@@ -1,0 +1,275 @@
+/* Tech Page Slider */
+#main_content .barcs_tech_slider{
+    background-color: white;
+    border: 0px;
+    border-radius: 20px;
+    padding: 0% 2%;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    -ms-border-radius: 20px;
+    -o-border-radius: 20px;
+    margin: 0rem auto 4rem;
+    max-width: 96%;
+    width: 100%;
+    height: 100%;
+}
+.barcs_tech_slider h1{
+    font-size: 1.9rem;
+    font-weight: 900;
+    width: 70%;
+    margin: 0% 4%;
+    padding-top: 4%;
+    padding-bottom: 2%;
+}
+.tech_slider_intro{
+    width: 80%;
+    margin: 0% 4%;
+    font-size: 1.14rem;
+    line-height: 1.6rem;
+}
+.tech_slider_intro a{
+    color: #006de3;
+    text-decoration: underline 0.15em rgb(0, 109, 227, 0);
+    transition: text-decoration-color 1s;
+    -webkit-transition: text-decoration-color 1s;
+    -moz-transition: text-decoration-color 1s;
+    -ms-transition: text-decoration-color 1s;
+    -o-transition: text-decoration-color 1s;
+}
+.tech_slider_intro a:hover, .tech_slider_intro a:focus{
+    color: rgb(0, 109, 227);
+    text-decoration: underline 0.15em rgb(0, 109, 227, 1);
+}
+.tech_slider_intro a:visited{
+    color: #006de3;
+    text-decoration: none;
+}
+.slick-slider{
+    margin: 0% 3%;
+}
+.barcs_tech_slider .slick-slide{
+    float: left;
+    height: 100%;
+    min-height: 260px;
+    margin: 10px 10px;
+    border-radius: 15px;
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-items: flex-end;
+    justify-content: space-between;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    -o-border-radius: 15px;
+}
+.tech_slider_slide{
+    display: flex !important;
+    flex-direction: column;
+    justify-items: center;
+    /* justify-content: space-between; */
+}
+.tech_slider_slide .btn-white{
+    margin: 0 0 5% 0;
+    width: fit-content;
+}
+.tech_slider_slide h3{
+    margin-top: 15%;
+    font-size: 1.5rem;
+}
+.slide_1{
+    background-image: url(https://tbcdn.talentbrew.com/company/22545/v1_0/img/refresh/tech-slider/barcs_tech_slide_1.png);
+    background-size: cover;
+    background-position: right 25% bottom 100%;
+}
+.slide_1 h3{
+    color: #515151;
+}
+.slide_2{
+    background-image: url(https://tbcdn.talentbrew.com/company/22545/v1_0/img/refresh/tech-slider/barcs_tech_slide_2.png);
+    background-size: cover;
+    background-position: right 45% bottom;
+}
+.slide_2 h3{
+    color: #515151;
+}
+.slide_3{
+    background-image: url(https://tbcdn.talentbrew.com/company/22545/v1_0/img/refresh/tech-slider/barcs_tech_slide_3.png);
+    background-size: cover;
+    background-position: right 45% bottom;
+}
+.slide_3 h3{
+    color: #EBEDFA;
+}
+.slide_4{
+    background-image: url(https://tbcdn.talentbrew.com/company/22545/v1_0/img/refresh/tech-slider/barcs_tech_slide_4.png);
+    background-size: cover;
+    background-position: right 45% bottom;
+}
+.slide_4 h3{
+    color: #515151;
+}
+.slide_5{
+    background-image: url(https://tbcdn.talentbrew.com/company/22545/v1_0/img/refresh/tech-slider/barcs_tech_slide_5.png);
+    background-size: cover;
+    background-position: right 45% bottom;
+}
+.slide_5 h3{
+    color: #EBEDFA;
+}
+.slide_6{
+    background-image: url(https://tbcdn.talentbrew.com/company/22545/v1_0/img/refresh/tech-slider/barcs_tech_slide_6.png);
+    background-size: cover;
+    background-position: right 45% bottom;
+}
+.slide_6 h3{
+    color: #EBEDFA;
+}
+.slide_7{
+    background-image: url(https://tbcdn.talentbrew.com/company/22545/v1_0/img/refresh/tech-slider/barcs_tech_slide_7.png);
+    background-size: cover;
+    background-position: right 45% bottom;
+}
+.slide_7 h3{
+    color: #EBEDFA;
+}
+.slide_8{
+    background-image: url(https://tbcdn.talentbrew.com/company/22545/v1_0/img/refresh/tech-slider/barcs_tech_slide_8.png);
+    background-size: cover;
+    background-position: right 45% bottom;
+}
+.slide_8 h3{
+    color: #EBEDFA;
+}
+.slider-controls{
+    position: relative;
+    top: 100%;
+    /* left: 35%; */
+    z-index: 1;
+}
+#barcs_tech_slider .slider-controls{
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    margin: 0;
+}
+#slick-dots{
+    display: flex;
+}
+#barcs_tech_slider .slider-controls .slick-dots{
+    position: relative;
+    width: auto;
+    display: -webkit-inline-box !important;
+    display: -ms-inline-flexbox !important;
+    display: inline-flex !important;
+    bottom: 0;
+}
+#barcs_tech_slider .slider-controls .slick-dots li{
+    position: relative;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin: 0 5px;
+    padding: 0;
+    cursor: pointer;
+}
+#barcs_tech_slider .slider-controls .slick-dots li button{
+    font-size: 0;
+    line-height: 0;
+    display: block;
+    width: 20px;
+    height: 20px;
+    padding: 5px;
+    /* margin: 0px 14px; */
+    cursor: pointer;
+    color: transparent;
+    border: 2px solid #006DE3;
+    border-radius: 100%;
+    outline: 0;
+    background: white;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    -ms-border-radius: 100%;
+    -o-border-radius: 100%;
+}
+#barcs_tech_slider .slider-controls .slick-dots li button::before{
+    content: "";
+}
+#barcs_tech_slider .slider-controls .slick-dots li.slick-active button{
+    font-size: 0;
+    line-height: 0;
+    display: block;
+    width: 20px;
+    height: 20px;
+    padding: 5px;
+    cursor: pointer;
+    color: transparent;
+    border: 2px solid #006DE3;
+    border-radius: 100%;
+    outline: 0;
+    background: #006DE3;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    -ms-border-radius: 100%;
+    -o-border-radius: 100%;
+}
+#barcs_tech_slider .slider-controls .slick-dots li.slick-active button::before{
+    content: "";
+}
+#next,
+#next-1 {
+    margin-left: 20px;
+}
+#next, #next-1 {
+    content: "";
+        background-image: url(https://tbcdn.talentbrew.com/company/22545/v1_0/img/refresh/icons/icon-slide-arrow-next--active-blue.svg);
+        background-size: contain;
+        transform: none;
+        background-repeat: no-repeat;
+        width: 40px;
+        height: 40px;
+        display: block;
+}
+#prev,
+#prev-1 {
+   margin-right: 20px;
+}
+#prev, #prev-1::before{
+    content: "";
+        background-image: url(https://tbcdn.talentbrew.com/company/22545/v1_0/img/refresh/icons/icon-slide-arrow-prev--active-blue.svg);
+        background-size: contain;
+        background-repeat: no-repeat;
+        width: 40px;
+        height: 40px;
+        display: block;
+}
+.slick-dots {
+    flex-wrap: wrap;
+}
+.margin-bottom-50 {
+    margin-bottom: 50px;
+}
+.from{
+    margin: 4% 4% 2% 4%;
+    font-size: 1.14rem;
+    line-height: 1.6rem;
+}
+
+@media all and (max-width: 1080px){
+    .btn-white{
+        font-size: 1.2rem;
+    }
+    .barcs_tech_slider h1{
+        margin: 1rem;
+    }
+    .slider-controls, .from, #next, #prev, .tech_slider_intro{
+        margin: 1rem;
+    }
+}

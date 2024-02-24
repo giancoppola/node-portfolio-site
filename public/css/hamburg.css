@@ -1,0 +1,1506 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+@keyframes openOverlay {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+    -webkit-transform: scale(0.8);
+    -moz-transform: scale(0.8);
+    -ms-transform: scale(0.8);
+    -o-transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    -ms-transform: scale(1);
+    -o-transform: scale(1);
+  }
+}
+@keyframes openOverlayMobile {
+  from {
+    transform-origin: top;
+    transform: scaleY(0);
+    -webkit-transform: scaleY(0);
+    -moz-transform: scaleY(0);
+    -ms-transform: scaleY(0);
+    -o-transform: scaleY(0);
+  }
+  to {
+    transform-origin: top;
+    transform: scaleY(1);
+    -webkit-transform: scaleY(1);
+    -moz-transform: scaleY(1);
+    -ms-transform: scaleY(1);
+    -o-transform: scaleY(1);
+  }
+}
+@keyframes closeOverlay {
+  from {
+    opacity: 1;
+    transform: scale(1);
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    -ms-transform: scale(1);
+    -o-transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.8);
+    -webkit-transform: scale(0.8);
+    -moz-transform: scale(0.8);
+    -ms-transform: scale(0.8);
+    -o-transform: scale(0.8);
+  }
+}
+@keyframes closeOverlayMobile {
+  from {
+    transform-origin: top;
+    transform: scaleY(1);
+    -webkit-transform: scaleY(1);
+    -moz-transform: scaleY(1);
+    -ms-transform: scaleY(1);
+    -o-transform: scaleY(1);
+  }
+  to {
+    transform-origin: top;
+    transform: scaleY(0);
+    -webkit-transform: scaleY(0);
+    -moz-transform: scaleY(0);
+    -ms-transform: scaleY(0);
+    -o-transform: scaleY(0);
+  }
+}
+@keyframes closeRotate {
+  from {
+    transform: rotateZ(0deg);
+    -webkit-transform: rotateZ(0deg);
+    -moz-transform: rotateZ(0deg);
+    -ms-transform: rotateZ(0deg);
+    -o-transform: rotateZ(0deg);
+  }
+  to {
+    transform: rotateZ(90deg);
+    -webkit-transform: rotateZ(90deg);
+    -moz-transform: rotateZ(90deg);
+    -ms-transform: rotateZ(90deg);
+    -o-transform: rotateZ(90deg);
+  }
+}
+@keyframes langToGerman {
+  from {
+    left: 0px;
+  }
+  to {
+    left: 140px;
+  }
+}
+@keyframes langToEnglish {
+  from {
+    left: 140px;
+  }
+  to {
+    left: 0px;
+  }
+}
+@keyframes sliderDotsActive {
+  from {
+    width: 40px;
+  }
+  to {
+    width: 70px;
+  }
+}
+@keyframes sliderDots {
+  from {
+    width: 70px;
+  }
+  to {
+    width: 40px;
+  }
+}
+:root {
+  --barcs-dark-blue: #001276;
+  --barcs-blue: #026DE2;
+  --barcs-light-blue: #AFFDFD;
+  --barcs-grey: #444444;
+  --barcs-white: #FFFFFF;
+  --barcs-pink: #E1C0E2;
+}
+
+* {
+  scroll-behavior: smooth;
+  font-family: "Roboto", sans-serif;
+}
+*::-moz-selection {
+  color: white;
+  background-color: var(--barcs-dark-blue);
+}
+*::selection {
+  color: white;
+  background-color: var(--barcs-dark-blue);
+}
+*::-moz-selection {
+  color: white;
+  background-color: var(--barcs-dark-blue);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.max-width-container {
+  width: 100%;
+  max-width: 1440px;
+}
+
+.content-container {
+  width: 100%;
+  max-width: 1440px;
+}
+.content-container-section {
+  width: 80%;
+  max-width: 1200px;
+  margin: 0 auto 50px;
+}
+
+.hide {
+  display: none !important;
+}
+
+.fw-bold {
+  font-weight: bold;
+}
+
+.margin-bottom-50 {
+  margin-bottom: 50px;
+}
+
+.header-section {
+  display: flex;
+  align-items: center;
+  height: 562px;
+  background-color: var(--barcs-light-blue);
+  box-shadow: inset 0px 0px 0px 75px var(--barcs-dark-blue);
+  margin: 0 auto;
+}
+
+.header-centre {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 90%;
+  height: 80%;
+  margin: auto;
+}
+.header-centre .header-text {
+  color: var(--barcs-dark-blue);
+  width: 50%;
+  margin-left: 126px;
+}
+.header-centre .header-text h1 {
+  font-size: 2.25rem;
+  font-weight: bolder;
+  line-height: 2.25rem;
+}
+.header-centre .header-text p {
+  font-size: 1rem;
+  font-weight: normal;
+  line-height: 1.5rem;
+}
+.header-centre .header-img {
+  position: relative;
+  border-style: none;
+  height: 100%;
+  bottom: 19px;
+}
+
+.content-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+}
+
+.language-toggle {
+  cursor: pointer;
+  width: 300px;
+  height: 50px;
+  background-color: var(--barcs-dark-blue);
+  border-radius: 25px;
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  -ms-border-radius: 25px;
+  -o-border-radius: 25px;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+.language-toggle-inner {
+  position: relative;
+  top: 5px;
+  left: 0px;
+  width: 150px;
+  height: 40px;
+  border-radius: 20px;
+  margin: auto 5px;
+  background-color: var(--barcs-white);
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+}
+.language-toggle-text {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  top: -40px;
+  justify-content: space-between;
+  margin: 0 50px;
+  font-weight: bolder;
+}
+.language-toggle-text .active {
+  color: var(--barcs-dark-blue);
+}
+.language-toggle-text .inactive {
+  color: var(--barcs-white);
+}
+
+.job-areas {
+  display: flex;
+  flex-direction: column;
+}
+.job-areas h2 {
+  color: var(--barcs-dark-blue);
+  font-size: 2rem;
+}
+.job-areas p {
+  color: var(--barcs-dark-blue);
+  line-height: 1.5rem;
+}
+.job-areas-cards {
+  min-height: 345px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 1%;
+  margin-top: 50px;
+}
+.job-areas-cards-card {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 20%;
+  padding: 2rem 0;
+  border-radius: 15px;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  -ms-border-radius: 15px;
+  -o-border-radius: 15px;
+  background-color: var(--barcs-dark-blue);
+  transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  -o-transition: all 0.5s;
+}
+.job-areas-cards-card:hover {
+  transform: translateY(-10px);
+  -webkit-transform: translateY(-10px);
+  -moz-transform: translateY(-10px);
+  -ms-transform: translateY(-10px);
+  -o-transform: translateY(-10px);
+}
+.job-areas-cards-card-img {
+  margin: 0 auto;
+}
+.job-areas-cards-card p {
+  color: var(--barcs-white);
+  font-weight: bold;
+  line-height: 1.5rem;
+  text-align: center;
+  margin: 0 auto;
+  width: 80%;
+}
+.job-areas-cards-card p::-moz-selection {
+  background-color: var(--barcs-white);
+  color: var(--barcs-dark-blue);
+}
+.job-areas-cards-card p::selection {
+  background-color: var(--barcs-white);
+  color: var(--barcs-dark-blue);
+}
+.job-areas-cards-card p::-moz-selection {
+  background-color: var(--barcs-white);
+  color: var(--barcs-dark-blue);
+}
+.job-areas-cards-overlay {
+  border-radius: 15px;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  -ms-border-radius: 15px;
+  -o-border-radius: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  gap: 10%;
+  align-items: center;
+  position: absolute;
+  width: 80%;
+  max-width: 1152px;
+  height: 345px;
+  background-color: var(--barcs-dark-blue);
+}
+.job-areas-cards-overlay p {
+  color: var(--barcs-white);
+}
+.job-areas-cards-overlay-text {
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+}
+.job-areas-cards-overlay-close {
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+.job-areas-cards-overlay-close:hover {
+  animation: closeRotate 0.2s linear;
+  -webkit-animation: closeRotate 0.2s linear;
+}
+.job-areas-cards-overlay-img {
+  padding-left: 10%;
+}
+
+.btn-blue {
+  cursor: pointer;
+  width: 12rem;
+  background-color: var(--barcs-blue);
+  border: none;
+  border-radius: 50px;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  -ms-border-radius: 50px;
+  -o-border-radius: 50px;
+  color: var(--barcs-white);
+  font-weight: bold;
+  padding: 1rem 2.5rem;
+  margin: 0 auto;
+  transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  -o-transition: all 0.5s;
+}
+.btn-blue:hover {
+  text-decoration: underline;
+  background-color: var(--barcs-white);
+  color: var(--barcs-blue);
+  width: 13rem;
+}
+
+.benefits {
+  background-color: var(--barcs-light-blue);
+}
+.benefits-content {
+  display: flex;
+  flex-direction: column;
+}
+.benefits-content h2 {
+  color: var(--barcs-grey);
+  font-size: 2rem;
+  margin-top: 85px;
+}
+.benefits-content p {
+  color: var(--barcs-grey);
+  line-height: 1.5rem;
+}
+.benefits-content-cards {
+  min-height: 300px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 1%;
+  margin-top: 50px;
+}
+.benefits-content-cards-card {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 20%;
+  padding: 2rem 0;
+  border-radius: 33px;
+  -webkit-border-radius: 33px;
+  -moz-border-radius: 33px;
+  -ms-border-radius: 33px;
+  -o-border-radius: 33px;
+  background-color: var(--barcs-dark-blue);
+  word-break: break-word;
+}
+.benefits-content-cards-card-img {
+  margin: 0 auto;
+}
+.benefits-content-cards-card p {
+  color: var(--barcs-white);
+  font-weight: bold;
+  line-height: 1.5rem;
+  text-align: center;
+  margin: 0 auto;
+  width: 80%;
+}
+.benefits-content-cards-card p::-moz-selection {
+  background-color: var(--barcs-white);
+  color: var(--barcs-dark-blue);
+}
+.benefits-content-cards-card p::selection {
+  background-color: var(--barcs-white);
+  color: var(--barcs-dark-blue);
+}
+.benefits-content-cards-card p::-moz-selection {
+  background-color: var(--barcs-white);
+  color: var(--barcs-dark-blue);
+}
+.benefits-content-cards-overlay {
+  border-radius: 15px;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  -ms-border-radius: 15px;
+  -o-border-radius: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  gap: 10%;
+  align-items: center;
+  position: absolute;
+  width: 80%;
+  max-width: 1152px;
+  height: 300px;
+  background-color: var(--barcs-dark-blue);
+}
+.benefits-content-cards-overlay p {
+  color: var(--barcs-white);
+}
+.benefits-content-cards-overlay-text {
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+}
+.benefits-content-cards-overlay-close {
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+.benefits-content-cards-overlay-close:hover {
+  animation: closeRotate 0.2s linear;
+  -webkit-animation: closeRotate 0.2s linear;
+}
+.benefits-content-cards-overlay-img {
+  padding-left: 10%;
+}
+
+.diversity-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.diversity-content h2 {
+  color: var(--barcs-dark-blue);
+  font-size: 2rem;
+}
+.diversity-content p {
+  color: var(--barcs-dark-blue);
+  line-height: 1.5rem;
+}
+.diversity-content-img {
+  width: 60%;
+}
+.diversity-content-img img {
+  width: 95%;
+}
+.diversity-content-text {
+  width: 40%;
+}
+
+.meet-our-people {
+  background-color: var(--barcs-dark-blue);
+  background-image: url(/img/hamburg/meet-our-people-bg.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: right;
+}
+.meet-our-people-content h2 {
+  color: var(--barcs-white);
+  font-size: 2rem;
+  margin-top: 80px;
+}
+.meet-our-people-content h2::-moz-selection {
+  background-color: var(--barcs-white);
+  color: var(--barcs-dark-blue);
+}
+.meet-our-people-content h2::selection {
+  background-color: var(--barcs-white);
+  color: var(--barcs-dark-blue);
+}
+.meet-our-people-content h2::-moz-selection {
+  background-color: var(--barcs-white);
+  color: var(--barcs-dark-blue);
+}
+.meet-our-people-content p {
+  color: var(--barcs-white);
+  line-height: 1.5rem;
+  width: 50%;
+}
+.meet-our-people-content p::-moz-selection {
+  background-color: var(--barcs-white);
+  color: var(--barcs-dark-blue);
+}
+.meet-our-people-content p::selection {
+  background-color: var(--barcs-white);
+  color: var(--barcs-dark-blue);
+}
+.meet-our-people-content p::-moz-selection {
+  background-color: var(--barcs-white);
+  color: var(--barcs-dark-blue);
+}
+.meet-our-people-content-slider .slick-list {
+  padding: 0 2rem;
+}
+.meet-our-people-content-slider-slide.slick-slide {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-end;
+  min-height: 600px;
+  width: 100%;
+  margin: 0 0.5rem;
+}
+.meet-our-people-content-slider-slide-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 35%;
+  background-color: var(--barcs-white);
+  color: var(--barcs-dark-blue);
+  border-radius: 20px 20px 0 20px;
+  -webkit-border-radius: 20px 20px 0 20px;
+  -moz-border-radius: 20px 20px 0 20px;
+  -ms-border-radius: 20px 20px 0 20px;
+  -o-border-radius: 20px 20px 0 20px;
+}
+.meet-our-people-content-slider-slide-left p {
+  color: var(--barcs-dark-blue);
+  width: 80%;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 3rem;
+}
+.meet-our-people-content-slider-slide-left img {
+  border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+  height: 250px;
+  width: 90%;
+  margin: 1rem;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.meet-our-people-content-slider-slide-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 65%;
+  border-radius: 0 20px 20px 0;
+  -webkit-border-radius: 0 20px 20px 0;
+  -moz-border-radius: 0 20px 20px 0;
+  -ms-border-radius: 0 20px 20px 0;
+  -o-border-radius: 0 20px 20px 0;
+  background-color: var(--barcs-white);
+}
+.meet-our-people-content-slider-slide-right-inner {
+  width: 90%;
+  margin: 1rem;
+  border-radius: 13px;
+  -webkit-border-radius: 13px;
+  -moz-border-radius: 13px;
+  -ms-border-radius: 13px;
+  -o-border-radius: 13px;
+  background-color: var(--barcs-dark-blue);
+  color: var(--barcs-white);
+}
+.meet-our-people-content-slider-slide-right-inner p {
+  width: 90%;
+  margin: 1rem auto;
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+.meet-our-people-content-navigation {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 1rem;
+  gap: 20%;
+}
+.meet-our-people-content-navigation-arrows {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+.meet-our-people-content-navigation-arrows .slick-prev {
+  cursor: pointer;
+  font-size: 0;
+  background: none;
+  border: none;
+}
+.meet-our-people-content-navigation-arrows .slick-prev::before {
+  cursor: pointer;
+  content: url(/img/hamburg/icons/arrow-left-white.svg);
+}
+.meet-our-people-content-navigation-arrows .slick-next {
+  cursor: pointer;
+  font-size: 0;
+  background: none;
+  border: none;
+}
+.meet-our-people-content-navigation-arrows .slick-next::before {
+  cursor: pointer;
+  content: url(/img/hamburg/icons/arrow-right-white.svg);
+}
+.meet-our-people-content-navigation-dots ul.slick-dots {
+  display: flex;
+  flex: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1rem;
+}
+.meet-our-people-content-navigation-dots ul.slick-dots li {
+  list-style: none;
+}
+.meet-our-people-content-navigation-dots ul.slick-dots li button {
+  cursor: pointer;
+  height: 7px;
+  width: 40px;
+  font-size: 0;
+  background: none;
+  border: solid var(--barcs-pink) 1px;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  animation: sliderDots 0.25s linear;
+  -webkit-animation: sliderDots 0.25s linear;
+}
+.meet-our-people-content-navigation-dots ul.slick-dots li.slick-active button {
+  width: 70px;
+  background-color: var(--barcs-white);
+  border: solid var(--barcs-white) 1px;
+  animation: sliderDotsActive 0.25s linear;
+  -webkit-animation: sliderDotsActive 0.25s linear;
+}
+
+@media all and (max-width: 1080px) {
+  .header-section {
+    display: flex;
+    align-items: center;
+    height: 900px;
+    background-color: var(--barcs-light-blue);
+    box-shadow: inset 0px 0px 0px 50px var(--barcs-dark-blue);
+    margin: 0 auto;
+  }
+  .header-centre {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 90%;
+    height: 89%;
+    margin: auto;
+  }
+  .header-centre .header-text {
+    color: var(--barcs-dark-blue);
+    width: 80%;
+    margin-left: 0px;
+    margin-top: 1rem;
+  }
+  .header-centre .header-text h1 {
+    font-size: 2.25rem;
+    font-weight: bolder;
+    line-height: 2.25rem;
+  }
+  .header-centre .header-text p {
+    font-size: 1rem;
+    font-weight: normal;
+    line-height: 1.5rem;
+  }
+  .header-centre .header-img {
+    position: relative;
+    border-style: none;
+    height: 100%;
+    bottom: 0px;
+  }
+  .job-areas {
+    display: flex;
+    flex-direction: column;
+  }
+  .job-areas h2 {
+    color: var(--barcs-dark-blue);
+    font-size: 2rem;
+  }
+  .job-areas p {
+    color: var(--barcs-dark-blue);
+    line-height: 1.5rem;
+  }
+  .job-areas-cards {
+    min-height: 345px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+    margin-top: 50px;
+  }
+  .job-areas-cards .active {
+    border-radius: 15px 15px 0px 0px;
+    -webkit-border-radius: 15px 15px 0px 0px;
+    -moz-border-radius: 15px 15px 0px 0px;
+    -ms-border-radius: 15px 15px 0px 0px;
+    -o-border-radius: 15px 15px 0px 0px;
+  }
+  .job-areas-cards .active .action {
+    transform: rotateZ(45deg);
+    -webkit-transform: rotateZ(45deg);
+    -moz-transform: rotateZ(45deg);
+    -ms-transform: rotateZ(45deg);
+    -o-transform: rotateZ(45deg);
+  }
+  .job-areas-cards-card {
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 2rem 2rem;
+    border-radius: 15px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    -o-border-radius: 15px;
+    background-color: var(--barcs-dark-blue);
+    transition: none;
+    -webkit-transition: none;
+    -moz-transition: none;
+    -ms-transition: none;
+    -o-transition: none;
+  }
+  .job-areas-cards-card:hover {
+    transform: none;
+    -webkit-transform: none;
+    -moz-transform: none;
+    -ms-transform: none;
+    -o-transform: none;
+  }
+  .job-areas-cards-card-img {
+    margin: 0 auto;
+  }
+  .job-areas-cards-card p {
+    color: var(--barcs-white);
+    font-weight: bold;
+    line-height: 1.5rem;
+    text-align: center;
+    margin: 0 auto;
+    width: 50%;
+  }
+  .job-areas-cards-card p::-moz-selection {
+    background-color: var(--barcs-white);
+    color: var(--barcs-dark-blue);
+  }
+  .job-areas-cards-card p::selection {
+    background-color: var(--barcs-white);
+    color: var(--barcs-dark-blue);
+  }
+  .job-areas-cards-card p::-moz-selection {
+    background-color: var(--barcs-white);
+    color: var(--barcs-dark-blue);
+  }
+  .job-areas-cards-overlay {
+    border-radius: 0px 0px 15px 15px;
+    -webkit-border-radius: 0px 0px 15px 15px;
+    -moz-border-radius: 0px 0px 15px 15px;
+    -ms-border-radius: 0px 0px 15px 15px;
+    -o-border-radius: 0px 0px 15px 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    gap: 10%;
+    align-items: center;
+    position: initial;
+    width: 100%;
+    padding: 2rem;
+    margin-top: -6px;
+    max-width: 1152px;
+    height: 400px;
+    background-color: var(--barcs-dark-blue);
+  }
+  .job-areas-cards-overlay p {
+    color: var(--barcs-white);
+  }
+  .job-areas-cards-overlay-text {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    gap: 2rem;
+    margin: auto;
+  }
+  .job-areas-cards-overlay-text .fw-bold {
+    display: none;
+  }
+  .job-areas-cards-overlay-close {
+    display: none;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+  .job-areas-cards-overlay-close:hover {
+    animation: closeRotate 0.2s linear;
+    -webkit-animation: closeRotate 0.2s linear;
+  }
+  .job-areas-cards-overlay-img {
+    display: none;
+    padding-left: 10%;
+  }
+  .benefits {
+    background-color: var(--barcs-light-blue);
+  }
+  .benefits-content h2 {
+    color: var(--barcs-grey);
+    font-size: 2rem;
+    margin-top: 85px;
+  }
+  .benefits-content p {
+    color: var(--barcs-grey);
+    line-height: 1.5rem;
+  }
+  .benefits-content-cards {
+    min-height: 259px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+    margin-top: 50px;
+  }
+  .benefits-content-cards .active {
+    border-radius: 15px 15px 0px 0px;
+    -webkit-border-radius: 15px 15px 0px 0px;
+    -moz-border-radius: 15px 15px 0px 0px;
+    -ms-border-radius: 15px 15px 0px 0px;
+    -o-border-radius: 15px 15px 0px 0px;
+  }
+  .benefits-content-cards .active .action {
+    transform: rotateZ(45deg);
+    -webkit-transform: rotateZ(45deg);
+    -moz-transform: rotateZ(45deg);
+    -ms-transform: rotateZ(45deg);
+    -o-transform: rotateZ(45deg);
+  }
+  .benefits-content-cards-card {
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 2rem 2rem;
+    border-radius: 15px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    -o-border-radius: 15px;
+    background-color: var(--barcs-dark-blue);
+  }
+  .benefits-content-cards-card-img {
+    margin: 0 auto;
+  }
+  .benefits-content-cards-card p {
+    color: var(--barcs-white);
+    font-weight: bold;
+    line-height: 1.5rem;
+    text-align: center;
+    margin: 0 auto;
+    width: 80%;
+  }
+  .benefits-content-cards-card p::-moz-selection {
+    background-color: var(--barcs-white);
+    color: var(--barcs-dark-blue);
+  }
+  .benefits-content-cards-card p::selection {
+    background-color: var(--barcs-white);
+    color: var(--barcs-dark-blue);
+  }
+  .benefits-content-cards-card p::-moz-selection {
+    background-color: var(--barcs-white);
+    color: var(--barcs-dark-blue);
+  }
+  .benefits-content-cards-overlay {
+    border-radius: 0px 0px 15px 15px;
+    -webkit-border-radius: 0px 0px 15px 15px;
+    -moz-border-radius: 0px 0px 15px 15px;
+    -ms-border-radius: 0px 0px 15px 15px;
+    -o-border-radius: 0px 0px 15px 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    gap: 10%;
+    align-items: center;
+    position: initial;
+    width: 100%;
+    padding: 2rem;
+    margin-top: -6px;
+    max-width: 1152px;
+    height: 400px;
+    background-color: var(--barcs-dark-blue);
+  }
+  .benefits-content-cards-overlay p {
+    color: var(--barcs-white);
+  }
+  .benefits-content-cards-overlay-text {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    gap: 2rem;
+    margin: auto;
+  }
+  .benefits-content-cards-overlay-text .fw-bold {
+    display: none;
+  }
+  .benefits-content-cards-overlay-close {
+    display: none;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+  .benefits-content-cards-overlay-close:hover {
+    animation: closeRotate 0.2s linear;
+    -webkit-animation: closeRotate 0.2s linear;
+  }
+  .benefits-content-cards-overlay-img {
+    display: none;
+    padding-left: 10%;
+  }
+  .meet-our-people {
+    background-color: var(--barcs-dark-blue);
+    background-image: none;
+  }
+  .meet-our-people-content h2 {
+    color: var(--barcs-white);
+    font-size: 1.5rem;
+    line-height: 1.75;
+    margin-top: 80px;
+  }
+  .meet-our-people-content h2::-moz-selection {
+    background-color: var(--barcs-white);
+    color: var(--barcs-dark-blue);
+  }
+  .meet-our-people-content h2::selection {
+    background-color: var(--barcs-white);
+    color: var(--barcs-dark-blue);
+  }
+  .meet-our-people-content h2::-moz-selection {
+    background-color: var(--barcs-white);
+    color: var(--barcs-dark-blue);
+  }
+  .meet-our-people-content p {
+    color: var(--barcs-white);
+    font-size: 0.875;
+    line-height: 1.5rem;
+    width: 100%;
+  }
+  .meet-our-people-content p::-moz-selection {
+    background-color: var(--barcs-white);
+    color: var(--barcs-dark-blue);
+  }
+  .meet-our-people-content p::selection {
+    background-color: var(--barcs-white);
+    color: var(--barcs-dark-blue);
+  }
+  .meet-our-people-content p::-moz-selection {
+    background-color: var(--barcs-white);
+    color: var(--barcs-dark-blue);
+  }
+  .meet-our-people-content-slider .slick-list {
+    padding: 0;
+  }
+  .meet-our-people-content-slider-slide.slick-slide {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    width: 100%;
+    margin: 0 1rem;
+  }
+  .meet-our-people-content-slider-slide-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: var(--barcs-dark-blue);
+    color: var(--barcs-white);
+    border-radius: 20px 20px 0 20px;
+    -webkit-border-radius: 20px 20px 0 20px;
+    -moz-border-radius: 20px 20px 0 20px;
+    -ms-border-radius: 20px 20px 0 20px;
+    -o-border-radius: 20px 20px 0 20px;
+  }
+  .meet-our-people-content-slider-slide-left p {
+    color: var(--barcs-white);
+    width: 100%;
+    font-size: 0.875rem;
+    line-height: 1.5rem;
+    font-weight: bold;
+  }
+  .meet-our-people-content-slider-slide-left img {
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    -ms-border-radius: 0;
+    -o-border-radius: 0;
+    height: 250px;
+    width: -moz-fit-content;
+    width: fit-content;
+    margin: 1rem;
+  }
+  .meet-our-people-content-slider-slide-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    -ms-border-radius: 0;
+    -o-border-radius: 0;
+    background-color: var(--barcs-dark-blue);
+  }
+  .meet-our-people-content-slider-slide-right-inner {
+    width: 100%;
+    margin: 1rem;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    -ms-border-radius: 0;
+    -o-border-radius: 0;
+    background-color: var(--barcs-dark-blue);
+    color: var(--barcs-white);
+  }
+  .meet-our-people-content-slider-slide-right-inner p {
+    display: none;
+    width: 100%;
+    margin: 1rem auto;
+    font-size: 0.875rem;
+    line-height: 1.5rem;
+    text-align: center;
+  }
+  .meet-our-people-content-slider-slide-right-inner p.fw-bold {
+    display: block;
+  }
+  .meet-our-people-content-navigation {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-top: 1rem;
+    gap: 0;
+  }
+  .meet-our-people-content-navigation-arrows {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+  }
+  .meet-our-people-content-navigation-arrows .slick-prev {
+    cursor: pointer;
+    font-size: 0;
+    background: none;
+    border: none;
+  }
+  .meet-our-people-content-navigation-arrows .slick-prev::before {
+    cursor: pointer;
+    content: url(/img/hamburg/icons/arrow-left-white.svg);
+  }
+  .meet-our-people-content-navigation-arrows .slick-next {
+    cursor: pointer;
+    font-size: 0;
+    background: none;
+    border: none;
+  }
+  .meet-our-people-content-navigation-arrows .slick-next::before {
+    cursor: pointer;
+    content: url(/img/hamburg/icons/arrow-right-white.svg);
+  }
+  .meet-our-people-content-navigation-dots ul.slick-dots {
+    display: flex;
+    flex: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
+  }
+  .meet-our-people-content-navigation-dots ul.slick-dots li {
+    list-style: none;
+  }
+  .meet-our-people-content-navigation-dots ul.slick-dots li button {
+    height: 7px;
+    width: 40px;
+    font-size: 0;
+    background: none;
+    border: solid var(--barcs-pink) 1px;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+  }
+  .meet-our-people-content-navigation-dots ul.slick-dots li.slick-active button {
+    width: 70px;
+    background-color: var(--barcs-white);
+    border: solid var(--barcs-white) 1px;
+  }
+}
+@media all and (max-width: 800px) {
+  h1, h2 {
+    font-size: 1.5rem;
+    line-height: 1.75rem;
+  }
+  p {
+    font-size: 0.875rem;
+    line-height: 1.5rem;
+  }
+  .header-section {
+    display: flex;
+    align-items: center;
+    height: 766px;
+    background-color: var(--barcs-light-blue);
+    box-shadow: inset 0px 0px 0px 30px var(--barcs-dark-blue);
+    margin: 0 auto;
+  }
+  .header-centre {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    height: 91%;
+    margin: auto;
+  }
+  .header-centre .header-text {
+    color: var(--barcs-dark-blue);
+    width: 80%;
+    margin-left: 0;
+  }
+  .header-centre .header-text h1 {
+    font-size: 1.5rem;
+    line-height: 1.75rem;
+  }
+  .header-centre .header-text p {
+    font-size: 0.875rem;
+    line-height: 1.5rem;
+  }
+  .header-centre .header-img {
+    position: relative;
+    border-style: none;
+    height: 45%;
+    bottom: -4px;
+  }
+  .job-areas {
+    display: flex;
+    flex-direction: column;
+  }
+  .job-areas h2 {
+    color: var(--barcs-dark-blue);
+    font-size: 1.5rem;
+    line-height: 1.75rem;
+  }
+  .job-areas p {
+    color: var(--barcs-dark-blue);
+    font-size: 0.875rem;
+    line-height: 1.5rem;
+  }
+  .job-areas-cards {
+    min-height: 345px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+    margin-top: 50px;
+  }
+  .job-areas-cards .active {
+    border-radius: 15px 15px 0px 0px;
+    -webkit-border-radius: 15px 15px 0px 0px;
+    -moz-border-radius: 15px 15px 0px 0px;
+    -ms-border-radius: 15px 15px 0px 0px;
+    -o-border-radius: 15px 15px 0px 0px;
+  }
+  .job-areas-cards-card {
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 2rem 2rem;
+    border-radius: 15px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    -o-border-radius: 15px;
+    background-color: var(--barcs-dark-blue);
+    transition: none;
+    -webkit-transition: none;
+    -moz-transition: none;
+    -ms-transition: none;
+    -o-transition: none;
+  }
+  .job-areas-cards-card:hover {
+    transform: none;
+    -webkit-transform: none;
+    -moz-transform: none;
+    -ms-transform: none;
+    -o-transform: none;
+  }
+  .job-areas-cards-card-img {
+    margin: 0 auto;
+  }
+  .job-areas-cards-card p {
+    color: var(--barcs-white);
+    font-weight: bold;
+    line-height: 1.5rem;
+    text-align: center;
+    margin: 0 auto;
+    width: 50%;
+  }
+  .job-areas-cards-card p::-moz-selection {
+    background-color: var(--barcs-white);
+    color: var(--barcs-dark-blue);
+  }
+  .job-areas-cards-card p::selection {
+    background-color: var(--barcs-white);
+    color: var(--barcs-dark-blue);
+  }
+  .job-areas-cards-card p::-moz-selection {
+    background-color: var(--barcs-white);
+    color: var(--barcs-dark-blue);
+  }
+  .job-areas-cards-overlay {
+    border-radius: 0px 0px 15px 15px;
+    -webkit-border-radius: 0px 0px 15px 15px;
+    -moz-border-radius: 0px 0px 15px 15px;
+    -ms-border-radius: 0px 0px 15px 15px;
+    -o-border-radius: 0px 0px 15px 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    gap: 10%;
+    align-items: center;
+    position: initial;
+    width: 100%;
+    padding: 2rem;
+    margin-top: -6px;
+    max-width: 1152px;
+    height: 400px;
+    background-color: var(--barcs-dark-blue);
+  }
+  .job-areas-cards-overlay p {
+    color: var(--barcs-white);
+  }
+  .job-areas-cards-overlay-text {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    gap: 2rem;
+    margin: auto;
+  }
+  .job-areas-cards-overlay-text .fw-bold {
+    display: none;
+  }
+  .job-areas-cards-overlay-close {
+    display: none;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+  .job-areas-cards-overlay-close:hover {
+    animation: closeRotate 0.2s linear;
+    -webkit-animation: closeRotate 0.2s linear;
+  }
+  .job-areas-cards-overlay-img {
+    display: none;
+    padding-left: 10%;
+  }
+  .benefits {
+    background-color: var(--barcs-light-blue);
+  }
+  .benefits-content h2 {
+    color: var(--barcs-grey);
+    font-size: 1.5rem;
+    line-height: 1.75rem;
+    margin-top: 85px;
+  }
+  .benefits-content p {
+    color: var(--barcs-grey);
+    font-size: 0.875rem;
+    line-height: 1.5rem;
+  }
+  .benefits-content-cards {
+    min-height: 259px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+    margin-top: 50px;
+  }
+  .benefits-content-cards .active {
+    border-radius: 15px 15px 0px 0px;
+    -webkit-border-radius: 15px 15px 0px 0px;
+    -moz-border-radius: 15px 15px 0px 0px;
+    -ms-border-radius: 15px 15px 0px 0px;
+    -o-border-radius: 15px 15px 0px 0px;
+  }
+  .benefits-content-cards .active .action {
+    transform: rotateZ(45deg);
+    -webkit-transform: rotateZ(45deg);
+    -moz-transform: rotateZ(45deg);
+    -ms-transform: rotateZ(45deg);
+    -o-transform: rotateZ(45deg);
+  }
+  .benefits-content-cards-card {
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 2rem 2rem;
+    border-radius: 15px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    -o-border-radius: 15px;
+    background-color: var(--barcs-dark-blue);
+  }
+  .benefits-content-cards-card-img {
+    margin: 0 auto;
+  }
+  .benefits-content-cards-card p {
+    color: var(--barcs-white);
+    font-weight: bold;
+    line-height: 1.5rem;
+    text-align: center;
+    margin: 0 auto;
+    width: 80%;
+  }
+  .benefits-content-cards-card p::-moz-selection {
+    background-color: var(--barcs-white);
+    color: var(--barcs-dark-blue);
+  }
+  .benefits-content-cards-card p::selection {
+    background-color: var(--barcs-white);
+    color: var(--barcs-dark-blue);
+  }
+  .benefits-content-cards-card p::-moz-selection {
+    background-color: var(--barcs-white);
+    color: var(--barcs-dark-blue);
+  }
+  .benefits-content-cards-overlay {
+    border-radius: 0px 0px 15px 15px;
+    -webkit-border-radius: 0px 0px 15px 15px;
+    -moz-border-radius: 0px 0px 15px 15px;
+    -ms-border-radius: 0px 0px 15px 15px;
+    -o-border-radius: 0px 0px 15px 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    gap: 10%;
+    align-items: center;
+    position: initial;
+    width: 100%;
+    padding: 2rem;
+    margin-top: -6px;
+    max-width: 1152px;
+    height: 400px;
+    background-color: var(--barcs-dark-blue);
+  }
+  .benefits-content-cards-overlay p {
+    color: var(--barcs-white);
+  }
+  .benefits-content-cards-overlay-text {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    gap: 2rem;
+    margin: auto;
+  }
+  .benefits-content-cards-overlay-text .fw-bold {
+    display: none;
+  }
+  .benefits-content-cards-overlay-close {
+    display: none;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+  .benefits-content-cards-overlay-close:hover {
+    animation: closeRotate 0.2s linear;
+    -webkit-animation: closeRotate 0.2s linear;
+  }
+  .benefits-content-cards-overlay-img {
+    display: none;
+    padding-left: 10%;
+  }
+  .diversity-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .diversity-content h1, .diversity-content h2 {
+    color: var(--barcs-dark-blue);
+    font-size: 1.5rem;
+    line-height: 1.75rem;
+  }
+  .diversity-content p {
+    color: var(--barcs-dark-blue);
+    font-size: 0.875rem;
+    line-height: 1.5rem;
+  }
+  .diversity-content-img {
+    width: 100%;
+    margin: 50px 0 45px;
+  }
+  .diversity-content-img img {
+    width: 100%;
+  }
+  .diversity-content-text {
+    width: 80%;
+  }
+}/*# sourceMappingURL=hamburg.css.map */

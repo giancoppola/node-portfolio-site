@@ -1,0 +1,20 @@
+{
+    "chilli": {
+        "title": "Chilli con Carne",
+        "description": "Chilli con Carne by Recipe Tin Eats",
+        "recipe": "https://www.recipetineats.com/chilli-con-carne/",
+        "emoji": "🍛",
+        "time": "1-2 hours",
+        "video": "https://www.youtube.com/watch?v=J84IUGG8q08",
+        "ingredients": null
+    },
+    "pastina": {
+        "title": "Pastina",
+        "description": "Mums recipe for pastina with added spinach",
+        "recipe": null,
+        "emoji": null,
+        "time": "15 minutes",
+        "video": null,
+        "ingredients": ["Olive Oil", "Orzo", "Spinach", "Chicken Stock", "Tomato Paste", "Parmigiano"]
+    }
+}
