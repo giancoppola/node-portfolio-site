@@ -1,9 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = require("express");
+var express = require('express');
 var cors = require('cors');
-var app = (0, express_1.default)();
+var app = express();
 app.use(cors());
+app.get("*", function (req, res, next) {
+    console.log(req.method, req.url, res.status);
+    next();
+});
 app.get("/", function (req, res) {
     res.send("OK");
 });
