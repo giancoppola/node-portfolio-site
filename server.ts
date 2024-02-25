@@ -1,22 +1,15 @@
+require('dotenv').config();
 const express = require('express');
 import {Express, NextFunction, Request, Response} from 'express';
-import { Mongoose } from 'mongoose';
-require('dotenv').config();
+const app: Express = express();
 const cors = require('cors');
 
+import { Mongoose } from 'mongoose';
 const mongoose: Mongoose = require('mongoose');
 const dbUri = `mongodb+srv://giancoppola:${process.env.MONGO_PW}@cluster0.gjnjhuw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
 mongoose.connect(dbUri);
-
-const userSchema = new mongoose.Schema({
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
-    email: { type: String, required: true },
-    pass: { type: String, required: true }
-})
-const User = mongoose.model('User', userSchema);
-
-const app: Express = express();
+// MongoDB model imports
+import {User} from './server/models';
 
 app.use(cors());
 app.use(express.static(__dirname + '/public'));
@@ -38,7 +31,8 @@ app.get("/test", (req: Request, res: Response) => {
 app.use("/api/users", express.json());
 app.route('/api/users')
 .get( async (req: Request, res: Response, next: NextFunction) => {
-    let users = await User.find().select('-pass -_id -__v').exec();
+    let users: Array<Object> = await User.Model.find().select('-pass -_id -__v').exec();
+    console.log(users.length);
     res.json({
         users
     })
@@ -49,7 +43,7 @@ app.route('/api/users')
     let lastName = req.body.lastName;
     let email = req.body.email;
     let pass = req.body.pass;
-    let user = new User({
+    let user = new User.Model({
         firstName: firstName,
         lastName: lastName,
         email: email,
