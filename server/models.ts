@@ -1,5 +1,4 @@
 import { Model } from "mongoose";
-
 const mongoose = require('mongoose');
 
 export class User{

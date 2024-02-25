@@ -20,41 +20,23 @@ app.get("*", (req: Request, res:Response, next: NextFunction) => {
 })
 
 app.get("/", (req: Request, res: Response) => {
-    res.send("OK")
+    res.sendFile(__dirname + '/views/index.html')
 })
 
+// add GET requests for pages
+const pageArr: Array<String> = ['cotravel', 'tfl', 'quotes', 'hamburg']
+for (let page of pageArr){
+    app.get(`/${page}`, (req: Request, res:Response, next: NextFunction) => {
+        res.sendFile(__dirname + `/views/${page}.html`)
+    })
+}
 app.get("/test", (req: Request, res: Response) => {
     res.sendFile(__dirname + '/views/index.html')
 })
 
 //API endpoints
-app.use("/api/users", express.json());
-app.route('/api/users')
-.get( async (req: Request, res: Response, next: NextFunction) => {
-    let users: Array<Object> = await User.Model.find().select('-pass -_id -__v').exec();
-    console.log(users.length);
-    res.json({
-        users
-    })
-    next()
-})
-.post( async (req: Request, res: Response, next: NextFunction) => {
-    let firstName = req.body.firstName;
-    let lastName = req.body.lastName;
-    let email = req.body.email;
-    let pass = req.body.pass;
-    let user = new User.Model({
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        pass: pass
-    })
-    await user.save();
-    res.json({
-        user
-    })
-    next()
-})
+const apiRoute = require('./server/api').router;
+app.use('/api', apiRoute);
 
 // Error page matching
 app.use('*', (req: Request, res: Response) => {
