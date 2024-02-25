@@ -12,6 +12,7 @@
     "mongodb": "^6.3.0",
     "mongoose": "^8.2.0",
     "node": "^21.6.2",
+    "path": "^0.12.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "webpack": "^5.90.3",
@@ -25,6 +26,6 @@
     "typescript": "^5.3.3"
   },
   "scripts": {
-    "build": "tsc --project tsconfig.json && node server.js"
+    "build": "tsc --project tsconfig.json && webpack && node server.js"
   }
 }

@@ -31,7 +31,6 @@ for (let page of pageArr){
     })
 }
 
-app.use(express.static('/react'));
 app.use('/dist', express.static(__dirname + '/dist'));
 app.get("/test", (req: Request, res: Response) => {
     res.sendFile(__dirname + '/views/test.html')
