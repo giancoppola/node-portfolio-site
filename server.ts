@@ -30,8 +30,11 @@ for (let page of pageArr){
         res.sendFile(__dirname + `/views/${page}.html`)
     })
 }
+
+app.use(express.static('/react'));
+app.use('/dist', express.static(__dirname + '/dist'));
 app.get("/test", (req: Request, res: Response) => {
-    res.sendFile(__dirname + '/views/index.html')
+    res.sendFile(__dirname + '/views/test.html')
 })
 
 //API endpoints

@@ -1,5 +1,6 @@
 "use strict";
 // slider for meet our people module
+var _a, _b, _c, _d;
 Object.defineProperty(exports, "__esModule", { value: true });
 // $(document).ready(function(){
 //     $('.meet-our-people-content-slider').slick({
@@ -13,31 +14,37 @@ Object.defineProperty(exports, "__esModule", { value: true });
 //     });
 // });
 // card overlay events and functions
-const jobCards = ['customer-service', 'information-technology', 'sales-marketing', 'comms-legal', 'product-management'];
-for (let i = 0; i < jobCards.length; i++) {
-    document.getElementById(`${jobCards[i]}-card`)?.addEventListener('click', function () {
-        let overlay = document.getElementById(`${jobCards[i]}-overlay`);
-        let card = document.getElementById(`${jobCards[i]}-card`);
+var jobCards = ['customer-service', 'information-technology', 'sales-marketing', 'comms-legal', 'product-management'];
+var _loop_1 = function (i) {
+    (_a = document.getElementById("".concat(jobCards[i], "-card"))) === null || _a === void 0 ? void 0 : _a.addEventListener('click', function () {
+        var overlay = document.getElementById("".concat(jobCards[i], "-overlay"));
+        var card = document.getElementById("".concat(jobCards[i], "-card"));
         openOverlay(overlay, card);
     });
-    document.getElementById(`${jobCards[i]}-overlay-close`)?.addEventListener('click', function () {
-        let overlay = document.getElementById(`${jobCards[i]}-overlay`);
-        let card = document.getElementById(`${jobCards[i]}-card`);
+    (_b = document.getElementById("".concat(jobCards[i], "-overlay-close"))) === null || _b === void 0 ? void 0 : _b.addEventListener('click', function () {
+        var overlay = document.getElementById("".concat(jobCards[i], "-overlay"));
+        var card = document.getElementById("".concat(jobCards[i], "-card"));
         closeOverlay(overlay, card);
     });
+};
+for (var i = 0; i < jobCards.length; i++) {
+    _loop_1(i);
 }
-const benefitCards = ['arena-tickets', 'employee-credit', 'community-days', 'personal-development', 'flexible-budget', 'company-pension'];
-for (let i = 0; i < benefitCards.length; i++) {
-    document.getElementById(`${benefitCards[i]}-card`)?.addEventListener('click', function () {
-        let overlay = document.getElementById(`${benefitCards[i]}-overlay`);
-        let card = document.getElementById(`${benefitCards[i]}-card`);
+var benefitCards = ['arena-tickets', 'employee-credit', 'community-days', 'personal-development', 'flexible-budget', 'company-pension'];
+var _loop_2 = function (i) {
+    (_c = document.getElementById("".concat(benefitCards[i], "-card"))) === null || _c === void 0 ? void 0 : _c.addEventListener('click', function () {
+        var overlay = document.getElementById("".concat(benefitCards[i], "-overlay"));
+        var card = document.getElementById("".concat(benefitCards[i], "-card"));
         openOverlay(overlay, card);
     });
-    document.getElementById(`${benefitCards[i]}-overlay-close`)?.addEventListener('click', function () {
-        let overlay = document.getElementById(`${benefitCards[i]}-overlay`);
-        let card = document.getElementById(`${benefitCards[i]}-card`);
+    (_d = document.getElementById("".concat(benefitCards[i], "-overlay-close"))) === null || _d === void 0 ? void 0 : _d.addEventListener('click', function () {
+        var overlay = document.getElementById("".concat(benefitCards[i], "-overlay"));
+        var card = document.getElementById("".concat(benefitCards[i], "-card"));
         closeOverlay(overlay, card);
     });
+};
+for (var i = 0; i < benefitCards.length; i++) {
+    _loop_2(i);
 }
 function closeOverlay(overlay, card) {
     if (window.matchMedia("(max-width: 1080px)").matches) {
@@ -46,7 +53,7 @@ function closeOverlay(overlay, card) {
     else {
         overlay.style.animation = 'closeOverlay 0.2s linear';
     }
-    setTimeout(() => { overlay.classList.add('hide'); }, 150);
+    setTimeout(function () { overlay.classList.add('hide'); }, 150);
     card.classList.remove('active');
 }
 function openOverlay(overlay, card) {
@@ -65,15 +72,15 @@ function openOverlay(overlay, card) {
     }
 }
 // language toggle event and function
-const langToggle = document.getElementById('language-toggle');
+var langToggle = document.getElementById('language-toggle');
 langToggle.addEventListener('click', function () {
-    let active = langToggle.getAttribute('active');
+    var active = langToggle.getAttribute('active');
     languageToggle(active);
 });
 function languageToggle(active) {
-    const englishButton = document.getElementById('language-toggle-text-english');
-    const germanButton = document.getElementById('language-toggle-text-german');
-    const langToggleInner = document.getElementById('language-toggle-inner');
+    var englishButton = document.getElementById('language-toggle-text-english');
+    var germanButton = document.getElementById('language-toggle-text-german');
+    var langToggleInner = document.getElementById('language-toggle-inner');
     if (active === 'english') {
         langToggle.setAttribute('active', 'german');
         langToggleInner.style.animation = 'langToGerman 0.2s linear';
@@ -96,18 +103,18 @@ function languageToggle(active) {
     }
 }
 //changing language via JSON
-let langObj;
-const xmlhttp = new XMLHttpRequest;
+var langObj;
+var xmlhttp = new XMLHttpRequest;
 xmlhttp.onload = function () {
-    const obj = JSON.parse(this.responseText);
+    var obj = JSON.parse(this.responseText);
     langObj = obj;
 };
 xmlhttp.open("GET", "../JSON/hamburg.json");
 xmlhttp.send();
 function langChange(lang) {
     if (lang === 'english') {
-        let node;
-        for (let items in langObj) {
+        var node = void 0;
+        for (var items in langObj) {
             node = document.getElementById(items);
             if (node) {
                 // node.innerHTML = langObj[items].english;
@@ -115,8 +122,8 @@ function langChange(lang) {
         }
     }
     else if (lang === 'german') {
-        let node;
-        for (let items in langObj) {
+        var node = void 0;
+        for (var items in langObj) {
             node = document.getElementById(items);
             if (node) {
                 // node.innerHTML = langObj[items].german;

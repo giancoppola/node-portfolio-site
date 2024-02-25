@@ -1,65 +1,44 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 require('dotenv').config();
-const express = require('express');
-const app = express();
-const cors = require('cors');
-const mongoose = require('mongoose');
-const dbUri = `mongodb+srv://giancoppola:${process.env.MONGO_PW}@cluster0.gjnjhuw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+var express = require('express');
+var app = express();
+var cors = require('cors');
+var mongoose = require('mongoose');
+var dbUri = "mongodb+srv://giancoppola:".concat(process.env.MONGO_PW, "@cluster0.gjnjhuw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
 mongoose.connect(dbUri);
 app.use(cors());
 app.use(express.static(__dirname + '/public'));
-app.get("*", (req, res, next) => {
+app.get("*", function (req, res, next) {
     console.log(req.method, req.url, res.statusCode);
     next();
 });
-app.get("/", (req, res) => {
+app.get("/", function (req, res) {
     res.sendFile(__dirname + '/views/index.html');
 });
 // add GET requests for pages
-const pageArr = ['cotravel', 'tfl', 'quotes', 'hamburg'];
-for (let page of pageArr) {
-    app.get(`/${page}`, (req, res, next) => {
-        res.sendFile(__dirname + `/views/${page}.html`);
+var pageArr = ['cotravel', 'tfl', 'quotes', 'hamburg'];
+var _loop_1 = function (page) {
+    app.get("/".concat(page), function (req, res, next) {
+        res.sendFile(__dirname + "/views/".concat(page, ".html"));
     });
+};
+for (var _i = 0, pageArr_1 = pageArr; _i < pageArr_1.length; _i++) {
+    var page = pageArr_1[_i];
+    _loop_1(page);
 }
-app.get("/test", (req, res) => {
-    res.sendFile(__dirname + '/views/index.html');
+app.use(express.static('/react'));
+app.use('/dist', express.static(__dirname + '/dist'));
+app.get("/test", function (req, res) {
+    res.sendFile(__dirname + '/views/test.html');
 });
 //API endpoints
-const apiRoute = require('./server/api').router;
+var apiRoute = require('./server/api').router;
 app.use('/api', apiRoute);
-// app.use("/api/users", express.json());
-// app.route('/api/users')
-// .get( async (req: Request, res: Response, next: NextFunction) => {
-//     let users: Array<Object> = await User.Model.find().select('-pass -_id -__v').exec();
-//     console.log(users.length);
-//     res.json({
-//         users
-//     })
-//     next()
-// })
-// .post( async (req: Request, res: Response, next: NextFunction) => {
-//     let firstName = req.body.firstName;
-//     let lastName = req.body.lastName;
-//     let email = req.body.email;
-//     let pass = req.body.pass;
-//     let user = new User.Model({
-//         firstName: firstName,
-//         lastName: lastName,
-//         email: email,
-//         pass: pass
-//     })
-//     await user.save();
-//     res.json({
-//         user
-//     })
-//     next()
-// })
 // Error page matching
-app.use('*', (req, res) => {
+app.use('*', function (req, res) {
     res.send('No match found - error page!');
 });
-const listener = app.listen(process.env.PORT || 3000, () => {
+var listener = app.listen(process.env.PORT || 3000, function () {
     // console.log('Your app is listening on port 3000 ' + listener.address().port)
 });
