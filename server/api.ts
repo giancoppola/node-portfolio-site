@@ -5,12 +5,12 @@ export const router: Router = express.Router();
 import { Mongoose } from "mongoose";
 const mongoose: Mongoose = require('mongoose');
 // MongoDB model imports
-import {User} from './models';
+import {UserModel, UserSchema, iUser} from './user';
 
 router.use("/users", express.json());
 router.route('/users')
 .get( async (req: Request, res: Response, next: NextFunction) => {
-    let users: Array<Object> = await User.Model.find().select('-pass -_id -__v').exec();
+    let users: Array<Object> = await UserModel.find().select('-pass -_id -__v').exec();
     console.log(users.length);
     res.json({
         users
@@ -22,7 +22,7 @@ router.route('/users')
     let lastName = req.body.lastName;
     let email = req.body.email;
     let pass = req.body.pass;
-    let user = new User.Model({
+    let user = new UserModel({
         firstName: firstName,
         lastName: lastName,
         email: email,

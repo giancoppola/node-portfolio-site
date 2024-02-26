@@ -9,7 +9,7 @@ const mongoose: Mongoose = require('mongoose');
 const dbUri = `mongodb+srv://giancoppola:${process.env.MONGO_PW}@cluster0.gjnjhuw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
 mongoose.connect(dbUri);
 // MongoDB model imports
-import {User} from './server/models';
+import {iUser, UserSchema, UserModel} from './server/user';
 
 app.use(cors());
 app.use(express.static(__dirname + '/public'));

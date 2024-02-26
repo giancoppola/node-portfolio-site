@@ -36,35 +36,28 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
+exports.usernameInUse = exports.UserModel = exports.UserSchema = void 0;
 var mongoose = require('mongoose');
-var User = /** @class */ (function () {
-    function User() {
-    }
-    User.usernameInUse = function (username) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_b) {
-                return [2 /*return*/, this.Model.exists({ username: username })
-                        .then(function (doc) {
-                        if (doc) {
-                            return false;
-                        }
-                        ;
-                        return true;
-                    })];
-            });
+exports.UserSchema = new mongoose.Schema({
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    username: { type: String, required: true },
+    email: { type: String, required: true },
+    pass: { type: String, required: true }
+});
+exports.UserModel = mongoose.model('User', exports.UserSchema);
+function usernameInUse(username) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            return [2 /*return*/, exports.UserModel.exists({ username: username })
+                    .then(function (doc) {
+                    if (doc) {
+                        return false;
+                    }
+                    ;
+                    return true;
+                })];
         });
-    };
-    var _a;
-    _a = User;
-    User.Schema = new mongoose.Schema({
-        firstName: { type: String, required: true },
-        lastName: { type: String, required: true },
-        username: { type: String, required: true },
-        email: { type: String, required: true },
-        pass: { type: String, required: true }
     });
-    User.Model = mongoose.model('User', _a.Schema);
-    return User;
-}());
-exports.User = User;
+}
+exports.usernameInUse = usernameInUse;

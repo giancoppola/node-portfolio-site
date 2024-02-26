@@ -41,14 +41,14 @@ var express = require('express');
 exports.router = express.Router();
 var mongoose = require('mongoose');
 // MongoDB model imports
-var models_1 = require("./models");
+var user_1 = require("./user");
 exports.router.use("/users", express.json());
 exports.router.route('/users')
     .get(function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var users;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, models_1.User.Model.find().select('-pass -_id -__v').exec()];
+            case 0: return [4 /*yield*/, user_1.UserModel.find().select('-pass -_id -__v').exec()];
             case 1:
                 users = _a.sent();
                 console.log(users.length);
@@ -69,7 +69,7 @@ exports.router.route('/users')
                 lastName = req.body.lastName;
                 email = req.body.email;
                 pass = req.body.pass;
-                user = new models_1.User.Model({
+                user = new user_1.UserModel({
                     firstName: firstName,
                     lastName: lastName,
                     email: email,
