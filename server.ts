@@ -40,6 +40,9 @@ app.get("/test", (req: Request, res: Response) => {
 const apiRoute = require('./server/api').router;
 app.use('/api', apiRoute);
 
+const mealsApiRoute = require('./server/meals-api').router;
+app.use('/api/meals', mealsApiRoute);
+
 // Error page matching
 app.use('*', (req: Request, res: Response) => {
     res.send('No match found - error page!');
