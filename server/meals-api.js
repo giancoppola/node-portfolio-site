@@ -43,40 +43,39 @@ var mongoose = require('mongoose');
 // MongoDB model imports
 var meals_1 = require("./meals");
 exports.router.use("/*", express.json());
-exports.router.route('/new')
-    .get(function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var meals;
+exports.router.get('/get/all', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var meals, e_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, meals_1.MealModel.find().exec()];
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, meals_1.MealModel.find().exec()];
             case 1:
                 meals = _a.sent();
                 console.log(meals.length);
                 res.json({
                     meals: meals
                 });
+                return [3 /*break*/, 3];
+            case 2:
+                e_1 = _a.sent();
+                res.send(e_1.message);
+                return [3 /*break*/, 3];
+            case 3:
                 next();
                 return [2 /*return*/];
         }
     });
-}); })
-    .post(function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var newMeal, meal;
+}); });
+exports.router.post('/post/new', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var meal, e_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 console.log(req.body);
-                newMeal = {
-                    name: req.body.name,
-                    prepTime: req.body.prepTime,
-                    cookTime: req.body.cookTime,
-                    veggie: req.body.veggie,
-                    ingredients: req.body.ingredients,
-                    recipe: req.body.recipe,
-                    link: req.body.link,
-                    tags: req.body.tags
-                };
-                console.log(newMeal);
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 3, , 4]);
                 meal = new meals_1.MealModel({
                     name: req.body.name,
                     prepTime: req.body.prepTime,
@@ -88,11 +87,17 @@ exports.router.route('/new')
                     tags: req.body.tags
                 });
                 return [4 /*yield*/, meal.save()];
-            case 1:
+            case 2:
                 _a.sent();
                 res.json({
                     meal: meal
                 });
+                return [3 /*break*/, 4];
+            case 3:
+                e_2 = _a.sent();
+                res.send(e_2.message);
+                return [3 /*break*/, 4];
+            case 4:
                 next();
                 return [2 /*return*/];
         }

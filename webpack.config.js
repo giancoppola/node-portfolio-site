@@ -4,7 +4,8 @@ const path = require('path')
 module.exports = {
     mode: 'development',
     entry: {
-        test: './src/test.js'
+        test: './src/test.js',
+        meals: './src/meals.js'
     },
     output: {
         filename: '[name].bundle.js',

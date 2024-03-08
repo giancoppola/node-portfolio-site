@@ -8,30 +8,39 @@ const mongoose: Mongoose = require('mongoose');
 import {MealModel, MealSchema, iMeal} from './meals';
 
 router.use("/*", express.json());
-router.route('/new')
-.get( async (req: Request, res: Response, next: NextFunction) => {
-    let meals: Array<Object> = await MealModel.find().exec();
-    console.log(meals.length);
-    res.json({
-        meals
-    })
+router.get('/get/all', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        let meals: Array<Object> = await MealModel.find().exec();
+        console.log(meals.length);
+        res.json({
+            meals
+        })
+    }
+    catch(e){
+        res.send((e as Error).message);
+    }
     next()
 })
-.post( async (req: Request, res: Response, next: NextFunction) => {
+router.post('/post/new', async (req: Request, res: Response, next: NextFunction) => {
     console.log(req.body)
-    let meal = new MealModel({
-        name: req.body.name,
-        prepTime: req.body.prepTime,
-        cookTime: req.body.cookTime,
-        veggie: req.body.veggie,
-        ingredients: req.body.ingredients,
-        recipe: req.body.recipe,
-        link: req.body.link,
-        tags: req.body.tags
-    })
-    await meal.save();
-    res.json({
-        meal
-    })
+    try {
+        let meal = new MealModel({
+            name: req.body.name,
+            prepTime: req.body.prepTime,
+            cookTime: req.body.cookTime,
+            veggie: req.body.veggie,
+            ingredients: req.body.ingredients,
+            recipe: req.body.recipe,
+            link: req.body.link,
+            tags: req.body.tags
+        })
+        await meal.save();
+        res.json({
+            meal
+        })
+    }
+    catch(e){
+        res.send((e as Error).message);
+    }
     next()
 })

@@ -24,7 +24,7 @@ app.get("/", (req: Request, res: Response) => {
 })
 
 // add GET requests for pages
-const pageArr: Array<String> = ['cotravel', 'tfl', 'quotes', 'hamburg']
+const pageArr: Array<String> = ['meal-picker']
 for (let page of pageArr){
     app.get(`/${page}`, (req: Request, res:Response, next: NextFunction) => {
         res.sendFile(__dirname + `/views/${page}.html`)
