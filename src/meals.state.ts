@@ -43,6 +43,7 @@ export const GetRandomQuote = () => {
         let result: Array<iQuote>;
         try{
             console.log('here now')
+            //@ts-ignore
             await fetch(QUOTE_URL)
             .then((res: Response) => {
                 return res.json();
@@ -56,6 +57,7 @@ export const GetRandomQuote = () => {
             console.log(e);
             return
         }
+        //@ts-ignore
         dispatch(nextQuote(result[GetRandomIndex(result.length)]))
     }
 }
@@ -76,13 +78,7 @@ const reducer = (state = defaultState, action: QuoteAction) => {
 }
 
 const thunkMiddleware = applyMiddleware(thunk)
-const store = configureStore({
-    reducer: {
-        posts: postsReducer,
-        comments: commentsReducer,
-        users: usersReducer,
-    },
-})
-
+const store = legacy_createStore(reducer, thunkMiddleware)
+store.dispatch(GetRandomQuote());
 export default store;
 
