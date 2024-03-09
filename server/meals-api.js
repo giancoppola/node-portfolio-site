@@ -44,12 +44,16 @@ var mongoose = require('mongoose');
 var meals_1 = require("./meals");
 exports.router.use("/*", express.json());
 exports.router.get('/get/all', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var meals, e_1;
+    var options, meals, e_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, meals_1.MealModel.find().exec()];
+                console.log(req.query);
+                options = {};
+                req.query.name ? options.name = { $regex: req.query.name } : options;
+                req.query.tags ? options.tags = { $all: req.query.tags } : options;
+                return [4 /*yield*/, meals_1.MealModel.find(options)];
             case 1:
                 meals = _a.sent();
                 console.log(meals.length);

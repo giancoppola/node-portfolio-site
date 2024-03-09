@@ -10,7 +10,11 @@ import {MealModel, MealSchema, iMeal} from './meals';
 router.use("/*", express.json());
 router.get('/get/all', async (req: Request, res: Response, next: NextFunction) => {
     try {
-        let meals: Array<Object> = await MealModel.find().exec();
+        console.log(req.query);
+        let options: Record<string, any> = {};
+        req.query.name ? options.name = {$regex : req.query.name} : options;
+        req.query.tags ? options.tags = {$all: req.query.tags} : options;
+        let meals: Array<Object> = await MealModel.find(options);
         console.log(meals.length);
         res.json({
             meals
