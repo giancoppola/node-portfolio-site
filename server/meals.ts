@@ -1,6 +1,7 @@
 import { Model } from "mongoose";
 const mongoose = require('mongoose');
 
+// Interfaces & Types
 export interface iMeal {
     name: string;
     prepTime: number;
@@ -11,6 +12,9 @@ export interface iMeal {
     link: string;
     tags: Array<string>;
 }
+// End of Interfaces & Types
+
+// MongoDB
 export const MealSchema = new mongoose.Schema({
     name: { type: String, required: true },
     prepTime: { type: Number, required: true },
@@ -22,10 +26,8 @@ export const MealSchema = new mongoose.Schema({
     tags: { type: [String], required: true },
 })
 export const MealModel: Model<Object> = mongoose.model('Meal', MealSchema);
-export async function usernameInUse(username: String){
-    return MealModel.exists({ username: username })
-    .then((doc) => {
-        if (doc) { return false };
-        return true;
-    })
-}
+// End MongoDB
+
+// Redux
+
+// End of Redux
