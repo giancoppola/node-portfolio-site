@@ -17,7 +17,7 @@ app.get("/", function (req, res) {
     res.sendFile(__dirname + '/views/index.html');
 });
 // add GET requests for pages
-var pageArr = ['meal-picker'];
+var pageArr = ['meal-planner'];
 var _loop_1 = function (page) {
     app.get("/".concat(page), function (req, res, next) {
         res.sendFile(__dirname + "/views/".concat(page, ".html"));

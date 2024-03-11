@@ -25,6 +25,21 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = __importStar(require("react"));
 var client_1 = require("react-dom/client");
+var Title = function () {
+    return (react_1.default.createElement("h1", { className: 'page-title' }, "Meal Planner"));
+};
+var Navigation = function (props) {
+    return (react_1.default.createElement("section", { className: "navigation", id: "navigation" },
+        react_1.default.createElement("button", { className: "navigation__btn", id: "search" },
+            react_1.default.createElement("img", { className: 'navigation__btn--icon', src: "../img/icons/material-search.svg", alt: "Magnifying glass icon - search" }),
+            "SEARCH"),
+        react_1.default.createElement("button", { className: "navigation__btn", id: "planner" },
+            react_1.default.createElement("img", { className: 'navigation__btn--icon', src: "../img/icons/material-menu.svg", alt: "Menu book icon - planner" }),
+            "PLANNER"),
+        react_1.default.createElement("button", { className: "navigation__btn active", id: "manage" },
+            react_1.default.createElement("img", { className: 'navigation__btn--icon', src: "../img/icons/material-settings.svg", alt: "Cog icon - settings" }),
+            "MANAGE")));
+};
 var AppWrapper = function (props) {
     var _a = (0, react_1.useState)({ meals: [] }), meals = _a[0], setMeals = _a[1];
     (0, react_1.useEffect)(function () {
@@ -45,7 +60,8 @@ var AppWrapper = function (props) {
             });
         });
     }, []);
-    return (react_1.default.createElement("div", null,
+    return (react_1.default.createElement(react_1.default.Fragment, null,
+        react_1.default.createElement(Title, null),
         react_1.default.createElement("input", { type: "text", name: "meal-name", id: "meal-name" }),
         react_1.default.createElement("button", { id: "update-meals" }, "Search Meals"),
         meals.meals.map(function (meal) {
@@ -60,7 +76,8 @@ var AppWrapper = function (props) {
                     return (react_1.default.createElement("li", null, ing));
                 })),
                 react_1.default.createElement("a", { href: meal.link }, meal.link)));
-        })));
+        }),
+        react_1.default.createElement(Navigation, null)));
 };
 var container = document.getElementById('app');
 var root = (0, client_1.createRoot)(container);
