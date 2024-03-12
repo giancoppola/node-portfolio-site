@@ -13,7 +13,7 @@ body {
 .dark-mode h1, .dark-mode h2, .dark-mode h3, .dark-mode h4 {
   color: #D0BCFE;
 }
-.dark-mode p, .dark-mode a, .dark-mode li, .dark-mode button {
+.dark-mode p, .dark-mode a, .dark-mode li, .dark-mode button, .dark-mode label {
   color: #fff;
 }
 

@@ -82,8 +82,10 @@ exports.router.post('/post/new', function (req, res, next) { return __awaiter(vo
                 _a.trys.push([1, 3, , 4]);
                 meal = new meals_1.MealModel({
                     name: req.body.name,
+                    emoji: req.body.emoji,
                     prepTime: req.body.prepTime,
                     cookTime: req.body.cookTime,
+                    feeds: req.body.feeds,
                     veggie: req.body.veggie,
                     ingredients: req.body.ingredients,
                     recipe: req.body.recipe,

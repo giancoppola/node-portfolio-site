@@ -28,6 +28,58 @@ var client_1 = require("react-dom/client");
 var Title = function () {
     return (react_1.default.createElement("h1", { className: 'page-title' }, "Meal Planner"));
 };
+var PostForm = function () {
+    (0, react_1.useEffect)(function () {
+        var form = document.querySelector('#post-form');
+        var formControls = form.elements;
+        var submit = document.querySelector('#post-submit');
+        console.log(form.elements);
+        submit.addEventListener('click', function (e) {
+            e.preventDefault();
+            var data = formControls;
+            fetch('/api/meals/post/new', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    name: data.name.value,
+                    emoji: data.emoji.value,
+                    prepTime: data.prepTime.value,
+                    cookTime: data.cookTime.value,
+                    feeds: data.feeds.value,
+                    veggie: data.veggie.checked,
+                    ingredients: data.ingredients.value,
+                    recipe: data.recipe.value,
+                    link: data.link.value,
+                    tags: data.tags.value
+                })
+            });
+        });
+    }, []);
+    return (react_1.default.createElement("form", { id: "post-form" },
+        react_1.default.createElement("label", { htmlFor: "name" }, "Name"),
+        react_1.default.createElement("input", { type: "text", name: "name", id: "post-name" }),
+        react_1.default.createElement("label", { htmlFor: "emoji" }, "Emoji"),
+        react_1.default.createElement("input", { type: "text", name: "emoji", id: "post-emoji" }),
+        react_1.default.createElement("label", { htmlFor: "prepTime" }, "Prep Time"),
+        react_1.default.createElement("input", { type: "number", name: "prepTime", id: "post-prepTime" }),
+        react_1.default.createElement("label", { htmlFor: "cookTime" }, "Cook Time"),
+        react_1.default.createElement("input", { type: "number", name: "cookTime", id: "post-cookTime" }),
+        react_1.default.createElement("label", { htmlFor: "feeds" }, "Feeds"),
+        react_1.default.createElement("input", { type: "number", name: "feeds", id: "post-feeds" }),
+        react_1.default.createElement("label", { htmlFor: "veggie" }, "Veggie"),
+        react_1.default.createElement("input", { type: "checkbox", role: 'switch', name: "veggie", id: "post-veggie" }),
+        react_1.default.createElement("label", { htmlFor: "ingredients" }, "Ingredients"),
+        react_1.default.createElement("input", { type: "text", name: "ingredients", id: "post-ingredients" }),
+        react_1.default.createElement("label", { htmlFor: "recipe" }, "Recipe"),
+        react_1.default.createElement("input", { type: "text", name: "recipe", id: "post-recipe" }),
+        react_1.default.createElement("label", { htmlFor: "link" }, "Link"),
+        react_1.default.createElement("input", { type: "text", name: "link", id: "post-link" }),
+        react_1.default.createElement("label", { htmlFor: "tags" }, "Tags"),
+        react_1.default.createElement("input", { type: "text", name: "tags", id: "post-tags" }),
+        react_1.default.createElement("button", { id: "post-submit" }, "Submit")));
+};
 var Navigation = function (props) {
     return (react_1.default.createElement("section", { className: "navigation", id: "navigation" },
         react_1.default.createElement("button", { className: "navigation__btn", id: "search" },
@@ -77,6 +129,7 @@ var AppWrapper = function (props) {
                 })),
                 react_1.default.createElement("a", { href: meal.link }, meal.link)));
         }),
+        react_1.default.createElement(PostForm, null),
         react_1.default.createElement(Navigation, null)));
 };
 var container = document.getElementById('app');

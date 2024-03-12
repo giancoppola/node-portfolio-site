@@ -10,6 +10,62 @@ const Title = () => {
     )
 }
 
+const PostForm = () => {
+    useEffect(() => {
+        let form: HTMLFormElement = document.querySelector<HTMLFormElement>('#post-form')!;
+        let formControls: HTMLFormControlsCollection = form.elements;
+        let submit: HTMLButtonElement = document.querySelector<HTMLButtonElement>('#post-submit')!;
+        console.log(form.elements);
+        submit.addEventListener('click', (e) => {
+            e.preventDefault();
+            let data = formControls as any;
+            fetch('/api/meals/post/new', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    name: data.name.value,
+                    emoji: data.emoji.value,
+                    prepTime: data.prepTime.value,
+                    cookTime: data.cookTime.value,
+                    feeds: data.feeds.value,
+                    veggie: data.veggie.checked,
+                    ingredients: data.ingredients.value,
+                    recipe: data.recipe.value,
+                    link: data.link.value,
+                    tags: data.tags.value
+                })
+            })
+        })
+    }, [])
+    return (
+        <form id="post-form">
+            <label htmlFor="name">Name</label>
+            <input type="text" name="name" id="post-name"/>
+            <label htmlFor="emoji">Emoji</label>
+            <input type="text" name="emoji" id="post-emoji"/>
+            <label htmlFor="prepTime">Prep Time</label>
+            <input type="number" name="prepTime" id="post-prepTime"/>
+            <label htmlFor="cookTime">Cook Time</label>
+            <input type="number" name="cookTime" id="post-cookTime"/>
+            <label htmlFor="feeds">Feeds</label>
+            <input type="number" name="feeds" id="post-feeds"/>
+            <label htmlFor="veggie">Veggie</label>
+            <input type="checkbox" role='switch' name="veggie" id="post-veggie"/>
+            <label htmlFor="ingredients">Ingredients</label>
+            <input type="text" name="ingredients" id="post-ingredients"/>
+            <label htmlFor="recipe">Recipe</label>
+            <input type="text" name="recipe" id="post-recipe"/>
+            <label htmlFor="link">Link</label>
+            <input type="text" name="link" id="post-link"/>
+            <label htmlFor="tags">Tags</label>
+            <input type="text" name="tags" id="post-tags"/>
+            <button id="post-submit">Submit</button>
+        </form>
+    )
+}
+
 const Navigation = (props: any) => {
     return (
         <section className="navigation" id="navigation">
@@ -73,6 +129,7 @@ const AppWrapper = (props: any) => {
                     </div>
                 )
             })}
+            <PostForm/>
             <Navigation/>
         </>
     )

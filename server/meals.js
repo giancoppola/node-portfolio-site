@@ -6,8 +6,10 @@ var mongoose = require('mongoose');
 // MongoDB
 exports.MealSchema = new mongoose.Schema({
     name: { type: String, required: true },
+    emoji: { type: String, required: true },
     prepTime: { type: Number, required: true },
     cookTime: { type: Number, required: true },
+    feeds: { type: Number, required: true },
     veggie: { type: Boolean, required: true },
     ingredients: { type: [String], required: true },
     recipe: { type: [String], required: true },

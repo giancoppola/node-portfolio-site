@@ -30,8 +30,10 @@ router.post('/post/new', async (req: Request, res: Response, next: NextFunction)
     try {
         let meal = new MealModel({
             name: req.body.name,
+            emoji: req.body.emoji,
             prepTime: req.body.prepTime,
             cookTime: req.body.cookTime,
+            feeds: req.body.feeds,
             veggie: req.body.veggie,
             ingredients: req.body.ingredients,
             recipe: req.body.recipe,
