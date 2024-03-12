@@ -71,6 +71,18 @@ exports.router.get('/get/all', function (req, res, next) { return __awaiter(void
         }
     });
 }); });
+exports.router.get('/get/pass', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        if (req.query.pass && req.query.pass === process.env.MONGO_PW) {
+            res.send('true');
+        }
+        else {
+            res.send('false');
+        }
+        next();
+        return [2 /*return*/];
+    });
+}); });
 exports.router.post('/post/new', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var meal, e_2;
     return __generator(this, function (_a) {
@@ -101,7 +113,9 @@ exports.router.post('/post/new', function (req, res, next) { return __awaiter(vo
                 return [3 /*break*/, 4];
             case 3:
                 e_2 = _a.sent();
-                res.send(e_2.message);
+                res.json({
+                    error: e_2.message
+                });
                 return [3 /*break*/, 4];
             case 4:
                 next();

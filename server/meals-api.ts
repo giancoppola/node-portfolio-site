@@ -25,6 +25,15 @@ router.get('/get/all', async (req: Request, res: Response, next: NextFunction) =
     }
     next()
 })
+router.get('/get/pass', async (req: Request, res: Response, next: NextFunction) => {
+    if(req.query.pass && req.query.pass === process.env.MONGO_PW){
+        res.send('true');
+    }
+    else {
+        res.send('false');
+    }
+    next()
+})
 router.post('/post/new', async (req: Request, res: Response, next: NextFunction) => {
     console.log(req.body)
     try {
@@ -46,7 +55,9 @@ router.post('/post/new', async (req: Request, res: Response, next: NextFunction)
         })
     }
     catch(e){
-        res.send((e as Error).message);
+        res.json({
+            error: (e as Error).message
+        });
     }
     next()
 })
