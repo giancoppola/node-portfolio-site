@@ -95,4 +95,10 @@ body {
 }
 .navigation__btn--icon {
   z-index: 2;
+}
+
+.manage-form {
+  display: flex;
+  flex-wrap: wrap;
+  width: 60%;
 }/*# sourceMappingURL=meals.css.map */

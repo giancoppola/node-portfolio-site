@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { useQuery } from 'react-query';
 import ReactDOM from 'react-dom';
-import {BrowserRouter as Router, Routes, Route, Link} from 'react-router-dom';
+import {BrowserRouter as Router, Routes, Route, Link, Navigate} from 'react-router-dom';
 import { createRoot } from 'react-dom/client'
 import { iMeal } from '../server/meals';
 
@@ -139,7 +139,7 @@ const PostForm = () => {
         }
     }
     return (
-        <form id="post-form">
+        <form className='manage-form' id="post-form">
             <label htmlFor="name">Name</label>
             <input type="text" name="name" id="post-name" required/>
             <label htmlFor="emoji">Emoji</label>
@@ -179,7 +179,7 @@ const Navigation = (props: any) => {
                 <img className='navigation__btn--icon' src="../img/icons/material-menu.svg" alt="Menu book icon - planner" />
                 PLANNER
             </Link>
-            <Link className='navigation__btn' id="manage" to='meal-planner/manage'>
+            <Link className='navigation__btn' id="manage" to='meal-planner/manage/add'>
                 <img className='navigation__btn--icon' src="../img/icons/material-settings.svg" alt="Cog icon - settings" />
                 MANAGE
             </Link>
@@ -193,7 +193,8 @@ const AppWrapper = (props: any) => {
             <Title/>
             <Routes>
                 <Route path='/meal-planner' element={<Planner/>}/>
-                <Route path='/meal-planner/manage' element={<Manage/>}/>
+                <Route path='/meal-planner/manage' element={<Navigate to="/meal-planner/manage/add"/>}/>
+                <Route path='/meal-planner/manage/add' element={<Manage/>}/>
                 <Route path='/meal-planner/search' element={<Planner/>}/>
             </Routes>
             <Navigation/>

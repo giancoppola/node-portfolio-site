@@ -189,7 +189,7 @@ var PostForm = function () {
             }
         });
     }); };
-    return (react_1.default.createElement("form", { id: "post-form" },
+    return (react_1.default.createElement("form", { className: 'manage-form', id: "post-form" },
         react_1.default.createElement("label", { htmlFor: "name" }, "Name"),
         react_1.default.createElement("input", { type: "text", name: "name", id: "post-name", required: true }),
         react_1.default.createElement("label", { htmlFor: "emoji" }, "Emoji"),
@@ -223,7 +223,7 @@ var Navigation = function (props) {
         react_1.default.createElement(react_router_dom_1.Link, { className: 'navigation__btn', id: "planner", to: '/meal-planner' },
             react_1.default.createElement("img", { className: 'navigation__btn--icon', src: "../img/icons/material-menu.svg", alt: "Menu book icon - planner" }),
             "PLANNER"),
-        react_1.default.createElement(react_router_dom_1.Link, { className: 'navigation__btn', id: "manage", to: 'meal-planner/manage' },
+        react_1.default.createElement(react_router_dom_1.Link, { className: 'navigation__btn', id: "manage", to: 'meal-planner/manage/add' },
             react_1.default.createElement("img", { className: 'navigation__btn--icon', src: "../img/icons/material-settings.svg", alt: "Cog icon - settings" }),
             "MANAGE")));
 };
@@ -232,7 +232,8 @@ var AppWrapper = function (props) {
         react_1.default.createElement(Title, null),
         react_1.default.createElement(react_router_dom_1.Routes, null,
             react_1.default.createElement(react_router_dom_1.Route, { path: '/meal-planner', element: react_1.default.createElement(Planner, null) }),
-            react_1.default.createElement(react_router_dom_1.Route, { path: '/meal-planner/manage', element: react_1.default.createElement(Manage, null) }),
+            react_1.default.createElement(react_router_dom_1.Route, { path: '/meal-planner/manage', element: react_1.default.createElement(react_router_dom_1.Navigate, { to: "/meal-planner/manage/add" }) }),
+            react_1.default.createElement(react_router_dom_1.Route, { path: '/meal-planner/manage/add', element: react_1.default.createElement(Manage, null) }),
             react_1.default.createElement(react_router_dom_1.Route, { path: '/meal-planner/search', element: react_1.default.createElement(Planner, null) })),
         react_1.default.createElement(Navigation, null)));
 };
