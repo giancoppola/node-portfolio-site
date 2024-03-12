@@ -60,9 +60,50 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = __importStar(require("react"));
+var react_router_dom_1 = require("react-router-dom");
 var client_1 = require("react-dom/client");
 var Title = function () {
     return (react_1.default.createElement("h1", { className: 'page-title' }, "Meal Planner"));
+};
+var Planner = function () {
+    var _a = (0, react_1.useState)({ meals: [] }), meals = _a[0], setMeals = _a[1];
+    (0, react_1.useEffect)(function () {
+        fetch('/api/meals/get/all')
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+            console.log(data);
+            setMeals(data);
+        });
+        var btn = document.querySelector('#update-meals');
+        btn === null || btn === void 0 ? void 0 : btn.addEventListener('click', function (e) {
+            var search = document.querySelector('#meal-name').value;
+            fetch("/api/meals/get/all?name=".concat(search))
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                console.log(data);
+                setMeals(data);
+            });
+        });
+    }, []);
+    return (react_1.default.createElement("div", null,
+        react_1.default.createElement("input", { type: "text", name: "meal-name", id: "meal-name" }),
+        react_1.default.createElement("button", { id: "update-meals" }, "Search Meals"),
+        meals.meals.map(function (meal) {
+            return (
+            //@ts-ignore
+            react_1.default.createElement("div", { key: meal._id },
+                react_1.default.createElement("p", null, meal.name),
+                react_1.default.createElement("p", null, meal.cookTime),
+                react_1.default.createElement("p", null, meal.prepTime),
+                react_1.default.createElement("p", null, meal.veggie),
+                react_1.default.createElement("ul", null, meal.ingredients.map(function (ing) {
+                    return (react_1.default.createElement("li", null, ing));
+                })),
+                react_1.default.createElement("a", { href: meal.link }, meal.link)));
+        })));
+};
+var Manage = function () {
+    return (react_1.default.createElement(PostForm, null));
 };
 var PostForm = function () {
     var _a = (0, react_1.useState)(''), message = _a[0], setMessage = _a[1];
@@ -176,54 +217,23 @@ var PostForm = function () {
 };
 var Navigation = function (props) {
     return (react_1.default.createElement("section", { className: "navigation", id: "navigation" },
-        react_1.default.createElement("button", { className: "navigation__btn", id: "search" },
+        react_1.default.createElement(react_router_dom_1.Link, { className: 'navigation__btn', id: "search", to: 'meal-planner/search' },
             react_1.default.createElement("img", { className: 'navigation__btn--icon', src: "../img/icons/material-search.svg", alt: "Magnifying glass icon - search" }),
             "SEARCH"),
-        react_1.default.createElement("button", { className: "navigation__btn", id: "planner" },
+        react_1.default.createElement(react_router_dom_1.Link, { className: 'navigation__btn', id: "planner", to: '/meal-planner' },
             react_1.default.createElement("img", { className: 'navigation__btn--icon', src: "../img/icons/material-menu.svg", alt: "Menu book icon - planner" }),
             "PLANNER"),
-        react_1.default.createElement("button", { className: "navigation__btn active", id: "manage" },
+        react_1.default.createElement(react_router_dom_1.Link, { className: 'navigation__btn', id: "manage", to: 'meal-planner/manage' },
             react_1.default.createElement("img", { className: 'navigation__btn--icon', src: "../img/icons/material-settings.svg", alt: "Cog icon - settings" }),
             "MANAGE")));
 };
 var AppWrapper = function (props) {
-    var _a = (0, react_1.useState)({ meals: [] }), meals = _a[0], setMeals = _a[1];
-    (0, react_1.useEffect)(function () {
-        fetch('/api/meals/get/all')
-            .then(function (res) { return res.json(); })
-            .then(function (data) {
-            console.log(data);
-            setMeals(data);
-        });
-        var btn = document.querySelector('#update-meals');
-        btn === null || btn === void 0 ? void 0 : btn.addEventListener('click', function (e) {
-            var search = document.querySelector('#meal-name').value;
-            fetch("/api/meals/get/all?name=".concat(search))
-                .then(function (res) { return res.json(); })
-                .then(function (data) {
-                console.log(data);
-                setMeals(data);
-            });
-        });
-    }, []);
-    return (react_1.default.createElement(react_1.default.Fragment, null,
+    return (react_1.default.createElement(react_router_dom_1.BrowserRouter, null,
         react_1.default.createElement(Title, null),
-        react_1.default.createElement("input", { type: "text", name: "meal-name", id: "meal-name" }),
-        react_1.default.createElement("button", { id: "update-meals" }, "Search Meals"),
-        meals.meals.map(function (meal) {
-            return (
-            //@ts-ignore
-            react_1.default.createElement("div", { key: meal._id },
-                react_1.default.createElement("p", null, meal.name),
-                react_1.default.createElement("p", null, meal.cookTime),
-                react_1.default.createElement("p", null, meal.prepTime),
-                react_1.default.createElement("p", null, meal.veggie),
-                react_1.default.createElement("ul", null, meal.ingredients.map(function (ing) {
-                    return (react_1.default.createElement("li", null, ing));
-                })),
-                react_1.default.createElement("a", { href: meal.link }, meal.link)));
-        }),
-        react_1.default.createElement(PostForm, null),
+        react_1.default.createElement(react_router_dom_1.Routes, null,
+            react_1.default.createElement(react_router_dom_1.Route, { path: '/meal-planner', element: react_1.default.createElement(Planner, null) }),
+            react_1.default.createElement(react_router_dom_1.Route, { path: '/meal-planner/manage', element: react_1.default.createElement(Manage, null) }),
+            react_1.default.createElement(react_router_dom_1.Route, { path: '/meal-planner/search', element: react_1.default.createElement(Planner, null) })),
         react_1.default.createElement(Navigation, null)));
 };
 var container = document.getElementById('app');
