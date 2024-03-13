@@ -59,52 +59,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Manage = exports.PostForm = exports.ManageNav = void 0;
 var react_1 = __importStar(require("react"));
 var react_router_dom_1 = require("react-router-dom");
-var client_1 = require("react-dom/client");
-var Title = function () {
-    return (react_1.default.createElement("h1", { className: 'page-title' }, "Meal Planner"));
+var ManageNav = function () {
+    return (react_1.default.createElement("section", { className: "manage-nav", id: "manage-nav" },
+        react_1.default.createElement(react_router_dom_1.Link, { className: "manage-nav__link", to: '/meal-planner/manage/add' }, "Add"),
+        react_1.default.createElement(react_router_dom_1.Link, { className: "manage-nav__link", to: '/meal-planner/manage/edit' }, "Edit"),
+        react_1.default.createElement(react_router_dom_1.Link, { className: "manage-nav__link", to: '/meal-planner/manage/delete' }, "Delete")));
 };
-var Planner = function () {
-    var _a = (0, react_1.useState)({ meals: [] }), meals = _a[0], setMeals = _a[1];
-    (0, react_1.useEffect)(function () {
-        fetch('/api/meals/get/all')
-            .then(function (res) { return res.json(); })
-            .then(function (data) {
-            console.log(data);
-            setMeals(data);
-        });
-        var btn = document.querySelector('#update-meals');
-        btn === null || btn === void 0 ? void 0 : btn.addEventListener('click', function (e) {
-            var search = document.querySelector('#meal-name').value;
-            fetch("/api/meals/get/all?name=".concat(search))
-                .then(function (res) { return res.json(); })
-                .then(function (data) {
-                console.log(data);
-                setMeals(data);
-            });
-        });
-    }, []);
-    return (react_1.default.createElement("div", null,
-        react_1.default.createElement("input", { type: "text", name: "meal-name", id: "meal-name" }),
-        react_1.default.createElement("button", { id: "update-meals" }, "Search Meals"),
-        meals.meals.map(function (meal) {
-            return (
-            //@ts-ignore
-            react_1.default.createElement("div", { key: meal._id },
-                react_1.default.createElement("p", null, meal.name),
-                react_1.default.createElement("p", null, meal.cookTime),
-                react_1.default.createElement("p", null, meal.prepTime),
-                react_1.default.createElement("p", null, meal.veggie),
-                react_1.default.createElement("ul", null, meal.ingredients.map(function (ing) {
-                    return (react_1.default.createElement("li", null, ing));
-                })),
-                react_1.default.createElement("a", { href: meal.link }, meal.link)));
-        })));
-};
-var Manage = function () {
-    return (react_1.default.createElement(PostForm, null));
-};
+exports.ManageNav = ManageNav;
 var PostForm = function () {
     var _a = (0, react_1.useState)(''), message = _a[0], setMessage = _a[1];
     (0, react_1.useEffect)(function () {
@@ -140,12 +104,14 @@ var PostForm = function () {
                     if (pass) {
                         valid = true;
                         !data.name.value ? (formMessage('Meal must have a name!', 'ERROR'), valid = false) : data;
+                        (data.name.value.length < 3) ? (formMessage('Name must be longer than 2 characters!', 'ERROR'), valid = false) : data;
                         !data.emoji.value ? (formMessage('Meal must have an icon!', 'ERROR'), valid = false) : data;
+                        (data.emoji.value.length > 1) ? (formMessage('Please select only one emoji!', 'ERROR'), valid = false) : data;
                         !data.prepTime.value ? (formMessage('Please add the prep time!', 'ERROR'), valid = false) : data;
                         !data.cookTime.value ? (formMessage('Please add the cook time!', 'ERROR'), valid = false) : data;
                         !data.feeds.value ? (formMessage('Please add how many people it feeds!', 'ERROR'), valid = false) : data;
-                        !data.ingredients.value ? (formMessage('Please add the ingredients!', 'ERROR'), valid = false) : data;
-                        !data.recipe.value ? (formMessage('Please add the recipe!', 'ERROR'), valid = false) : data;
+                        !data.ingredients.value ? (formMessage('Please add some ingredients!', 'ERROR'), valid = false) : data;
+                        !data.recipe.value ? (formMessage('Please add a recipe!', 'ERROR'), valid = false) : data;
                         !data.tags.value ? (formMessage('Please add at least one tag!', 'ERROR'), valid = false) : data;
                         if (valid) {
                             try {
@@ -189,54 +155,49 @@ var PostForm = function () {
             }
         });
     }); };
-    return (react_1.default.createElement("form", { className: 'manage-form', id: "post-form" },
-        react_1.default.createElement("label", { htmlFor: "name" }, "Name"),
-        react_1.default.createElement("input", { type: "text", name: "name", id: "post-name", required: true }),
-        react_1.default.createElement("label", { htmlFor: "emoji" }, "Emoji"),
-        react_1.default.createElement("input", { type: "text", name: "emoji", id: "post-emoji", required: true }),
-        react_1.default.createElement("label", { htmlFor: "prepTime" }, "Prep Time"),
-        react_1.default.createElement("input", { type: "number", name: "prepTime", id: "post-prepTime", required: true }),
-        react_1.default.createElement("label", { htmlFor: "cookTime" }, "Cook Time"),
-        react_1.default.createElement("input", { type: "number", name: "cookTime", id: "post-cookTime", required: true }),
-        react_1.default.createElement("label", { htmlFor: "feeds" }, "Feeds"),
-        react_1.default.createElement("input", { type: "number", name: "feeds", id: "post-feeds", required: true }),
-        react_1.default.createElement("label", { htmlFor: "veggie" }, "Veggie"),
-        react_1.default.createElement("input", { type: "checkbox", role: 'switch', name: "veggie", id: "post-veggie" }),
-        react_1.default.createElement("label", { htmlFor: "ingredients" }, "Ingredients"),
-        react_1.default.createElement("input", { type: "text", name: "ingredients", id: "post-ingredients", required: true }),
-        react_1.default.createElement("label", { htmlFor: "recipe" }, "Recipe"),
-        react_1.default.createElement("input", { type: "text", name: "recipe", id: "post-recipe", required: true }),
-        react_1.default.createElement("label", { htmlFor: "link" }, "Link"),
-        react_1.default.createElement("input", { type: "text", name: "link", id: "post-link" }),
-        react_1.default.createElement("label", { htmlFor: "tags" }, "Tags"),
-        react_1.default.createElement("input", { type: "text", name: "tags", id: "post-tags", required: true }),
-        react_1.default.createElement("label", { htmlFor: "pass" }, "Password"),
-        react_1.default.createElement("input", { type: "password", name: "pass", id: "post-pass", required: true }),
-        react_1.default.createElement("button", { id: "post-submit" }, "Submit"),
+    return (react_1.default.createElement(react_1.default.Fragment, null,
+        react_1.default.createElement("form", { className: 'manage-form', id: "post-form" },
+            react_1.default.createElement("div", { className: 'manage-form__field' },
+                react_1.default.createElement("label", { htmlFor: "name" }, "Name"),
+                react_1.default.createElement("input", { type: "text", name: "name", id: "post-name", required: true })),
+            react_1.default.createElement("div", { className: "manage-form__field" },
+                react_1.default.createElement("label", { htmlFor: "emoji" }, "Emoji"),
+                react_1.default.createElement("input", { type: "text", name: "emoji", id: "post-emoji", required: true })),
+            react_1.default.createElement("div", { className: "manage-form__field" },
+                react_1.default.createElement("label", { htmlFor: "prepTime" }, "Prep Time"),
+                react_1.default.createElement("input", { type: "number", name: "prepTime", id: "post-prepTime", required: true })),
+            react_1.default.createElement("div", { className: "manage-form__field" },
+                react_1.default.createElement("label", { htmlFor: "cookTime" }, "Cook Time"),
+                react_1.default.createElement("input", { type: "number", name: "cookTime", id: "post-cookTime", required: true })),
+            react_1.default.createElement("div", { className: "manage-form__field" },
+                react_1.default.createElement("label", { htmlFor: "feeds" }, "Feeds"),
+                react_1.default.createElement("input", { type: "number", name: "feeds", id: "post-feeds", required: true })),
+            react_1.default.createElement("div", { className: "manage-form__field checkbox" },
+                react_1.default.createElement("label", { htmlFor: "veggie" }, "Veggie"),
+                react_1.default.createElement("input", { type: "checkbox", role: 'switch', name: "veggie", id: "post-veggie" })),
+            react_1.default.createElement("div", { className: "manage-form__field" },
+                react_1.default.createElement("label", { htmlFor: "ingredients" }, "Ingredients"),
+                react_1.default.createElement("input", { type: "text", name: "ingredients", id: "post-ingredients", required: true })),
+            react_1.default.createElement("div", { className: "manage-form__field" },
+                react_1.default.createElement("label", { htmlFor: "recipe" }, "Recipe"),
+                react_1.default.createElement("input", { type: "text", name: "recipe", id: "post-recipe", required: true })),
+            react_1.default.createElement("div", { className: "manage-form__field" },
+                react_1.default.createElement("label", { htmlFor: "link" }, "Link"),
+                react_1.default.createElement("input", { type: "text", name: "link", id: "post-link" })),
+            react_1.default.createElement("div", { className: "manage-form__field" },
+                react_1.default.createElement("label", { htmlFor: "tags" }, "Tags"),
+                react_1.default.createElement("input", { type: "text", name: "tags", id: "post-tags", required: true })),
+            react_1.default.createElement("div", { className: "manage-form__field" },
+                react_1.default.createElement("label", { htmlFor: "pass" }, "Password"),
+                react_1.default.createElement("input", { type: "password", name: "pass", id: "post-pass", required: true })),
+            react_1.default.createElement("div", { className: "manage-form__field button" },
+                react_1.default.createElement("button", { className: 'btn', id: "post-submit" }, "Submit"))),
         react_1.default.createElement("p", { className: 'message', id: "post-message" }, message)));
 };
-var Navigation = function (props) {
-    return (react_1.default.createElement("section", { className: "navigation", id: "navigation" },
-        react_1.default.createElement(react_router_dom_1.Link, { className: 'navigation__btn', id: "search", to: 'meal-planner/search' },
-            react_1.default.createElement("img", { className: 'navigation__btn--icon', src: "../img/icons/material-search.svg", alt: "Magnifying glass icon - search" }),
-            "SEARCH"),
-        react_1.default.createElement(react_router_dom_1.Link, { className: 'navigation__btn', id: "planner", to: '/meal-planner' },
-            react_1.default.createElement("img", { className: 'navigation__btn--icon', src: "../img/icons/material-menu.svg", alt: "Menu book icon - planner" }),
-            "PLANNER"),
-        react_1.default.createElement(react_router_dom_1.Link, { className: 'navigation__btn', id: "manage", to: 'meal-planner/manage/add' },
-            react_1.default.createElement("img", { className: 'navigation__btn--icon', src: "../img/icons/material-settings.svg", alt: "Cog icon - settings" }),
-            "MANAGE")));
+exports.PostForm = PostForm;
+var Manage = function () {
+    return (react_1.default.createElement(react_1.default.Fragment, null,
+        react_1.default.createElement(exports.ManageNav, null),
+        react_1.default.createElement(react_router_dom_1.Outlet, null)));
 };
-var AppWrapper = function (props) {
-    return (react_1.default.createElement(react_router_dom_1.BrowserRouter, null,
-        react_1.default.createElement(Title, null),
-        react_1.default.createElement(react_router_dom_1.Routes, null,
-            react_1.default.createElement(react_router_dom_1.Route, { path: '/meal-planner', element: react_1.default.createElement(Planner, null) }),
-            react_1.default.createElement(react_router_dom_1.Route, { path: '/meal-planner/manage', element: react_1.default.createElement(react_router_dom_1.Navigate, { to: "/meal-planner/manage/add" }) }),
-            react_1.default.createElement(react_router_dom_1.Route, { path: '/meal-planner/manage/add', element: react_1.default.createElement(Manage, null) }),
-            react_1.default.createElement(react_router_dom_1.Route, { path: '/meal-planner/search', element: react_1.default.createElement(Planner, null) })),
-        react_1.default.createElement(Navigation, null)));
-};
-var container = document.getElementById('app');
-var root = (0, client_1.createRoot)(container);
-root.render(react_1.default.createElement(AppWrapper, null));
+exports.Manage = Manage;

@@ -30,6 +30,10 @@ for (let page of pageArr){
         res.sendFile(__dirname + `/views/${page}.html`)
     })
 }
+app.get('/meal-planner/*',(req: Request, res:Response, next: NextFunction) => {
+    res.redirect('/meal-planner');
+    next();
+})
 
 app.use('/dist', express.static(__dirname + '/dist'));
 app.get("/test", (req: Request, res: Response) => {

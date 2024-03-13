@@ -27,6 +27,10 @@ for (var _i = 0, pageArr_1 = pageArr; _i < pageArr_1.length; _i++) {
     var page = pageArr_1[_i];
     _loop_1(page);
 }
+app.get('/meal-planner/*', function (req, res, next) {
+    res.redirect('/meal-planner');
+    next();
+});
 app.use('/dist', express.static(__dirname + '/dist'));
 app.get("/test", function (req, res) {
     res.sendFile(__dirname + '/views/test.html');
