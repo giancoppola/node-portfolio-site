@@ -191,7 +191,7 @@ var PostForm = function () {
                 react_1.default.createElement("label", { htmlFor: "pass" }, "Password"),
                 react_1.default.createElement("input", { type: "password", name: "pass", id: "post-pass", required: true })),
             react_1.default.createElement("div", { className: "manage-form__field button" },
-                react_1.default.createElement("button", { className: 'btn', id: "post-submit" }, "Submit"))),
+                react_1.default.createElement("button", { className: 'btn btn__icon-before', id: "post-submit" }, "Submit"))),
         react_1.default.createElement("p", { className: 'message', id: "post-message" }, message)));
 };
 exports.PostForm = PostForm;

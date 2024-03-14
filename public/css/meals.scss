@@ -9,6 +9,7 @@ $dm-on-primary: #381E72;
 $dm-secondary-container: #4A4458;
 
 @mixin btn{
+    cursor: pointer;
     background-color: $dm-primary;
     color: $dm-on-primary;
     border-radius: 100px;
@@ -135,11 +136,22 @@ body{
             margin-top: auto;
         }
     }
+    .btn{
+        &::before{
+            content: url(../img/icons/material-add-dm-on-primary.svg);
+            height: 20px;
+        }
+    }
 }
 .message{
     min-height: 50px;
 }
 
 .btn{
-    @include btn
+    @include btn;
+    &__icon-before {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+    }
 }

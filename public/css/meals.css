@@ -118,12 +118,17 @@ body {
 .manage-form__field.button {
   margin-top: auto;
 }
+.manage-form .btn::before {
+  content: url(../img/icons/material-add-dm-on-primary.svg);
+  height: 20px;
+}
 
 .message {
   min-height: 50px;
 }
 
 .btn {
+  cursor: pointer;
   background-color: #D0BCFF;
   color: #381E72;
   border-radius: 100px;
@@ -134,4 +139,9 @@ body {
   padding: 10px 24px;
   border: none;
   font-weight: 600;
+}
+.btn__icon-before {
+  display: flex;
+  gap: 4px;
+  align-items: center;
 }/*# sourceMappingURL=meals.css.map */

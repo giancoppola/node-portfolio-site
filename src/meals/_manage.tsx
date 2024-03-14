@@ -136,7 +136,7 @@ export const PostForm = () => {
                     <input type="password" name="pass" id="post-pass" required/>
                 </div>
                 <div className="manage-form__field button">
-                    <button className='btn' id="post-submit">Submit</button>
+                    <button className='btn btn__icon-before' id="post-submit">Submit</button>
                 </div>
             </form>
             <p className='message' id="post-message">{message}</p>
