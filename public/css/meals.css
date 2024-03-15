@@ -44,6 +44,11 @@ body {
   align-items: center;
 }
 
+.narrow-container {
+  width: 80dvw;
+  margin: auto;
+}
+
 .page-title {
   font-size: 4rem;
   font-weight: bold;
@@ -144,4 +149,46 @@ body {
   display: flex;
   gap: 4px;
   align-items: center;
+}
+
+.search {
+  width: 100%;
+  position: relative;
+}
+.search__input {
+  width: 100%;
+  height: 4.5rem;
+  background: #2B2930;
+  border: none;
+  border-radius: 10px 10px 0 0;
+  -webkit-border-radius: 10px 10px 0 0;
+  -moz-border-radius: 10px 10px 0 0;
+  -ms-border-radius: 10px 10px 0 0;
+  -o-border-radius: 10px 10px 0 0;
+  color: #fff;
+  text-indent: 4rem;
+  font-size: 1.2rem;
+  border-bottom: 1px solid #938F99;
+}
+.search__clear {
+  cursor: pointer;
+  background: none;
+  border: none;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 100%;
+  width: 3rem;
+}
+.search__btn {
+  cursor: pointer;
+  background: none;
+  border: none;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 100%;
+  width: 3rem;
 }/*# sourceMappingURL=meals.css.map */

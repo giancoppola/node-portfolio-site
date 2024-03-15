@@ -1,12 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 // Variables
+$white: #fff;
+
 $dm-surface: #141218;
 $dm-surface-container: #211F26;
+$dm-surface-container-high: #2B2930;
 $dm-outline-variant: #CAC4D0;
 $dm-primary: #D0BCFF;
 $dm-on-primary: #381E72;
 $dm-secondary-container: #4A4458;
+$dm-outline: #938F99;
 
 @mixin btn{
     cursor: pointer;
@@ -61,6 +65,11 @@ body{
         justify-content: space-between;
         align-items: center;
     }
+}
+
+.narrow-container{
+    width: 80dvw;
+    margin: auto;
 }
 
 .page-title{
@@ -153,5 +162,47 @@ body{
         display: flex;
         gap: 4px;
         align-items: center;
+    }
+}
+
+.search{
+    width: 100%;
+    position: relative;
+    &__input{
+        width: 100%;
+        height: 4.5rem;
+        background: $dm-surface-container-high;
+        border: none;
+        border-radius: 10px 10px 0 0;
+        -webkit-border-radius: 10px 10px 0 0;
+        -moz-border-radius: 10px 10px 0 0;
+        -ms-border-radius: 10px 10px 0 0;
+        -o-border-radius: 10px 10px 0 0;
+        color: $white;
+        text-indent: 4rem;
+        font-size: 1.2rem;
+        border-bottom: 1px solid $dm-outline;
+    }
+    &__clear{
+        cursor: pointer;
+        background: none;
+        border: none;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 100%;
+        width: 3rem;
+    }
+    &__btn{
+        cursor: pointer;
+        background: none;
+        border: none;
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 100%;
+        width: 3rem;
     }
 }

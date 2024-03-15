@@ -67,18 +67,19 @@ var Navigation = function (props) {
             "MANAGE")));
 };
 var AppWrapper = function (props) {
-    return (react_1.default.createElement(react_router_dom_1.BrowserRouter, null,
-        react_1.default.createElement(Title, null),
-        react_1.default.createElement(react_router_dom_1.Routes, null,
-            react_1.default.createElement(react_router_dom_1.Route, { path: '/meal-planner', element: react_1.default.createElement(_planner_1.Planner, null) }),
-            react_1.default.createElement(react_router_dom_1.Route, { path: '/meal-planner/manage', element: react_1.default.createElement(_manage_1.Manage, null) },
-                react_1.default.createElement(react_router_dom_1.Route, { index: true, element: react_1.default.createElement(_manage_1.PostForm, null) }),
-                react_1.default.createElement(react_router_dom_1.Route, { path: '/meal-planner/manage/add', element: react_1.default.createElement(_manage_1.PostForm, null) }),
-                react_1.default.createElement(react_router_dom_1.Route, { path: '/meal-planner/manage/edit', element: react_1.default.createElement(_manage_1.PostForm, null) }),
-                react_1.default.createElement(react_router_dom_1.Route, { path: '/meal-planner/manage/delete', element: react_1.default.createElement(_manage_1.PostForm, null) })),
-            react_1.default.createElement(react_router_dom_1.Route, { path: '/meal-planner/search', element: react_1.default.createElement(_search_1.Search, null) }),
-            react_1.default.createElement(react_router_dom_1.Route, { path: '/meal-planner/*', element: react_1.default.createElement(_planner_1.Planner, null) })),
-        react_1.default.createElement(Navigation, null)));
+    return (react_1.default.createElement(react_1.StrictMode, null,
+        react_1.default.createElement(react_router_dom_1.BrowserRouter, null,
+            react_1.default.createElement(Title, null),
+            react_1.default.createElement(react_router_dom_1.Routes, null,
+                react_1.default.createElement(react_router_dom_1.Route, { path: '/meal-planner', element: react_1.default.createElement(_planner_1.Planner, null) }),
+                react_1.default.createElement(react_router_dom_1.Route, { path: '/meal-planner/manage', element: react_1.default.createElement(_manage_1.Manage, null) },
+                    react_1.default.createElement(react_router_dom_1.Route, { index: true, element: react_1.default.createElement(_manage_1.PostForm, null) }),
+                    react_1.default.createElement(react_router_dom_1.Route, { path: '/meal-planner/manage/add', element: react_1.default.createElement(_manage_1.PostForm, null) }),
+                    react_1.default.createElement(react_router_dom_1.Route, { path: '/meal-planner/manage/edit', element: react_1.default.createElement(_manage_1.PostForm, null) }),
+                    react_1.default.createElement(react_router_dom_1.Route, { path: '/meal-planner/manage/delete', element: react_1.default.createElement(_manage_1.PostForm, null) })),
+                react_1.default.createElement(react_router_dom_1.Route, { path: '/meal-planner/search', element: react_1.default.createElement(_search_1.Search, null) }),
+                react_1.default.createElement(react_router_dom_1.Route, { path: '/meal-planner/*', element: react_1.default.createElement(_planner_1.Planner, null) })),
+            react_1.default.createElement(Navigation, null))));
 };
 var container = document.getElementById('app');
 var root = (0, client_1.createRoot)(container);

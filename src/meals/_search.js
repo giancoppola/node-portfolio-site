@@ -25,9 +25,29 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Search = void 0;
 var react_1 = __importStar(require("react"));
+var SearchForm = function (props) {
+    var _a = (0, react_1.useState)(''), keyword = _a[0], setKeyword = _a[1];
+    return (react_1.default.createElement("div", { className: "search" },
+        react_1.default.createElement("button", { className: "search__clear", id: "clear-search", onClick: function () { return setKeyword(''); } },
+            react_1.default.createElement("img", { src: "../img/icons/material-x.svg", alt: "Clear" })),
+        react_1.default.createElement("input", { value: keyword, className: 'search__input', type: "text", name: "meal-name", id: "meal-name", onChange: function (e) { return setKeyword(e.target.value); }, onKeyUp: function (e) { e.key == "Enter" ? props.fetchMeals(keyword) : e; } }),
+        react_1.default.createElement("button", { className: "search__btn", id: "search-meals", onClick: function () { return props.fetchMeals(keyword); } },
+            react_1.default.createElement("img", { src: "../img/icons/material-arrow-forward.svg", alt: "Search" }))));
+};
 var Search = function () {
     var _a = (0, react_1.useState)('LOADING'), status = _a[0], setStatus = _a[1];
     var _b = (0, react_1.useState)({ meals: [] }), meals = _b[0], setMeals = _b[1];
+    var fetchMeals = function (keyword) {
+        console.log(keyword);
+        setStatus('LOADING');
+        fetch("/api/meals/get/all?name=".concat(keyword))
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+            console.log(data);
+            setMeals(data);
+            setStatus('READY');
+        });
+    };
     (0, react_1.useEffect)(function () {
         try {
             setStatus('LOADING');
@@ -38,30 +58,17 @@ var Search = function () {
                 setMeals(data);
                 setStatus('READY');
             });
-            var btn = document.querySelector('#update-meals');
-            btn === null || btn === void 0 ? void 0 : btn.addEventListener('click', function (e) {
-                var search = document.querySelector('#meal-name').value;
-                setStatus('LOADING');
-                fetch("/api/meals/get/all?name=".concat(search))
-                    .then(function (res) { return res.json(); })
-                    .then(function (data) {
-                    console.log(data);
-                    setMeals(data);
-                    setStatus('READY');
-                });
-            });
         }
         catch (e) {
             setStatus('ERROR');
         }
     }, []);
-    return (react_1.default.createElement(react_1.default.Fragment, null,
-        status == 'ERROR' && react_1.default.createElement(react_1.default.Fragment, null, "ERROR"),
-        status == "LOADING" && react_1.default.createElement("p", null, "LOADING"),
-        status == 'READY' &&
-            react_1.default.createElement("div", null,
-                react_1.default.createElement("input", { type: "text", name: "meal-name", id: "meal-name" }),
-                react_1.default.createElement("button", { id: "update-meals" }, "Search Meals"),
+    return (react_1.default.createElement("section", { className: 'narrow-container', id: 'search-section' },
+        react_1.default.createElement(SearchForm, { fetchMeals: fetchMeals }),
+        react_1.default.createElement("div", { className: 'results' },
+            status == 'ERROR' && react_1.default.createElement(react_1.default.Fragment, null, "ERROR"),
+            status == "LOADING" && react_1.default.createElement("p", null, "LOADING"),
+            status == 'READY' &&
                 meals.meals.map(function (meal) {
                     return (
                     //@ts-ignore

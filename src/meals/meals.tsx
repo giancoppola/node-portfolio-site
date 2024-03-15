@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, StrictMode} from 'react';
 import { useQuery } from 'react-query';
 import ReactDOM from 'react-dom';
 import {BrowserRouter as Router, Routes, Route, Link, Navigate, useLocation} from 'react-router-dom';
@@ -57,21 +57,23 @@ const Navigation = (props: any) => {
 
 const AppWrapper = (props: any) => {
     return (
-        <Router>
-            <Title/>
-            <Routes>
-                <Route path='/meal-planner' element={<Planner/>}/>
-                <Route path='/meal-planner/manage' element={<Manage/>}>
-                    <Route index element={<PostForm/>}/>
-                    <Route path='/meal-planner/manage/add' element={<PostForm/>}/>
-                    <Route path='/meal-planner/manage/edit' element={<PostForm/>}/>
-                    <Route path='/meal-planner/manage/delete' element={<PostForm/>}/>
-                </Route>
-                <Route path='/meal-planner/search' element={<Search/>}/>
-                <Route path='/meal-planner/*' element={<Planner/>}/>
-            </Routes>
-            <Navigation/>
-        </Router>
+        <StrictMode>
+            <Router>
+                <Title/>
+                <Routes>
+                    <Route path='/meal-planner' element={<Planner/>}/>
+                    <Route path='/meal-planner/manage' element={<Manage/>}>
+                        <Route index element={<PostForm/>}/>
+                        <Route path='/meal-planner/manage/add' element={<PostForm/>}/>
+                        <Route path='/meal-planner/manage/edit' element={<PostForm/>}/>
+                        <Route path='/meal-planner/manage/delete' element={<PostForm/>}/>
+                    </Route>
+                    <Route path='/meal-planner/search' element={<Search/>}/>
+                    <Route path='/meal-planner/*' element={<Planner/>}/>
+                </Routes>
+                <Navigation/>
+            </Router>
+        </StrictMode>
     )
 }
 
