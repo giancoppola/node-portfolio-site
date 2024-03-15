@@ -151,6 +151,34 @@ body {
   align-items: center;
 }
 
+.planner-section__add {
+  cursor: pointer;
+  background-color: #211F26;
+  color: #D0BCFF;
+  border-radius: 28px;
+  -webkit-border-radius: 28px;
+  -moz-border-radius: 28px;
+  -ms-border-radius: 28px;
+  -o-border-radius: 28px;
+  font-weight: 600;
+  font-size: 1.25rem;
+  line-height: 2rem;
+  border: none;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.25rem 0;
+  width: 100%;
+}
+.planner-section__add:hover {
+  background-color: #2B2930;
+}
+.planner-section__add:active {
+  background-color: #3B383E;
+}
+
 .search {
   width: 100%;
   position: relative;

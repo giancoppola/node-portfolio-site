@@ -6,11 +6,39 @@ $white: #fff;
 $dm-surface: #141218;
 $dm-surface-container: #211F26;
 $dm-surface-container-high: #2B2930;
+$dm-surface-bright: #3B383E;
 $dm-outline-variant: #CAC4D0;
 $dm-primary: #D0BCFF;
 $dm-on-primary: #381E72;
 $dm-secondary-container: #4A4458;
 $dm-outline: #938F99;
+
+@mixin fab{
+    cursor: pointer;
+    background-color: $dm-surface-container;
+    color: $dm-primary;
+    border-radius: 28px;
+    -webkit-border-radius: 28px;
+    -moz-border-radius: 28px;
+    -ms-border-radius: 28px;
+    -o-border-radius: 28px;
+    font-weight: 600;
+    font-size: 1.25rem;
+    line-height: 2rem;
+    border: none;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+    padding: 1.25rem 0;
+    &:hover{
+        background-color: $dm-surface-container-high;
+    }
+    &:active{
+        background-color: $dm-surface-bright;
+    }
+}
 
 @mixin btn{
     cursor: pointer;
@@ -162,6 +190,13 @@ body{
         display: flex;
         gap: 4px;
         align-items: center;
+    }
+}
+
+.planner-section{
+    &__add{
+        @include fab;
+        width: 100%;
     }
 }
 
