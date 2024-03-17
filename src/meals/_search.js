@@ -73,6 +73,7 @@ var Search = function () {
                     return (
                     //@ts-ignore
                     react_1.default.createElement("div", { key: meal._id },
+                        react_1.default.createElement("p", null, meal.emoji),
                         react_1.default.createElement("p", null, meal.name),
                         react_1.default.createElement("p", null, meal.cookTime),
                         react_1.default.createElement("p", null, meal.prepTime),

@@ -62,6 +62,7 @@ export const Search = () => {
                         return (
                             //@ts-ignore
                             <div key={meal._id}>
+                                <p>{meal.emoji}</p>
                                 <p>{meal.name}</p>
                                 <p>{meal.cookTime}</p>
                                 <p>{meal.prepTime}</p>
