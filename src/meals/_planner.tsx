@@ -21,6 +21,7 @@ export const AddButton = (props: any) => {
 export const Day = (props: any) => {
     return (
         <li className="day" id={props.id} key={props.id}>
+            <h2>{props.count}</h2>
             <div className="day__shown">
                 <span className="day__icon">{props.meal.icon}</span>
                 <div className="day__info">
@@ -37,7 +38,9 @@ export const Day = (props: any) => {
                     <button className="btn" id={props.id + 'info'}
                     onClick={() => console.log('info')}>More Info</button>
                     <button className="btn" id={props.id + 'delete'}
-                    onClick={() => console.log('delete')}>Delete</button>
+                    onClick={() => {
+                        document.getElementById(props.id)?.remove();
+                     }}>Delete</button>
                 </div>
             </div>
             <div className="day__extra">
@@ -91,7 +94,7 @@ export const Days = () => {
                     {meals.length == 0 && <>LOADING</>}
                     {meals.length > 0 && meals.map((meal, index) => {
                         return (
-                            <Day meal={meal} id={`meal-${index}`} />
+                            <Day meal={meal} id={`meal-${index}`} count={index + 1} />
                         )
                     })}
                 </ul>
