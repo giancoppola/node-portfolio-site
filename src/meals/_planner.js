@@ -47,7 +47,9 @@ var AddButton = function (props) {
 exports.AddButton = AddButton;
 var Day = function (props) {
     return (react_1.default.createElement("li", { className: "day", id: props.id, key: props.id },
-        react_1.default.createElement("h2", null, props.count),
+        react_1.default.createElement("h2", null,
+            "Day ",
+            props.count),
         react_1.default.createElement("div", { className: "day__shown" },
             react_1.default.createElement("span", { className: "day__icon" }, props.meal.icon),
             react_1.default.createElement("div", { className: "day__info" },
@@ -59,10 +61,7 @@ var Day = function (props) {
             react_1.default.createElement("div", { className: "day__modify" },
                 react_1.default.createElement("button", { className: "btn", id: props.id + 'random', onClick: function () { return console.log('random'); } }, "Random"),
                 react_1.default.createElement("button", { className: "btn", id: props.id + 'info', onClick: function () { return console.log('info'); } }, "More Info"),
-                react_1.default.createElement("button", { className: "btn", id: props.id + 'delete', onClick: function () {
-                        var _a;
-                        (_a = document.getElementById(props.id)) === null || _a === void 0 ? void 0 : _a.remove();
-                    } }, "Delete"))),
+                react_1.default.createElement("button", { className: "btn", id: props.id + 'delete', onClick: props.remove }, "Delete"))),
         react_1.default.createElement("div", { className: "day__extra" })));
 };
 exports.Day = Day;
@@ -70,8 +69,16 @@ var Days = function () {
     var _a = (0, react_1.useState)('LOADING'), status = _a[0], setStatus = _a[1];
     var _b = (0, react_1.useState)([]), meals = _b[0], setMeals = _b[1];
     var _c = (0, react_1.useState)(0), days = _c[0], setDays = _c[1];
+    var _d = (0, react_1.useState)([]), dayList = _d[0], setDayList = _d[1];
+    var removeMeal = function (ind) {
+        var newMeals = __spreadArray([], meals, true);
+        console.log(newMeals);
+        newMeals.splice(ind, 1);
+        console.log(newMeals);
+        setMeals(newMeals);
+    };
     var addMeal = function () {
-        if (days < 7) {
+        if (dayList.length < 7) {
             setStatus('LOADING');
             try {
                 fetch("/api/meals/get/all")
@@ -107,7 +114,7 @@ var Days = function () {
             react_1.default.createElement("ul", { className: "days__list", id: "days-list" },
                 meals.length == 0 && react_1.default.createElement(react_1.default.Fragment, null, "LOADING"),
                 meals.length > 0 && meals.map(function (meal, index) {
-                    return (react_1.default.createElement(exports.Day, { meal: meal, id: "meal-".concat(index), count: index + 1 }));
+                    return (react_1.default.createElement(exports.Day, { meal: meal, id: "meal-".concat(index), count: index + 1, remove: function () { removeMeal(index); } }));
                 }))),
         react_1.default.createElement(exports.AddButton, { add: addMeal, days: days })));
 };

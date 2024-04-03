@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, ReactElement} from 'react';
 import {Outlet} from 'react-router-dom';
 import { iMeal } from '../../server/meals';
 
@@ -21,7 +21,7 @@ export const AddButton = (props: any) => {
 export const Day = (props: any) => {
     return (
         <li className="day" id={props.id} key={props.id}>
-            <h2>{props.count}</h2>
+            <h2>Day {props.count}</h2>
             <div className="day__shown">
                 <span className="day__icon">{props.meal.icon}</span>
                 <div className="day__info">
@@ -38,9 +38,7 @@ export const Day = (props: any) => {
                     <button className="btn" id={props.id + 'info'}
                     onClick={() => console.log('info')}>More Info</button>
                     <button className="btn" id={props.id + 'delete'}
-                    onClick={() => {
-                        document.getElementById(props.id)?.remove();
-                     }}>Delete</button>
+                    onClick={props.remove}>Delete</button>
                 </div>
             </div>
             <div className="day__extra">
@@ -55,8 +53,16 @@ export const Days = () => {
     let [status, setStatus] = useState<STATUS>('LOADING');
     let [meals, setMeals] = useState<Array<iMeal>>([]);
     let [days, setDays] = useState<number>(0);
+    let [dayList, setDayList] = useState<Array<ReactElement>>([]);
+    const removeMeal = (ind: number) => {
+        let newMeals = [...meals];
+        console.log(newMeals);
+        newMeals.splice(ind, 1);
+        console.log(newMeals);
+        setMeals(newMeals);
+    }
     const addMeal = () => {
-        if (days < 7){
+        if (dayList.length < 7){
             setStatus('LOADING');
             try{
                 fetch(`/api/meals/get/all`)
@@ -64,7 +70,7 @@ export const Days = () => {
                 .then((data) => {
                     console.log(data);
                     setMeals([...meals, data.meals[getRandomInt(0, data.meals.length-1)]]);
-                    setStatus('READY')
+                    setStatus('READY');
                 })
             }
             catch(e){
@@ -80,7 +86,7 @@ export const Days = () => {
             .then((data) => {
                 console.log(data);
                 setMeals([...meals, data.meals[getRandomInt(0, data.meals.length - 1)]]);
-                setStatus('READY')
+                setStatus('READY');
             })
         }
         catch(e){
@@ -94,7 +100,7 @@ export const Days = () => {
                     {meals.length == 0 && <>LOADING</>}
                     {meals.length > 0 && meals.map((meal, index) => {
                         return (
-                            <Day meal={meal} id={`meal-${index}`} count={index + 1} />
+                            <Day meal={meal} id={`meal-${index}`} count={index + 1} remove={() => {removeMeal(index)}} />
                         )
                     })}
                 </ul>
