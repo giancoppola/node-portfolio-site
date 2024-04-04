@@ -7,7 +7,9 @@ $dm-surface: #141218;
 $dm-surface-container: #211F26;
 $dm-surface-container-high: #2B2930;
 $dm-surface-bright: #3B383E;
+$dm-on-surface: #E6E0E9;
 $dm-outline-variant: #CAC4D0;
+$dm-outline-variant-dark: #49454F;
 $dm-primary: #D0BCFF;
 $dm-on-primary: #381E72;
 $dm-secondary-container: #4A4458;
@@ -259,5 +261,18 @@ body{
     flex-direction: column;
     &__shown{
         display: flex;
+    }
+    &__tile{
+        border: 1px solid $dm-outline-variant-dark;
+        border-radius: 12px;
+        -webkit-border-radius: 12px;
+        -moz-border-radius: 12px;
+        -ms-border-radius: 12px;
+        -o-border-radius: 12px;
+        padding: 1rem;
+    }
+    &__data{
+        display: flex;
+        gap: 1rem;
     }
 }

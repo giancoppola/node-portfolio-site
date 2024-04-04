@@ -238,4 +238,17 @@ body {
 }
 .day__shown {
   display: flex;
+}
+.day__tile {
+  border: 1px solid #49454F;
+  border-radius: 12px;
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  -ms-border-radius: 12px;
+  -o-border-radius: 12px;
+  padding: 1rem;
+}
+.day__data {
+  display: flex;
+  gap: 1rem;
 }/*# sourceMappingURL=meals.css.map */

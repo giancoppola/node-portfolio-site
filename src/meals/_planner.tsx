@@ -22,47 +22,66 @@ export const Day = (props: any) => {
     return (
         <li className="day" id={props.id} key={props.id}>
             <h2>Day {props.count}</h2>
-            <div className="day__shown">
-                <span className="day__icon">{props.meal.icon}</span>
-                <div className="day__info">
-                    <h4 className="day__meal-name">{props.meal.name}</h4>
-                    <div className="day__data">
-                        <p className="day__prep">{props.meal.prepTime}</p>
-                        <p className="day__cook">{props.meal.cookTime}</p>
-                        <p className="day__feeds">{props.meal.feeds}</p>
+            <div className="day__tile">
+                <div className="day__shown">
+                    <span className="day__icon">{props.meal.icon}</span>
+                    <div className="day__info">
+                        <h4 className="day__meal-name">{props.meal.name}</h4>
+                        <div className="day__data">
+                            <p className="day__prep">{props.meal.prepTime}</p>
+                            <p className="day__cook">{props.meal.cookTime}</p>
+                            <p className="day__feeds">{props.meal.feeds}</p>
+                        </div>
+                    </div>
+                    <div className="day__modify">
+                        <button className="btn" id={props.id + 'random'}
+                        onClick={props.getRandom}>Random</button>
+                        <button className="btn" id={props.id + 'info'}
+                        onClick={() => console.log('info')}>More Info</button>
+                        <button className="btn" id={props.id + 'delete'}
+                        onClick={props.remove}>Delete</button>
                     </div>
                 </div>
-                <div className="day__modify">
-                    <button className="btn" id={props.id + 'random'}
-                    onClick={() => console.log('random')}>Random</button>
-                    <button className="btn" id={props.id + 'info'}
-                    onClick={() => console.log('info')}>More Info</button>
-                    <button className="btn" id={props.id + 'delete'}
-                    onClick={props.remove}>Delete</button>
-                </div>
-            </div>
-            <div className="day__extra">
+                <div className="day__extra">
 
+                </div>
             </div>
         </li>
     )
 }
 
 export const Days = () => {
+    type UPDATE_TYPE = 'RANDOM' | 'VEGGIE' | 'QUICK';
     type STATUS = 'READY' | 'LOADING' | 'ERROR';
     let [status, setStatus] = useState<STATUS>('LOADING');
     let [meals, setMeals] = useState<Array<iMeal>>([]);
     let [days, setDays] = useState<number>(0);
-    let [dayList, setDayList] = useState<Array<ReactElement>>([]);
     const removeMeal = (ind: number) => {
         let newMeals = [...meals];
-        console.log(newMeals);
         newMeals.splice(ind, 1);
-        console.log(newMeals);
         setMeals(newMeals);
     }
+    const updateMeal = (type: UPDATE_TYPE, ind: number) => {
+        setStatus('LOADING');
+        try{
+            fetch(`/api/meals/get/all`)
+            .then(res => res.json())
+            .then((data) => {
+                console.log(data);
+                let newMeals = [...meals]
+                newMeals[ind] = data.meals[getRandomInt(0, data.meals.length-1)];
+                console.log(newMeals);
+                setMeals(newMeals);
+                setStatus('READY');
+            })
+        }
+        catch(e){
+            setStatus('ERROR');
+        }
+    }
     const addMeal = () => {
-        if (dayList.length < 7){
+        console.log(meals.length);
+        if (meals.length < 7){
             setStatus('LOADING');
             try{
                 fetch(`/api/meals/get/all`)
@@ -100,12 +119,13 @@ export const Days = () => {
                     {meals.length == 0 && <>LOADING</>}
                     {meals.length > 0 && meals.map((meal, index) => {
                         return (
-                            <Day meal={meal} id={`meal-${index}`} count={index + 1} remove={() => {removeMeal(index)}} />
+                            <Day meal={meal} id={`meal-${index}`} count={index + 1}
+                            getRandom={() => {updateMeal('RANDOM', index)}} remove={() => {removeMeal(index)}} />
                         )
                     })}
                 </ul>
             </div>
-            <AddButton add={addMeal} days={days}/>
+            {meals.length< 7 && <AddButton add={addMeal} days={days}/>}
         </>
     )
 }
