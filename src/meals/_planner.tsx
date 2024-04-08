@@ -29,9 +29,9 @@ export const Day = (props: any) => {
                     <div className="day__info">
                         <h4 className="day__meal-name">{props.meal.name}</h4>
                         <div className="day__data">
-                            <p className="day__prep">{props.meal.prepTime}</p>
-                            <p className="day__cook">{props.meal.cookTime}</p>
-                            <p className="day__feeds">{props.meal.feeds}</p>
+                            <p className="day__prep">Prep Time: {props.meal.prepTime}</p>
+                            <p className="day__cook">Cook Time: {props.meal.cookTime}</p>
+                            <p className="day__feeds">Feeds: {props.meal.feeds}</p>
                         </div>
                     </div>
                     <div className="day__modify">
@@ -62,7 +62,6 @@ export const Days = (props: any) => {
         newMeals.splice(ind, 1);
         setMeals(newMeals);
         localStorage.MEALS = JSON.stringify(newMeals);
-        console.log(JSON.parse(localStorage.MEALS));
     }
     const updateMeal = (type: UPDATE_TYPE, ind: number) => {
         setStatus('LOADING');
@@ -77,7 +76,6 @@ export const Days = (props: any) => {
                 setMeals(newMeals);
                 setStatus('READY');
                 localStorage.MEALS = JSON.stringify(newMeals);
-                console.log(JSON.parse(localStorage.MEALS));
             })
         }
         catch(e){
@@ -97,7 +95,6 @@ export const Days = (props: any) => {
                     setMeals(newMeals);
                     setStatus('READY');
                     localStorage.MEALS = JSON.stringify(newMeals);
-                    console.log(JSON.parse(localStorage.MEALS));
                 })
             }
             catch(e){
@@ -120,7 +117,6 @@ export const Days = (props: any) => {
                     setMeals(newMeals);
                     setStatus('READY');
                     localStorage.MEALS = JSON.stringify(newMeals);
-                    console.log(JSON.parse(localStorage.MEALS));
                 })
             }
             catch(e){

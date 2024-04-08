@@ -56,9 +56,15 @@ var Day = function (props) {
                 react_1.default.createElement("div", { className: "day__info" },
                     react_1.default.createElement("h4", { className: "day__meal-name" }, props.meal.name),
                     react_1.default.createElement("div", { className: "day__data" },
-                        react_1.default.createElement("p", { className: "day__prep" }, props.meal.prepTime),
-                        react_1.default.createElement("p", { className: "day__cook" }, props.meal.cookTime),
-                        react_1.default.createElement("p", { className: "day__feeds" }, props.meal.feeds))),
+                        react_1.default.createElement("p", { className: "day__prep" },
+                            "Prep Time: ",
+                            props.meal.prepTime),
+                        react_1.default.createElement("p", { className: "day__cook" },
+                            "Cook Time: ",
+                            props.meal.cookTime),
+                        react_1.default.createElement("p", { className: "day__feeds" },
+                            "Feeds: ",
+                            props.meal.feeds))),
                 react_1.default.createElement("div", { className: "day__modify" },
                     react_1.default.createElement("button", { className: "btn", id: props.id + 'random', onClick: props.getRandom }, "Random"),
                     react_1.default.createElement("button", { className: "btn", id: props.id + 'info', onClick: function () { return console.log('info'); } }, "More Info"),
@@ -75,7 +81,6 @@ var Days = function (props) {
         newMeals.splice(ind, 1);
         setMeals(newMeals);
         localStorage.MEALS = JSON.stringify(newMeals);
-        console.log(JSON.parse(localStorage.MEALS));
     };
     var updateMeal = function (type, ind) {
         setStatus('LOADING');
@@ -90,7 +95,6 @@ var Days = function (props) {
                 setMeals(newMeals);
                 setStatus('READY');
                 localStorage.MEALS = JSON.stringify(newMeals);
-                console.log(JSON.parse(localStorage.MEALS));
             });
         }
         catch (e) {
@@ -110,7 +114,6 @@ var Days = function (props) {
                     setMeals(newMeals);
                     setStatus('READY');
                     localStorage.MEALS = JSON.stringify(newMeals);
-                    console.log(JSON.parse(localStorage.MEALS));
                 });
             }
             catch (e) {
@@ -133,7 +136,6 @@ var Days = function (props) {
                     setMeals(newMeals);
                     setStatus('READY');
                     localStorage.MEALS = JSON.stringify(newMeals);
-                    console.log(JSON.parse(localStorage.MEALS));
                 });
             }
             catch (e) {
