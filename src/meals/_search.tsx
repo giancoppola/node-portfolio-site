@@ -39,7 +39,7 @@ export const Search = () => {
     useEffect(() => {
         try{
             setStatus('LOADING');
-            fetch('/api/meals/get/all')
+            fetch('/api/meals/get/all') 
             .then(res => res.json())
             .then((data) => {
                 console.log(data);
@@ -52,7 +52,7 @@ export const Search = () => {
         }
     }, [])
     return (
-        <section className='narrow-container' id='search-section'>
+        <section className='narrow-container search-section' id='search-section'>
             <SearchForm fetchMeals={fetchMeals}/>
             <div className='results'>
                 {status == 'ERROR' && <>ERROR</>}

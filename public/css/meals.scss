@@ -200,10 +200,17 @@ body{
     }
 }
 
+.search-section {
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
 .planner-section{
     &__add{
         @include fab;
         width: 100%;
+    }
+    &::-webkit-scrollbar{
+        display: none;
     }
 }
 

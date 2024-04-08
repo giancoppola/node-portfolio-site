@@ -156,6 +156,11 @@ body {
   align-items: center;
 }
 
+.search-section {
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
 .planner-section__add {
   cursor: pointer;
   background-color: #211F26;
@@ -182,6 +187,9 @@ body {
 }
 .planner-section__add:active {
   background-color: #3B383E;
+}
+.planner-section::-webkit-scrollbar {
+  display: none;
 }
 
 .search {

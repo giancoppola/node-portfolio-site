@@ -1,6 +1,7 @@
 import React, {useState, useEffect, ReactElement} from 'react';
 import {Outlet} from 'react-router-dom';
 import { iMeal } from '../../server/meals';
+import { set } from 'mongoose';
 
 function getRandomInt(min: number, max: number) {
     const minCeiled = Math.ceil(min);
@@ -50,7 +51,7 @@ export const Day = (props: any) => {
     )
 }
 
-export const Days = () => {
+export const Days = (props: any) => {
     type UPDATE_TYPE = 'RANDOM' | 'VEGGIE' | 'QUICK';
     type STATUS = 'READY' | 'LOADING' | 'ERROR';
     let [status, setStatus] = useState<STATUS>('LOADING');
@@ -60,6 +61,8 @@ export const Days = () => {
         let newMeals = [...meals];
         newMeals.splice(ind, 1);
         setMeals(newMeals);
+        localStorage.MEALS = JSON.stringify(newMeals);
+        console.log(JSON.parse(localStorage.MEALS));
     }
     const updateMeal = (type: UPDATE_TYPE, ind: number) => {
         setStatus('LOADING');
@@ -73,6 +76,8 @@ export const Days = () => {
                 console.log(newMeals);
                 setMeals(newMeals);
                 setStatus('READY');
+                localStorage.MEALS = JSON.stringify(newMeals);
+                console.log(JSON.parse(localStorage.MEALS));
             })
         }
         catch(e){
@@ -88,8 +93,11 @@ export const Days = () => {
                 .then(res => res.json())
                 .then((data) => {
                     console.log(data);
-                    setMeals([...meals, data.meals[getRandomInt(0, data.meals.length-1)]]);
+                    let newMeals = [...meals, data.meals[getRandomInt(0, data.meals.length-1)]];
+                    setMeals(newMeals);
                     setStatus('READY');
+                    localStorage.MEALS = JSON.stringify(newMeals);
+                    console.log(JSON.parse(localStorage.MEALS));
                 })
             }
             catch(e){
@@ -98,18 +106,26 @@ export const Days = () => {
         }
     }
     useEffect(() => {
-        try{
-            setStatus('LOADING');
-            fetch('/api/meals/get/all')
-            .then(res => res.json())
-            .then((data) => {
-                console.log(data);
-                setMeals([...meals, data.meals[getRandomInt(0, data.meals.length - 1)]]);
-                setStatus('READY');
-            })
+        if (localStorage.MEALS){
+            setMeals(JSON.parse(localStorage.MEALS));
         }
-        catch(e){
-            setStatus('ERROR')
+        else {
+            try{
+                setStatus('LOADING');
+                fetch('/api/meals/get/all')
+                .then(res => res.json())
+                .then((data) => {
+                    console.log(data);
+                    let newMeals = [...meals, data.meals[getRandomInt(0, data.meals.length - 1)]];
+                    setMeals(newMeals);
+                    setStatus('READY');
+                    localStorage.MEALS = JSON.stringify(newMeals);
+                    console.log(JSON.parse(localStorage.MEALS));
+                })
+            }
+            catch(e){
+                setStatus('ERROR')
+            }
         }
     }, [])
     return (
@@ -133,7 +149,7 @@ export const Days = () => {
 export const Planner = () => {
     return (
         <section className="narrow-container planner-section" id="planner-section">
-            <Days/>
+            <Days />
         </section>
     )
 }

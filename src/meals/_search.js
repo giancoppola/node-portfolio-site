@@ -63,7 +63,7 @@ var Search = function () {
             setStatus('ERROR');
         }
     }, []);
-    return (react_1.default.createElement("section", { className: 'narrow-container', id: 'search-section' },
+    return (react_1.default.createElement("section", { className: 'narrow-container search-section', id: 'search-section' },
         react_1.default.createElement(SearchForm, { fetchMeals: fetchMeals }),
         react_1.default.createElement("div", { className: 'results' },
             status == 'ERROR' && react_1.default.createElement(react_1.default.Fragment, null, "ERROR"),

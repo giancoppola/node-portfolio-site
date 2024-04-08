@@ -66,7 +66,7 @@ var Day = function (props) {
             react_1.default.createElement("div", { className: "day__extra" }))));
 };
 exports.Day = Day;
-var Days = function () {
+var Days = function (props) {
     var _a = (0, react_1.useState)('LOADING'), status = _a[0], setStatus = _a[1];
     var _b = (0, react_1.useState)([]), meals = _b[0], setMeals = _b[1];
     var _c = (0, react_1.useState)(0), days = _c[0], setDays = _c[1];
@@ -74,6 +74,8 @@ var Days = function () {
         var newMeals = __spreadArray([], meals, true);
         newMeals.splice(ind, 1);
         setMeals(newMeals);
+        localStorage.MEALS = JSON.stringify(newMeals);
+        console.log(JSON.parse(localStorage.MEALS));
     };
     var updateMeal = function (type, ind) {
         setStatus('LOADING');
@@ -87,6 +89,8 @@ var Days = function () {
                 console.log(newMeals);
                 setMeals(newMeals);
                 setStatus('READY');
+                localStorage.MEALS = JSON.stringify(newMeals);
+                console.log(JSON.parse(localStorage.MEALS));
             });
         }
         catch (e) {
@@ -102,8 +106,11 @@ var Days = function () {
                     .then(function (res) { return res.json(); })
                     .then(function (data) {
                     console.log(data);
-                    setMeals(__spreadArray(__spreadArray([], meals, true), [data.meals[getRandomInt(0, data.meals.length - 1)]], false));
+                    var newMeals = __spreadArray(__spreadArray([], meals, true), [data.meals[getRandomInt(0, data.meals.length - 1)]], false);
+                    setMeals(newMeals);
                     setStatus('READY');
+                    localStorage.MEALS = JSON.stringify(newMeals);
+                    console.log(JSON.parse(localStorage.MEALS));
                 });
             }
             catch (e) {
@@ -112,18 +119,26 @@ var Days = function () {
         }
     };
     (0, react_1.useEffect)(function () {
-        try {
-            setStatus('LOADING');
-            fetch('/api/meals/get/all')
-                .then(function (res) { return res.json(); })
-                .then(function (data) {
-                console.log(data);
-                setMeals(__spreadArray(__spreadArray([], meals, true), [data.meals[getRandomInt(0, data.meals.length - 1)]], false));
-                setStatus('READY');
-            });
+        if (localStorage.MEALS) {
+            setMeals(JSON.parse(localStorage.MEALS));
         }
-        catch (e) {
-            setStatus('ERROR');
+        else {
+            try {
+                setStatus('LOADING');
+                fetch('/api/meals/get/all')
+                    .then(function (res) { return res.json(); })
+                    .then(function (data) {
+                    console.log(data);
+                    var newMeals = __spreadArray(__spreadArray([], meals, true), [data.meals[getRandomInt(0, data.meals.length - 1)]], false);
+                    setMeals(newMeals);
+                    setStatus('READY');
+                    localStorage.MEALS = JSON.stringify(newMeals);
+                    console.log(JSON.parse(localStorage.MEALS));
+                });
+            }
+            catch (e) {
+                setStatus('ERROR');
+            }
         }
     }, []);
     return (react_1.default.createElement(react_1.default.Fragment, null,
