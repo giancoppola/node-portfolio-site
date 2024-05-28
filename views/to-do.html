@@ -1,81 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To Do List</title>
-    <link rel="stylesheet" href="/css/to-do.css">
-</head>
-<body>
-    <main class="main">
-        <section class="main-modal">
-            <dialog tabindex="0" class="overlay" id="overlay">
-                <h1 class="overlay-title">Welcome!</h1>
-                <p class="overlay-text">
-                    You can either save your list by signing in to your Google account
-                    to access from anywhere, or save your data locally meaning your data 
-                    will only accessible using the same device.
-                </p>
-                <p class="overlay-text">Please choose an option below to continue;</p>
-                <button id="sign-in-google" class="sign-in-btn sign-in-google">Sign in with Google</button>
-                <button id="sign-in-local" class="sign-in-btn sign-in-local">Save your list locally</button>
-                <p class="overlay-error-text" id="overlay-error-text"></p>
-            </dialog>
-        </section>
-        <section class="main-title">
-            <h1 id="welcome-title">Welcome!</h1>
-            <p id="welcome-text">Your list is being saved locally</p>
-        </section>
-        <section class="main-grid">
-            <div class="main-grid-to-do" id="main-grid-to-do">
-                <div class="main-grid-to-do-title">
-                    <h2>To Do</h2><span class="amount" id="todo-amount"></span>
-                </div>
-                <div class="main-grid-to-do-list" id="main-grid-to-do-list">
-
-                </div>
-                <div class="main-grid-to-do-input" id="main-grid-to-do-input">
-                    <input class="new-btn" id="todo-new-input" placeholder="+ New">
-                    <button id="todo-new">✓</button>
-                </div>
-            </div>
-            <div class="main-grid-doing" id="main-grid-doing">
-                <div class="main-grid-doing-title">
-                    <h2>Doing</h2><span class="amount" id="doing-amount"></span>
-                </div>
-                <div class="main-grid-doing-list" id="main-grid-doing-list">
-
-                </div>
-                <div class="main-grid-doing-input" id="main-grid-doing-input">
-                    <input class="new-btn" id="doing-new-input" placeholder="+ New">
-                    <button id="doing-new">✓</button>
-                </div>
-            </div>
-            <div class="main-grid-done" id="main-grid-done">
-                <div class="main-grid-done-title">
-                    <h2>Done</h2><span class="amount" id="done-amount"></span>
-                </div>
-                <div class="main-grid-done-list" id="main-grid-done-list">
-
-                </div>
-                <div class="main-grid-done-input" id="main-grid-done-input">
-                    <input class="new-btn" id="done-new-input" placeholder="+ New">
-                    <button id="done-new">✓</button>
-                </div>
-            </div>
-        </section>
-        <section class="main-info">
-            <div class="main-info-text">
-                <p>The list will save when you add or delete an item</p>
-                <p>Add items with the save button or enter, delete items with the delete button</p>
-                <p>Transfer items between columns by dragging and dropping the item</p>
-                <p id="local-info" class="">The list will be saved in local storage as long as you don't clear it</p>
-                <p id="local-info" class="">You can clear the list in local storage with <span class="code">localStorage.clear('obj')</span></p>
-            </div>
-        </section>
-    </main>
-    <script type="module" src="/js/to-do-firebase.js"></script>
-    <script type="module" src="/js/to-do.js"></script>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="../css/to-do.css">
+        <title>To Do List</title>
+    </head>
+    <body class="to-do" id="to-do">
+        <main class="main" id="main">
+            <section class="app" id="app">
+            </section>
+        </main>
+        <script src="../js/todo.bundle.js"></script>
+    </body>
 </html>

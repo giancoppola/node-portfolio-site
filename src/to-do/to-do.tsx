@@ -1,0 +1,72 @@
+import React, {useState, useEffect, StrictMode} from 'react';
+import { createRoot } from 'react-dom/client'
+
+const Title = () => {
+    return (
+        <h1 className='page-title'>To Do List</h1>
+    )
+}
+
+const List = (props: any) => {
+    const [list, setList] = useState(["Try adding your own"]);
+    const add = () => {
+        let newList = [...list, ""];
+        setList(newList);
+    }
+    const remove = (index: number) => {
+        console.log(list);
+        console.log(list[index]);
+        console.log("removing ", index);
+        let newList = [...list];
+        newList.splice(index, 1);
+        console.log(newList);
+        setList(newList);
+    }
+    return (
+        <div className="to-do-container">
+            <ul className="list">
+                {
+                    list.map((item, index) => (
+                        <ListItem index={index} key={index} text={item} remove={remove}/>
+                    ))
+                }
+            </ul>
+            <AddNew add={add}/>
+        </div>
+    )
+}
+
+const ListItem = (props: any) => {
+    let index = props.index;
+    useEffect(() => {
+        console.log(props);
+    }, [])
+    return (
+        <li className='list-item' data-index={props.index} key={props.key}>
+            <button className='list-item__check'>/</button>
+            <input className='list-item__text' value={props.text}></input>
+            <button onClick={() => props.remove(index)} className='list-item__delete'>X</button>
+        </li>
+    )
+}
+
+const AddNew = (props: any) => {
+    return (
+        <div className="add-new">
+            <button onClick={() => props.add()} className='btn'>Add +</button>
+        </div>
+    )
+}
+
+const AppWrapper = (props: any) => {
+    return (
+        <StrictMode>
+            <Title/>
+            <List/>
+        </StrictMode>
+    )
+}
+
+const container = document.getElementById('app');
+const root = createRoot(container!);
+root.render(<AppWrapper/>);
