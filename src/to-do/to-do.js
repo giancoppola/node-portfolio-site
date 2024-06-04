@@ -44,26 +44,37 @@ var List = function (props) {
         setList(newList);
     };
     var remove = function (index) {
-        console.log(list);
-        console.log(list[index]);
-        console.log("removing ", index);
+        console.log("now removing", index);
         var newList = __spreadArray([], list, true);
         newList.splice(index, 1);
         console.log(newList);
         setList(newList);
     };
+    var update = function (index, text) {
+        console.log("update called");
+        var newList = __spreadArray([], list, true);
+        newList[index] = text;
+        setList(newList);
+        console.log(newList);
+    };
     return (react_1.default.createElement("div", { className: "to-do-container" },
-        react_1.default.createElement("ul", { className: "list" }, list.map(function (item, index) { return (react_1.default.createElement(ListItem, { index: index, key: index, text: item, remove: remove })); })),
+        react_1.default.createElement("ul", { className: "list" }, list.map(function (item, index) { return (react_1.default.createElement(ListItem, { index: index, key: index, text: item, remove: remove, update: update })); })),
         react_1.default.createElement(AddNew, { add: add })));
 };
 var ListItem = function (props) {
     var index = props.index;
+    var _a = (0, react_1.useState)(""), inputVal = _a[0], setInputVal = _a[1];
     (0, react_1.useEffect)(function () {
         console.log(props);
+        props.text != null ? setInputVal(props.text) : setInputVal("");
     }, []);
+    var inputUpdate = function (e) {
+        setInputVal(e.target.value);
+        props.update(index, e.target.value);
+    };
     return (react_1.default.createElement("li", { className: 'list-item', "data-index": props.index, key: props.key },
         react_1.default.createElement("button", { className: 'list-item__check' }, "/"),
-        react_1.default.createElement("input", { className: 'list-item__text', value: props.text }),
+        react_1.default.createElement("input", { className: 'list-item__text', value: inputVal, onChange: function (e) { return inputUpdate(e); } }),
         react_1.default.createElement("button", { onClick: function () { return props.remove(index); }, className: 'list-item__delete' }, "X")));
 };
 var AddNew = function (props) {

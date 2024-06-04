@@ -14,20 +14,29 @@ const List = (props: any) => {
         setList(newList);
     }
     const remove = (index: number) => {
-        console.log(list);
-        console.log(list[index]);
-        console.log("removing ", index);
+        console.log("now removing", index);
         let newList = [...list];
         newList.splice(index, 1);
         console.log(newList);
         setList(newList);
     }
+    const update = (index: number, text: string) => {
+        console.log("update called");
+        let newList = [...list];
+        newList[index] = text;
+        setList(newList);
+        console.log(newList);
+    }
+    useEffect(() => {
+        
+    }, [list])
     return (
         <div className="to-do-container">
             <ul className="list">
                 {
                     list.map((item, index) => (
-                        <ListItem index={index} key={index} text={item} remove={remove}/>
+                        <ListItem index={index} key={index} text={item} remove={remove}
+                        update={update}/>
                     ))
                 }
             </ul>
@@ -38,13 +47,20 @@ const List = (props: any) => {
 
 const ListItem = (props: any) => {
     let index = props.index;
+    const [inputVal, setInputVal] = useState("");
     useEffect(() => {
         console.log(props);
+        props.text != null ? setInputVal(props.text) : setInputVal("");
     }, [])
+    const inputUpdate = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInputVal(e.target.value);
+        props.update(index, e.target.value);
+    }
     return (
         <li className='list-item' data-index={props.index} key={props.key}>
             <button className='list-item__check'>/</button>
-            <input className='list-item__text' value={props.text}></input>
+            <input className='list-item__text' value={inputVal}
+            onChange={e => inputUpdate(e)}/>
             <button onClick={() => props.remove(index)} className='list-item__delete'>X</button>
         </li>
     )
