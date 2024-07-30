@@ -1,38 +1,11 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Search = void 0;
-var react_1 = __importStar(require("react"));
+var jsx_runtime_1 = require("react/jsx-runtime");
+var react_1 = require("react");
 var SearchForm = function (props) {
     var _a = (0, react_1.useState)(''), keyword = _a[0], setKeyword = _a[1];
-    return (react_1.default.createElement("div", { className: "search" },
-        react_1.default.createElement("button", { className: "search__clear", id: "clear-search", onClick: function () { return setKeyword(''); } },
-            react_1.default.createElement("img", { src: "../img/icons/material-x.svg", alt: "Clear" })),
-        react_1.default.createElement("input", { value: keyword, className: 'search__input', type: "text", name: "meal-name", id: "meal-name", onChange: function (e) { return setKeyword(e.target.value); }, onKeyUp: function (e) { e.key == "Enter" ? props.fetchMeals(keyword) : e; } }),
-        react_1.default.createElement("button", { className: "search__btn", id: "search-meals", onClick: function () { return props.fetchMeals(keyword); } },
-            react_1.default.createElement("img", { src: "../img/icons/material-arrow-forward.svg", alt: "Search" }))));
+    return ((0, jsx_runtime_1.jsxs)("div", { className: "search", children: [(0, jsx_runtime_1.jsx)("button", { className: "search__clear", id: "clear-search", onClick: function () { return setKeyword(''); }, children: (0, jsx_runtime_1.jsx)("img", { src: "../img/icons/material-x.svg", alt: "Clear" }) }), (0, jsx_runtime_1.jsx)("input", { value: keyword, className: 'search__input', type: "text", name: "meal-name", id: "meal-name", onChange: function (e) { return setKeyword(e.target.value); }, onKeyUp: function (e) { e.key == "Enter" ? props.fetchMeals(keyword) : e; } }), (0, jsx_runtime_1.jsx)("button", { className: "search__btn", id: "search-meals", onClick: function () { return props.fetchMeals(keyword); }, children: (0, jsx_runtime_1.jsx)("img", { src: "../img/icons/material-arrow-forward.svg", alt: "Search" }) })] }));
 };
 var Search = function () {
     var _a = (0, react_1.useState)('LOADING'), status = _a[0], setStatus = _a[1];
@@ -63,25 +36,13 @@ var Search = function () {
             setStatus('ERROR');
         }
     }, []);
-    return (react_1.default.createElement("section", { className: 'narrow-container search-section', id: 'search-section' },
-        react_1.default.createElement(SearchForm, { fetchMeals: fetchMeals }),
-        react_1.default.createElement("div", { className: 'results' },
-            status == 'ERROR' && react_1.default.createElement(react_1.default.Fragment, null, "ERROR"),
-            status == "LOADING" && react_1.default.createElement("p", null, "LOADING"),
-            status == 'READY' &&
-                meals.meals.map(function (meal) {
-                    return (
-                    //@ts-ignore
-                    react_1.default.createElement("div", { key: meal._id },
-                        react_1.default.createElement("p", null, meal.emoji),
-                        react_1.default.createElement("p", null, meal.name),
-                        react_1.default.createElement("p", null, meal.cookTime),
-                        react_1.default.createElement("p", null, meal.prepTime),
-                        react_1.default.createElement("p", null, meal.veggie),
-                        react_1.default.createElement("ul", null, meal.ingredients.map(function (ing) {
-                            return (react_1.default.createElement("li", null, ing));
-                        })),
-                        react_1.default.createElement("a", { href: meal.link }, meal.link)));
-                }))));
+    return ((0, jsx_runtime_1.jsxs)("section", { className: 'narrow-container search-section', id: 'search-section', children: [(0, jsx_runtime_1.jsx)(SearchForm, { fetchMeals: fetchMeals }), (0, jsx_runtime_1.jsxs)("div", { className: 'results', children: [status == 'ERROR' && (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, { children: "ERROR" }), status == "LOADING" && (0, jsx_runtime_1.jsx)("p", { children: "LOADING" }), status == 'READY' &&
+                        meals.meals.map(function (meal) {
+                            return (
+                            //@ts-ignore
+                            (0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsx)("p", { children: meal.emoji }), (0, jsx_runtime_1.jsx)("p", { children: meal.name }), (0, jsx_runtime_1.jsx)("p", { children: meal.cookTime }), (0, jsx_runtime_1.jsx)("p", { children: meal.prepTime }), (0, jsx_runtime_1.jsx)("p", { children: meal.veggie }), (0, jsx_runtime_1.jsx)("ul", { children: meal.ingredients.map(function (ing) {
+                                            return ((0, jsx_runtime_1.jsx)("li", { children: ing }));
+                                        }) }), (0, jsx_runtime_1.jsx)("a", { href: meal.link, children: meal.link })] }, meal._id));
+                        })] })] }));
 };
 exports.Search = Search;

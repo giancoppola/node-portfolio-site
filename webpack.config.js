@@ -7,6 +7,7 @@ module.exports = {
         test: './src/test.js',
         meals: './src/meals/meals.js',
         todo: './src/to-do/to-do.js',
+        wordguesser: './src/word-guesser/word-guesser.js',
     },
     output: {
         filename: '[name].bundle.js',
