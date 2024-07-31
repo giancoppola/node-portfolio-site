@@ -4,6 +4,9 @@ require('dotenv').config();
 var express = require('express');
 var app = express();
 var cors = require('cors');
+var mongoose = require('mongoose');
+var dbUri = "mongodb+srv://giancoppola:".concat(process.env.MONGO_PW, "@cluster0.gjnjhuw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
+mongoose.connect(dbUri);
 app.use(cors());
 app.use(express.static(__dirname + '/public'));
 app.get("*", function (req, res, next) {
@@ -17,9 +20,6 @@ app.get("/", function (req, res) {
 var pageArr = ['meal-planner', 'to-do', 'word-guesser'];
 var _loop_1 = function (page) {
     app.get("/".concat(page), function (req, res, next) {
-        res.sendFile(__dirname + "/views/".concat(page, ".html"));
-    });
-    app.get("/".concat(page, "/*"), function (req, res, next) {
         res.sendFile(__dirname + "/views/".concat(page, ".html"));
     });
 };
@@ -40,6 +40,8 @@ var apiRoute = require('./server/api').router;
 app.use('/api', apiRoute);
 var mealsApiRoute = require('./server/meals-api').router;
 app.use('/api/meals', mealsApiRoute);
+var wgApiRoute = require('./server/word-guesser-api').router;
+app.use('/api/word-guesser/', wgApiRoute);
 // Error page matching
 app.use('*', function (req, res) {
     res.send('No match found - error page!');

@@ -4,10 +4,10 @@ import {Express, NextFunction, Request, Response} from 'express';
 const app: Express = express();
 const cors = require('cors');
 
-// import { Mongoose } from 'mongoose';
-// const mongoose: Mongoose = require('mongoose');
-// const dbUri = `mongodb+srv://giancoppola:${process.env.MONGO_PW}@cluster0.gjnjhuw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
-// mongoose.connect(dbUri);
+import { Mongoose } from 'mongoose';
+const mongoose: Mongoose = require('mongoose');
+const dbUri = `mongodb+srv://giancoppola:${process.env.MONGO_PW}@cluster0.gjnjhuw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
+mongoose.connect(dbUri);
 // MongoDB model imports
 import {iUser, UserSchema, UserModel} from './server/user';
 
@@ -29,9 +29,6 @@ for (let page of pageArr){
     app.get(`/${page}`, (req: Request, res:Response, next: NextFunction) => {
         res.sendFile(__dirname + `/views/${page}.html`)
     })
-    app.get(`/${page}/*`, (req: Request, res:Response, next: NextFunction) => {
-        res.sendFile(__dirname + `/views/${page}.html`)
-    })
 }
 app.get('/meal-planner/*',(req: Request, res:Response, next: NextFunction) => {
     res.redirect('/meal-planner');
@@ -49,6 +46,9 @@ app.use('/api', apiRoute);
 
 const mealsApiRoute = require('./server/meals-api').router;
 app.use('/api/meals', mealsApiRoute);
+
+const wgApiRoute = require('./server/word-guesser-api').router;
+app.use('/api/word-guesser/', wgApiRoute);
 
 // Error page matching
 app.use('*', (req: Request, res: Response) => {
