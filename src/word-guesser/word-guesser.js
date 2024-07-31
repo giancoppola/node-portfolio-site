@@ -41,6 +41,7 @@ var client_1 = require("react-dom/client");
 var react_1 = require("react");
 var material_1 = require("@mui/material");
 var _create_room_1 = require("./_create-room");
+var _footer_1 = require("./_footer");
 var word_guesser_types_1 = require("../../types/word-guesser-types");
 var word_guesser_tools_1 = require("./word-guesser-tools");
 var Main = function () {
@@ -97,7 +98,7 @@ var Main = function () {
             CreateNewPlayer();
         }
     }, []);
-    return ((0, jsx_runtime_1.jsxs)(material_1.Box, { component: 'section', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', height: '100dvh', width: '100dvw', children: [(0, jsx_runtime_1.jsx)(material_1.Typography, { variant: 'h1', children: "Word Guesser" }), playerId && (0, jsx_runtime_1.jsx)(_create_room_1.CreateRoom, {})] }));
+    return ((0, jsx_runtime_1.jsxs)(material_1.Box, { component: 'section', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', height: '100dvh', width: '100dvw', children: [(0, jsx_runtime_1.jsx)(material_1.Typography, { variant: 'h1', children: "Word Guesser" }), playerId && (0, jsx_runtime_1.jsx)(_create_room_1.CreateRoom, { playerId: playerId }), (0, jsx_runtime_1.jsx)(_footer_1.Footer, {})] }));
 };
 var root = (0, client_1.createRoot)(document.getElementById('main'));
 root.render((0, jsx_runtime_1.jsx)(Main, {}));

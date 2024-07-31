@@ -1,3 +1,7 @@
 body {
   margin: 0;
+}
+
+.btn__input.MuiButtonBase-root {
+  height: 56px;
 }/*# sourceMappingURL=word-guesser.css.map */

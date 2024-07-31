@@ -51,6 +51,9 @@ var limit = rateLimit({
 });
 exports.router.use(limit);
 exports.router.use("/*", express.json());
+///////////////////////////
+// Players API Endpoints //
+///////////////////////////
 // Get all players in DB
 exports.router.route('/players/')
     .get(function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
@@ -117,6 +120,12 @@ exports.router.route('/players/find')
         }
     });
 }); });
+///////////////////////////////
+// Players API Endpoints End //
+///////////////////////////////
+/////////////////////////
+// Rooms API Endpoints //
+/////////////////////////
 // Get all rooms in DB
 exports.router.route('/rooms/')
     .get(function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
@@ -130,6 +139,33 @@ exports.router.route('/rooms/')
                 res.json({
                     rooms: rooms
                 });
+                next();
+                return [2 /*return*/];
+        }
+    });
+}); });
+exports.router.route('/rooms/find')
+    .get(function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var room, err_2;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, word_guesser_types_1.RoomModel.find({ name: req.query.name }).exec()];
+            case 1:
+                room = _a.sent();
+                if (room.length === 1) {
+                    res.send(true);
+                }
+                else {
+                    res.send(false);
+                }
+                return [3 /*break*/, 3];
+            case 2:
+                err_2 = _a.sent();
+                res.send(false);
+                return [3 /*break*/, 3];
+            case 3:
                 next();
                 return [2 /*return*/];
         }
@@ -164,12 +200,15 @@ exports.router.route('/rooms/new')
                 return [4 /*yield*/, room.save()];
             case 1:
                 _a.sent();
-                res.send(room._id);
+                res.redirect("/word-guesser?room=".concat(req.query.name));
                 next();
                 return [2 /*return*/];
         }
     });
 }); });
+/////////////////////////////
+// Rooms API Endpoints End //
+/////////////////////////////
 // .get( async (req: Request, res: Response, next: NextFunction) => {
 //     let users: Array<Object> = await UserModel.find().select('-pass -_id -__v').exec();
 //     console.log(users.length);

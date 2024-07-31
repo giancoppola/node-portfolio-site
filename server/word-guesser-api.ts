@@ -17,6 +17,10 @@ const limit = rateLimit({
 router.use(limit);
 router.use("/*", express.json());
 
+///////////////////////////
+// Players API Endpoints //
+///////////////////////////
+
 // Get all players in DB
 router.route('/players/')
 .get( async (req: Request, res: Response, next: NextFunction) => {
@@ -58,6 +62,14 @@ router.route('/players/find')
     next();
 })
 
+///////////////////////////////
+// Players API Endpoints End //
+///////////////////////////////
+
+/////////////////////////
+// Rooms API Endpoints //
+/////////////////////////
+
 // Get all rooms in DB
 router.route('/rooms/')
 .get( async (req: Request, res: Response, next: NextFunction) => {
@@ -67,6 +79,23 @@ router.route('/rooms/')
             rooms: rooms
         })
         next()
+})
+
+router.route('/rooms/find')
+.get( async ( req: Request, res: Response, next: NextFunction) => {
+    try {
+        let room = await RoomModel.find( { name: req.query.name } ).exec();
+        if (room.length === 1) {
+            res.send(true);
+        }
+        else {
+            res.send(false);
+        }
+    }
+    catch (err) {
+        res.send(false);
+    }
+    next();
 })
 
 router.route('/rooms/new')
@@ -92,9 +121,13 @@ router.route('/rooms/new')
     let room = new RoomModel(newRoom);
     console.log(room);
     await room.save();
-    res.send(room._id);
+    res.redirect(`/word-guesser?room=${req.query.name}`);
     next();
 })
+
+/////////////////////////////
+// Rooms API Endpoints End //
+/////////////////////////////
 
 
 // .get( async (req: Request, res: Response, next: NextFunction) => {

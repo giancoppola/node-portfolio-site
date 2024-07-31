@@ -1,9 +1,9 @@
 import { createRoot } from 'react-dom/client'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Dispatch } from 'react'
 
 import { Box, List, ListItem, TextField, Typography } from '@mui/material'
 import { CreateRoom } from './_create-room'
-import { Dispatch } from 'react'
+import { Footer } from './_footer'
 
 import { iPlayer, PlayerModel, PLAYER_ID } from '../../types/word-guesser-types'
 import { RemoveQuotes } from './word-guesser-tools'
@@ -51,7 +51,8 @@ const Main = () => {
     return (
         <Box component='section' display='flex' flexDirection='column' justifyContent='flex-start' alignItems='center' height='100dvh' width='100dvw'>
             <Typography variant='h1'>Word Guesser</Typography>
-            { playerId && <CreateRoom/> }
+            { playerId && <CreateRoom playerId={playerId} /> }
+            <Footer/>
         </Box>
     )
 }
