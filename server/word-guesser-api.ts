@@ -7,6 +7,8 @@ import { Mongoose } from "mongoose";
 const mongoose: Mongoose = require('mongoose');
 // MongoDB model imports
 import { iPlayer, PlayerSchema, PlayerModel, RoomModel, iRoom } from "../types/word-guesser-types";
+import { Server } from "http";
+import { Socket } from "dgram";
 
 const limit = rateLimit({
     // Every 5 minutes
@@ -29,7 +31,6 @@ router.route('/players/')
         res.json({
             players: players
         })
-        next()
 })
 
 router.route('/players/new')
@@ -42,7 +43,6 @@ router.route('/players/new')
     console.log(player);
     await player.save();
     res.send(player._id);
-    next();
 })
 
 router.route('/players/find')
@@ -53,13 +53,12 @@ router.route('/players/find')
             res.send(true);
         }
         else {
-            res.send(false);
+            res.status(400).send(false);
         }
     }
     catch (err) {
-        res.send(false);
+        res.status(400).send(false);
     }
-    next();
 })
 
 ///////////////////////////////
@@ -78,7 +77,6 @@ router.route('/rooms/')
         res.json({
             rooms: rooms
         })
-        next()
 })
 
 router.route('/rooms/find')
@@ -95,7 +93,6 @@ router.route('/rooms/find')
     catch (err) {
         res.send(false);
     }
-    next();
 })
 
 router.route('/rooms/new')
@@ -122,7 +119,6 @@ router.route('/rooms/new')
     console.log(room);
     await room.save();
     res.redirect(`/word-guesser?room=${req.query.name}`);
-    next();
 })
 
 /////////////////////////////

@@ -44,6 +44,8 @@ var _create_room_1 = require("./_create-room");
 var _footer_1 = require("./_footer");
 var word_guesser_types_1 = require("../../types/word-guesser-types");
 var word_guesser_tools_1 = require("./word-guesser-tools");
+var socket_io_client_1 = require("socket.io-client");
+var socket = (0, socket_io_client_1.io)();
 var Main = function () {
     var _a = (0, react_1.useState)(""), playerId = _a[0], setPlayerId = _a[1];
     var CheckPlayerId = function (player_id) { return __awaiter(void 0, void 0, void 0, function () {
@@ -98,6 +100,7 @@ var Main = function () {
             CreateNewPlayer();
         }
     }, []);
+    (0, react_1.useEffect)(function () { playerId ? socket.emit("active", playerId) : null; }, [playerId]);
     return ((0, jsx_runtime_1.jsxs)(material_1.Box, { component: 'section', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', height: '100dvh', width: '100dvw', children: [(0, jsx_runtime_1.jsx)(material_1.Typography, { variant: 'h1', children: "Word Guesser" }), playerId && (0, jsx_runtime_1.jsx)(_create_room_1.CreateRoom, { playerId: playerId }), (0, jsx_runtime_1.jsx)(_footer_1.Footer, {})] }));
 };
 var root = (0, client_1.createRoot)(document.getElementById('main'));

@@ -67,7 +67,6 @@ exports.router.route('/players/')
                 res.json({
                     players: players
                 });
-                next();
                 return [2 /*return*/];
         }
     });
@@ -88,7 +87,6 @@ exports.router.route('/players/new')
             case 1:
                 _a.sent();
                 res.send(player._id);
-                next();
                 return [2 /*return*/];
         }
     });
@@ -107,16 +105,14 @@ exports.router.route('/players/find')
                     res.send(true);
                 }
                 else {
-                    res.send(false);
+                    res.status(400).send(false);
                 }
                 return [3 /*break*/, 3];
             case 2:
                 err_1 = _a.sent();
-                res.send(false);
+                res.status(400).send(false);
                 return [3 /*break*/, 3];
-            case 3:
-                next();
-                return [2 /*return*/];
+            case 3: return [2 /*return*/];
         }
     });
 }); });
@@ -139,7 +135,6 @@ exports.router.route('/rooms/')
                 res.json({
                     rooms: rooms
                 });
-                next();
                 return [2 /*return*/];
         }
     });
@@ -165,9 +160,7 @@ exports.router.route('/rooms/find')
                 err_2 = _a.sent();
                 res.send(false);
                 return [3 /*break*/, 3];
-            case 3:
-                next();
-                return [2 /*return*/];
+            case 3: return [2 /*return*/];
         }
     });
 }); });
@@ -201,7 +194,6 @@ exports.router.route('/rooms/new')
             case 1:
                 _a.sent();
                 res.redirect("/word-guesser?room=".concat(req.query.name));
-                next();
                 return [2 /*return*/];
         }
     });

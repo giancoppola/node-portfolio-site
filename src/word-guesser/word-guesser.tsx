@@ -8,6 +8,9 @@ import { Footer } from './_footer'
 import { iPlayer, PlayerModel, PLAYER_ID } from '../../types/word-guesser-types'
 import { RemoveQuotes } from './word-guesser-tools'
 
+import { io, Socket } from 'socket.io-client'
+const socket: Socket = io();
+
 const Main = () => {
     const [playerId, setPlayerId]: [string, Dispatch<string>] = useState<string>("");
     const CheckPlayerId = async (player_id: string) => {
@@ -48,6 +51,7 @@ const Main = () => {
             CreateNewPlayer();
         }
     }, [])
+    useEffect(() => { playerId ? socket.emit("active", playerId) : null; }, [playerId])
     return (
         <Box component='section' display='flex' flexDirection='column' justifyContent='flex-start' alignItems='center' height='100dvh' width='100dvw'>
             <Typography variant='h1'>Word Guesser</Typography>
