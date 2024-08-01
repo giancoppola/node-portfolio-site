@@ -48,3 +48,16 @@ export const PlayerSchema = new mongoose.Schema({
     last_played: { type: Date, required: true, default: Date.now() },
 })
 export const PlayerModel: Model<Object> = mongoose.model('Player', PlayerSchema);
+
+export interface SuccessResponse {
+    success: boolean;
+    msg: string;
+}
+
+export interface SocketIoUser {
+    player_id: string;
+    room_name: string;
+}
+export interface SocketIoUserObj {
+    [key: string]: SocketIoUser;
+}

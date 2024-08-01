@@ -43,9 +43,9 @@ var material_1 = require("@mui/material");
 var word_guesser_tools_1 = require("./word-guesser-tools");
 var CreateRoom = function (props) {
     var _a = (0, react_1.useState)(""), errMsg = _a[0], setErrMsg = _a[1];
-    var _b = (0, react_1.useState)(""), roomName = _b[0], setRoomName = _b[1];
+    var _b = (0, react_1.useState)(""), newRoomName = _b[0], setNewRoomName = _b[1];
     var CheckRoom = function (room_name) { return __awaiter(void 0, void 0, void 0, function () {
-        var inUse;
+        var room_exists, room_created;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -53,38 +53,22 @@ var CreateRoom = function (props) {
                         setErrMsg('Please provide a room name!');
                         return [2 /*return*/];
                     }
-                    return [4 /*yield*/, fetch("/api/word-guesser/rooms/find?name=".concat(room_name))
-                            .then(function (res) { return res.text(); })
-                            .then(function (data) {
-                            inUse = (0, word_guesser_tools_1.RemoveQuotes)(data);
-                            if (inUse === 'true') {
-                                setErrMsg("Room with that name already exists!");
-                                return;
-                            }
-                            else {
-                                CreateRoom();
-                            }
-                        })];
+                    return [4 /*yield*/, (0, word_guesser_tools_1.Room_DoesRoomExist)(room_name)];
                 case 1:
-                    _a.sent();
+                    room_exists = _a.sent();
+                    if (room_exists) {
+                        setErrMsg("Room with that name already exists!");
+                        return [2 /*return*/];
+                    }
+                    return [4 /*yield*/, (0, word_guesser_tools_1.Room_CreateRoom)(room_name, props.playerId)];
+                case 2:
+                    room_created = _a.sent();
+                    room_created ? props.setRoomName(room_name) : console.log('room not created');
                     return [2 /*return*/];
             }
         });
     }); };
-    var CreateRoom = function () { return __awaiter(void 0, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, fetch("/api/word-guesser/rooms/new?name=".concat(roomName, "&id=").concat(props.playerId), {
-                        method: "POST"
-                    })
-                        .then((function (res) { return res.redirected; }))];
-                case 1:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
-        });
-    }); };
-    (0, react_1.useEffect)(function () { setErrMsg(''); }, [roomName]);
-    return ((0, jsx_runtime_1.jsxs)(material_1.Box, { height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', children: [(0, jsx_runtime_1.jsx)(material_1.Typography, { variant: 'h3', children: "Create a room" }), (0, jsx_runtime_1.jsx)(material_1.List, { children: (0, jsx_runtime_1.jsxs)(material_1.ListItem, { sx: { gap: '1rem', paddingLeft: 0 }, children: [(0, jsx_runtime_1.jsx)(material_1.TextField, { error: errMsg ? true : false, fullWidth: true, label: "Room Name", value: roomName, onChange: function (e) { return setRoomName(e.target.value); } }), (0, jsx_runtime_1.jsx)(material_1.Button, { className: 'btn__input', variant: 'contained', onClick: function () { return CheckRoom(roomName); }, children: "Create" })] }) }), (0, jsx_runtime_1.jsx)(material_1.Typography, { minHeight: '1.5rem', color: 'red', children: errMsg })] }));
+    (0, react_1.useEffect)(function () { setErrMsg(''); }, [newRoomName]);
+    return ((0, jsx_runtime_1.jsxs)(material_1.Box, { children: [(0, jsx_runtime_1.jsx)(material_1.Typography, { variant: 'h3', children: "Create a room" }), (0, jsx_runtime_1.jsx)(material_1.List, { children: (0, jsx_runtime_1.jsxs)(material_1.ListItem, { sx: { gap: '1rem', paddingLeft: 0 }, children: [(0, jsx_runtime_1.jsx)(material_1.TextField, { error: errMsg ? true : false, fullWidth: true, label: "Room Name", value: newRoomName, onChange: function (e) { return setNewRoomName(e.target.value); } }), (0, jsx_runtime_1.jsx)(material_1.Button, { className: 'btn__input', variant: 'contained', onClick: function () { return CheckRoom(newRoomName); }, children: "Create" })] }) }), (0, jsx_runtime_1.jsx)(material_1.Typography, { minHeight: '1.5rem', color: 'red', children: errMsg })] }));
 };
 exports.CreateRoom = CreateRoom;

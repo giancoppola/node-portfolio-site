@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.router = void 0;
+exports.Player_ResetLastPlayedDate = exports.router = void 0;
 var express = require('express');
 var rateLimit = require("express-rate-limit");
 exports.router = express.Router();
@@ -193,37 +193,82 @@ exports.router.route('/rooms/new')
                 return [4 /*yield*/, room.save()];
             case 1:
                 _a.sent();
-                res.redirect("/word-guesser?room=".concat(req.query.name));
+                res.status(200).json(room);
                 return [2 /*return*/];
+        }
+    });
+}); });
+exports.router.route('/rooms/join')
+    .put(function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var room, error, err_3, error;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, word_guesser_types_1.RoomModel.findOne({ name: req.query.name })];
+            case 1:
+                room = _a.sent();
+                if (room.player_2.id != "") {
+                    res.status(400).json({
+                        success: false,
+                        msg: 'Room is full!'
+                    });
+                }
+                else {
+                    try {
+                        room.updateOne({ player_2: { id: req.query.id } });
+                        res.status(200).json({
+                            success: true,
+                            msg: 'Room joined!'
+                        });
+                    }
+                    catch (err) {
+                        error = err;
+                        res.status(400).json({
+                            success: false,
+                            msg: 'Could not update room! ' + error.message
+                        });
+                    }
+                }
+                return [3 /*break*/, 3];
+            case 2:
+                err_3 = _a.sent();
+                error = err_3;
+                console.log(error.message);
+                res.status(400).json({
+                    success: false,
+                    msg: 'Cant find room! ' + error.message
+                });
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
 }); });
 /////////////////////////////
 // Rooms API Endpoints End //
 /////////////////////////////
-// .get( async (req: Request, res: Response, next: NextFunction) => {
-//     let users: Array<Object> = await UserModel.find().select('-pass -_id -__v').exec();
-//     console.log(users.length);
-//     res.json({
-//         users
-//     })
-//     next()
-// })
-// .post( async (req: Request, res: Response, next: NextFunction) => {
-//     let wins = req.
-//     let firstName = req.body.firstName;
-//     let lastName = req.body.lastName;
-//     let email = req.body.email;
-//     let pass = req.body.pass;
-//     let user = new UserModel({
-//         firstName: firstName,
-//         lastName: lastName,
-//         email: email,
-//         pass: pass
-//     })
-//     await user.save();
-//     res.json({
-//         user
-//     })
-//     next()
-// })
+////////////////////////
+// Database Functions //
+////////////////////////
+var Player_ResetLastPlayedDate = function (player_id) { return __awaiter(void 0, void 0, void 0, function () {
+    var player, e_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, word_guesser_types_1.PlayerModel.findOneAndUpdate({ _id: player_id }, { last_played: Date.now() })];
+            case 1:
+                player = _a.sent();
+                return [3 /*break*/, 3];
+            case 2:
+                e_1 = _a.sent();
+                console.log(e_1);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.Player_ResetLastPlayedDate = Player_ResetLastPlayedDate;
+////////////////////////////
+// Database Functions End //
+////////////////////////////

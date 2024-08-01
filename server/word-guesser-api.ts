@@ -3,12 +3,12 @@ const express = require('express')
 const rateLimit = require("express-rate-limit");
 export const router: Router = express.Router();
 
+import { RemoveQuotes } from "../src/word-guesser/word-guesser-tools";
+
 import { Mongoose } from "mongoose";
 const mongoose: Mongoose = require('mongoose');
 // MongoDB model imports
 import { iPlayer, PlayerSchema, PlayerModel, RoomModel, iRoom } from "../types/word-guesser-types";
-import { Server } from "http";
-import { Socket } from "dgram";
 
 const limit = rateLimit({
     // Every 5 minutes
@@ -118,37 +118,74 @@ router.route('/rooms/new')
     let room = new RoomModel(newRoom);
     console.log(room);
     await room.save();
-    res.redirect(`/word-guesser?room=${req.query.name}`);
+    res.status(200).json(room);
+})
+
+router.route('/rooms/join')
+.put( async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        let room = await RoomModel.findOne({ name: req.query.name })
+        if ((room as unknown as iRoom)!.player_2.id != "") {
+            res.status(400).json(
+                {
+                    success: false,
+                    msg: 'Room is full!'
+                }
+            );
+        }
+        else {
+            try {
+                room!.updateOne({ player_2: { id: req.query.id } })
+                res.status(200).json(
+                    {
+                        success: true,
+                        msg: 'Room joined!'
+                    }
+                );
+            }
+            catch (err) {
+                let error = err as Error;
+                res.status(400).json(
+                    {
+                        success: false,
+                        msg: 'Could not update room! ' + error.message
+                    }
+                );
+            }
+        }
+    }
+    catch (err) {
+        let error = err as Error;
+        console.log(error.message);
+        res.status(400).json(
+            {
+                success: false,
+                msg: 'Cant find room! ' + error.message
+            }
+        );
+    }
 })
 
 /////////////////////////////
 // Rooms API Endpoints End //
 /////////////////////////////
 
+////////////////////////
+// Database Functions //
+////////////////////////
 
-// .get( async (req: Request, res: Response, next: NextFunction) => {
-//     let users: Array<Object> = await UserModel.find().select('-pass -_id -__v').exec();
-//     console.log(users.length);
-//     res.json({
-//         users
-//     })
-//     next()
-// })
-// .post( async (req: Request, res: Response, next: NextFunction) => {
-//     let wins = req.
-//     let firstName = req.body.firstName;
-//     let lastName = req.body.lastName;
-//     let email = req.body.email;
-//     let pass = req.body.pass;
-//     let user = new UserModel({
-//         firstName: firstName,
-//         lastName: lastName,
-//         email: email,
-//         pass: pass
-//     })
-//     await user.save();
-//     res.json({
-//         user
-//     })
-//     next()
-// })
+export const Player_ResetLastPlayedDate = async (player_id: string)=> {
+    try {
+        const player = await PlayerModel.findOneAndUpdate(
+            { _id: player_id },
+            { last_played: Date.now() },
+        );
+    }
+    catch (e) {
+        console.log(e);
+    }
+}
+
+////////////////////////////
+// Database Functions End //
+////////////////////////////

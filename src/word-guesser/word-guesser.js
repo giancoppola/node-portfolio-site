@@ -41,31 +41,30 @@ var client_1 = require("react-dom/client");
 var react_1 = require("react");
 var material_1 = require("@mui/material");
 var _create_room_1 = require("./_create-room");
+var _join_room_1 = require("./_join_room");
+var _room_1 = require("./_room");
 var _footer_1 = require("./_footer");
 var word_guesser_types_1 = require("../../types/word-guesser-types");
 var word_guesser_tools_1 = require("./word-guesser-tools");
 var socket_io_client_1 = require("socket.io-client");
 var socket = (0, socket_io_client_1.io)();
 var Main = function () {
-    var _a = (0, react_1.useState)(""), playerId = _a[0], setPlayerId = _a[1];
+    var _a = (0, react_1.useState)(""), roomName = _a[0], setRoomName = _a[1];
+    var _b = (0, react_1.useState)(""), playerId = _b[0], setPlayerId = _b[1];
     var CheckPlayerId = function (player_id) { return __awaiter(void 0, void 0, void 0, function () {
         var valid;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, fetch("/api/word-guesser/players/find?id=".concat(player_id))
-                        .then(function (res) { return res.text(); })
-                        .then(function (data) {
-                        valid = (0, word_guesser_tools_1.RemoveQuotes)(data);
-                        if (valid === 'true') {
-                            setPlayerId(player_id);
-                        }
-                        else {
-                            localStorage.removeItem(word_guesser_types_1.PLAYER_ID);
-                            CreateNewPlayer();
-                        }
-                    })];
+                case 0: return [4 /*yield*/, (0, word_guesser_tools_1.Player_CheckPlayerId)(player_id)];
                 case 1:
-                    _a.sent();
+                    valid = _a.sent();
+                    if (valid) {
+                        setPlayerId(player_id);
+                    }
+                    else {
+                        localStorage.removeItem(word_guesser_types_1.PLAYER_ID);
+                        CreateNewPlayer();
+                    }
                     return [2 /*return*/];
             }
         });
@@ -74,18 +73,12 @@ var Main = function () {
         var newId;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, fetch("/api/word-guesser/players/new", {
-                        method: "POST"
-                    })
-                        .then(function (res) { return res.text(); })
-                        .then(function (id) {
-                        newId = (0, word_guesser_tools_1.RemoveQuotes)(id);
-                        console.log(newId);
-                        setPlayerId(newId);
-                        localStorage.setItem(word_guesser_types_1.PLAYER_ID, newId);
-                    })];
+                case 0: return [4 /*yield*/, (0, word_guesser_tools_1.Player_CreateNewPlayer)()];
                 case 1:
-                    _a.sent();
+                    newId = _a.sent();
+                    console.log(newId);
+                    setPlayerId(newId);
+                    localStorage.setItem(word_guesser_types_1.PLAYER_ID, newId);
                     return [2 /*return*/];
             }
         });
@@ -101,7 +94,10 @@ var Main = function () {
         }
     }, []);
     (0, react_1.useEffect)(function () { playerId ? socket.emit("active", playerId) : null; }, [playerId]);
-    return ((0, jsx_runtime_1.jsxs)(material_1.Box, { component: 'section', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', height: '100dvh', width: '100dvw', children: [(0, jsx_runtime_1.jsx)(material_1.Typography, { variant: 'h1', children: "Word Guesser" }), playerId && (0, jsx_runtime_1.jsx)(_create_room_1.CreateRoom, { playerId: playerId }), (0, jsx_runtime_1.jsx)(_footer_1.Footer, {})] }));
+    (0, react_1.useEffect)(function () { roomName ? socket.emit("room_joined", roomName) : null; }, [roomName]);
+    return ((0, jsx_runtime_1.jsxs)(material_1.Box, { component: 'section', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', height: '100dvh', width: '100dvw', children: [(0, jsx_runtime_1.jsx)(material_1.Typography, { variant: 'h1', fontWeight: 'bold', children: "BattleWords" }), playerId && !roomName &&
+                (0, jsx_runtime_1.jsxs)(material_1.Box, { height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '2rem', children: [(0, jsx_runtime_1.jsx)(_create_room_1.CreateRoom, { setRoomName: setRoomName, playerId: playerId }), (0, jsx_runtime_1.jsx)(_join_room_1.JoinRoom, { setRoomName: setRoomName, playerId: playerId })] }), roomName &&
+                (0, jsx_runtime_1.jsx)(material_1.Box, { height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '2rem', children: (0, jsx_runtime_1.jsx)(_room_1.Room, {}) }), (0, jsx_runtime_1.jsx)(_footer_1.Footer, {})] }));
 };
 var root = (0, client_1.createRoot)(document.getElementById('main'));
 root.render((0, jsx_runtime_1.jsx)(Main, {}));

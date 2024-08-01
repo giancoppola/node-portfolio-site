@@ -53,24 +53,27 @@ const server = app.listen(process.env.PORT || 3000, () => {
     // console.log('Your app is listening on port 3000 ' + listener.address().port)
 })
 
-import { PlayerModel, RoomModel, iRoom, iPlayer } from './types/word-guesser-types';
+// MongoDB Database Functions
+import { Player_ResetLastPlayedDate } from './server/word-guesser-api';
+import { SocketIoUser, SocketIoUserObj } from './types/word-guesser-types';
 // Socket IO Connections and Responses
+const users: SocketIoUserObj = {};
 const io: Server = new SocketServer(server);
 io.on("connection", (socket: Socket) => {
-    console.log("user connected");
+    users[socket.id] = { player_id: '', room_name: '' };
+    console.log(users);
     socket.on('disconnect', () => {
+        // TODO - Remove user from room once disconnected
+        delete users[socket.id];
         console.log("user disconnected");
     })
-    socket.on("active", async (player_id) => {
-        console.log(player_id, 'is now active');
-        try {
-            const player = await PlayerModel.findOneAndUpdate(
-                { _id: player_id },
-                { last_played: Date.now() },
-            );
-        }
-        catch (e) {
-            console.log(e);
-        }
+    socket.on("active", async (player_id: string) => {
+        users[socket.id].player_id = player_id;
+        console.log(users);
+        Player_ResetLastPlayedDate(player_id);
+    })
+    socket.on("room_joined", async (room_name: string) => {
+        users[socket.id].room_name = room_name;
+        console.log(users);
     })
 })
