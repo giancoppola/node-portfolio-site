@@ -2,6 +2,7 @@ import { Model } from "mongoose";
 const mongoose = require('mongoose');
 
 export const PLAYER_ID = "WG.player_id";
+export const ROOM_NAME = "WG.room_name";
 
 export interface iPlayerInRoom {
     id: string;
@@ -61,3 +62,13 @@ export interface SocketIoUser {
 export interface SocketIoUserObj {
     [key: string]: SocketIoUser;
 }
+////////////////////
+// Player Actions //
+////////////////////
+
+export const SET_WORD = 'set_word';
+export const NEXT_GUESS = 'next_guess';
+
+////////////////////////
+// Player Actions End //
+////////////////////////

@@ -46,6 +46,11 @@ export const Room_JoinRoom = async (room_name: string, player_id: string): Promi
     return joined;
 }
 
+export const Room_RejoinRoom = async (room_name: string, player_id: string): Promise<SuccessResponse> => {
+    let rejoined: SuccessResponse = { success: false, msg: "Could not rejoin" }
+    return rejoined;
+}
+
 ////////////////////////
 // Room API Calls End //
 ////////////////////////

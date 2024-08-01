@@ -166,6 +166,61 @@ router.route('/rooms/join')
     }
 })
 
+
+// TODO - create rejoin api
+router.route('/rooms/rejoin')
+.put( async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        let room = await RoomModel.findOne({ name: req.query.name })
+        if ((room as unknown as iRoom)!.player_2.id != "") {
+            res.status(400).json(
+                {
+                    success: false,
+                    msg: 'Room is full!'
+                }
+            );
+        }
+        else if ((room as unknown as iRoom)!.player_2.id != "") {
+            res.status(400).json(
+                {
+                    success: false,
+                    msg: 'Room is full!'
+                }
+            );
+        }
+        else {
+            try {
+                room!.updateOne({ player_2: { id: req.query.id } })
+                res.status(200).json(
+                    {
+                        success: true,
+                        msg: 'Room joined!'
+                    }
+                );
+            }
+            catch (err) {
+                let error = err as Error;
+                res.status(400).json(
+                    {
+                        success: false,
+                        msg: 'Could not update room! ' + error.message
+                    }
+                );
+            }
+        }
+    }
+    catch (err) {
+        let error = err as Error;
+        console.log(error.message);
+        res.status(400).json(
+            {
+                success: false,
+                msg: 'Cant find room! ' + error.message
+            }
+        );
+    }
+})
+
 /////////////////////////////
 // Rooms API Endpoints End //
 /////////////////////////////

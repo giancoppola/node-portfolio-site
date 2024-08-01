@@ -7,7 +7,7 @@ import { JoinRoom } from './_join_room'
 import { Room } from './_room'
 import { Footer } from './_footer'
 
-import { iPlayer, PlayerModel, PLAYER_ID } from '../../types/word-guesser-types'
+import { iPlayer, PlayerModel, PLAYER_ID, ROOM_NAME, SET_WORD, NEXT_GUESS } from '../../types/word-guesser-types'
 import { Player_CheckPlayerId, Player_CreateNewPlayer, RemoveQuotes } from './word-guesser-tools'
 
 import { io, Socket } from 'socket.io-client'
@@ -34,12 +34,17 @@ const Main = () => {
     }
     useEffect(() => {
         let player_id = localStorage.getItem(PLAYER_ID);
-        console.log("Player ID: ", player_id)
+        let room_name = localStorage.getItem(ROOM_NAME);
+        console.log("Player ID: ", player_id);
+        console.log("Room Name", room_name);
         if (player_id != null) {
             CheckPlayerId(player_id);
         }
         else {
             CreateNewPlayer();
+        }
+        if (room_name != null) {
+            
         }
     }, [])
     useEffect(() => { playerId ? socket.emit("active", playerId) : null }, [playerId])
