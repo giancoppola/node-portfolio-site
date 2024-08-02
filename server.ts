@@ -92,7 +92,14 @@ RoomModel.watch()
 .on("change", (data: ChangeStreamDocument) => {
     if (data.operationType === 'update') {
         console.log("Room Updates", data.updateDescription.updatedFields)
+        let updates = data.updateDescription.updatedFields;
         // Check if the room is now empty, if it is then delete it
         Room_DeleteIfEmpty(data.documentKey._id.toString())
+        if (updates!.update_type != null) {
+            let updateType = updates!.update_type;
+            switch (updateType) {
+                // TODO
+            }
+        }
     }
 });

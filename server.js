@@ -71,8 +71,6 @@ app.get('/meal-planner/*', function (req, res, next) {
 //API endpoints
 var apiRoute = require('./server/api').router;
 app.use('/api', apiRoute);
-var mealsApiRoute = require('./server/meals-api').router;
-app.use('/api/meals', mealsApiRoute);
 var wgApiRoute = require('./server/word-guesser-api').router;
 app.use('/api/word-guesser/', wgApiRoute);
 // Error page matching

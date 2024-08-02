@@ -1,10 +1,12 @@
 import { Dispatch, useEffect, useState } from 'react'
 import { Box, Button, List, ListItem, TextField, Typography } from '@mui/material'
 import { RemoveQuotes, Room_DoesRoomExist, Room_CreateRoom } from './word-guesser-tools'
+import { PLAYER_1 } from '../../types/word-guesser-types';
 
 interface Props {
     playerId: string;
     setRoomName: Function;
+    setPlayerNumber: Function;
 }
 export const CreateRoom = (props: Props) => {
     const [errMsg, setErrMsg]: [string, Dispatch<string>] = useState<string>("");
@@ -14,7 +16,11 @@ export const CreateRoom = (props: Props) => {
         let room_exists = await Room_DoesRoomExist(room_name);
         if (room_exists) { setErrMsg("Room with that name already exists!"); return; }
         let room_created = await Room_CreateRoom(room_name, props.playerId);
-        room_created ? props.setRoomName(room_name) : console.log('room not created');
+        if (room_created) {
+            props.setRoomName(room_name);
+            props.setPlayerNumber(PLAYER_1);
+        }
+        else { console.log('room not created'); }
     }
     useEffect(() => { setErrMsg('') }, [newRoomName])
     return (

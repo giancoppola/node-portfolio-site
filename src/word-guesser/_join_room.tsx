@@ -1,11 +1,12 @@
 import { Dispatch, useEffect, useState } from 'react'
 import { Box, Button, List, ListItem, TextField, Typography } from '@mui/material'
 import { RemoveQuotes, Room_DoesRoomExist, Room_JoinRoom } from './word-guesser-tools'
-import { SuccessResponse } from '../../types/word-guesser-types';
+import { PLAYER_2, SuccessResponse } from '../../types/word-guesser-types';
 
 interface Props {
     playerId: string;
     setRoomName: Function;
+    setPlayerNumber: Function;
 }
 export const JoinRoom = (props: Props) => {
     const [errMsg, setErrMsg]: [string, Dispatch<string>] = useState<string>("");
@@ -20,6 +21,7 @@ export const JoinRoom = (props: Props) => {
         let joined: SuccessResponse = await Room_JoinRoom(room_name, props.playerId);
         if (joined.success) {
             props.setRoomName(room_name);
+            props.setPlayerNumber(PLAYER_2);
         }
         else {
             setErrMsg(joined.msg);

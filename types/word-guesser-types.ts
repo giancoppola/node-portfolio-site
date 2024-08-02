@@ -2,9 +2,10 @@ import { Model } from "mongoose";
 const mongoose = require('mongoose');
 
 export const PLAYER_ID = "WG.player_id";
-export const ROOM_NAME = "WG.room_name";
+export const PLAYER_1 = 'player_1';
+export const PLAYER_2 = 'player_2';
 
-export type UPDATE_TYPE = 'ROOM_CREATED' | 'PLAYER_2_JOINED' | 'PLAYER_1_JOINED' | 'PLAYER_1_GUESSED' | 'PLAYER_2_GUESSED';
+export type UPDATE_TYPE = 'ROOM_CREATED' | 'PLAYER_2_JOINED' | 'PLAYER_1_READY' | 'PLAYER_2_READY' | 'PLAYER_1_JOINED' | 'PLAYER_1_GUESSED' | 'PLAYER_2_GUESSED';
 export type NEXT_ACTION = 'GAME_START' | 'PLAYER_1_GUESS' | 'PLAYER_2_GUESS' | 'FINISH';
 export interface iPlayerInRoom {
     id: string;
