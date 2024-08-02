@@ -11,9 +11,11 @@ import { iPlayer, PlayerModel, PLAYER_ID, ROOM_NAME, SET_WORD, NEXT_GUESS, ACTIV
 import { Player_CheckPlayerId, Player_CreateNewPlayer, RemoveQuotes } from './word-guesser-tools'
 
 import { io, Socket } from 'socket.io-client'
+import { WordInput } from './_word_input'
 const socket: Socket = io();
 
 const Main = () => {
+    const [word, setWord]: [string, Dispatch<string>] = useState<string>("");
     const [userCount, setUserCount]: [number, Dispatch<number>] = useState<number>(0)
     const [roomName, setRoomName]: [string, Dispatch<string>] = useState<string>("");
     const [playerId, setPlayerId]: [string, Dispatch<string>] = useState<string>("");
@@ -55,7 +57,7 @@ const Main = () => {
         <Box component='section' display='flex' flexDirection='column' justifyContent='space-between' alignItems='center' height='100dvh' width='100dvw'>
             <Typography variant='h1' fontWeight='bold'>
                 BattleWords
-                <Typography variant='subtitle2' fontWeight='bold' textAlign='center'>{`${userCount} players are online`}</Typography>
+                <Typography variant='subtitle2' fontWeight='bold' textAlign='center'>{`${userCount} player${userCount > 1 ? 's are' : ' is'} online`}</Typography>
             </Typography>
             { playerId && !roomName &&
                 <Box height='100%' display='flex' flexDirection='column' justifyContent='center' gap='2rem'>
@@ -63,11 +65,10 @@ const Main = () => {
                     <JoinRoom setRoomName={setRoomName} playerId={playerId} />
                 </Box>
             }
-            { roomName &&
-                <Box height='100%' display='flex' flexDirection='column' justifyContent='center' gap='2rem'>
-                    <Room/>
-                </Box>
-            }
+            <Box height='100%' display='flex' flexDirection='column' justifyContent='center' gap='2rem'>
+                <Room setWord={setWord}/>
+            </Box>
+            {word}
             <Footer/>
         </Box>
     )
