@@ -39,9 +39,6 @@ app.get('/meal-planner/*',(req: Request, res:Response, next: NextFunction) => {
 const apiRoute = require('./server/api').router;
 app.use('/api', apiRoute);
 
-const mealsApiRoute = require('./server/meals-api').router;
-app.use('/api/meals', mealsApiRoute);
-
 const wgApiRoute = require('./server/word-guesser-api').router;
 app.use('/api/word-guesser/', wgApiRoute);
 
