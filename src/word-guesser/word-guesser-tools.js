@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Player_CreateNewPlayer = exports.Player_CheckPlayerId = exports.Room_JoinRoom = exports.Room_CreateRoom = exports.Room_DoesRoomExist = exports.RemoveQuotes = void 0;
+exports.Player_CreateNewPlayer = exports.Player_CheckPlayerId = exports.Room_RejoinRoom = exports.Room_JoinRoom = exports.Room_CreateRoom = exports.Room_DoesRoomExist = exports.RemoveQuotes = void 0;
 /////////////
 // General //
 /////////////
@@ -100,6 +100,14 @@ var Room_JoinRoom = function (room_name, player_id) { return __awaiter(void 0, v
     });
 }); };
 exports.Room_JoinRoom = Room_JoinRoom;
+var Room_RejoinRoom = function (room_name, player_id) { return __awaiter(void 0, void 0, void 0, function () {
+    var rejoined;
+    return __generator(this, function (_a) {
+        rejoined = { success: false, msg: "Could not rejoin" };
+        return [2 /*return*/, rejoined];
+    });
+}); };
+exports.Room_RejoinRoom = Room_RejoinRoom;
 ////////////////////////
 // Room API Calls End //
 ////////////////////////

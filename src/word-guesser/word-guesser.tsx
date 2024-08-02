@@ -7,13 +7,14 @@ import { JoinRoom } from './_join_room'
 import { Room } from './_room'
 import { Footer } from './_footer'
 
-import { iPlayer, PlayerModel, PLAYER_ID, ROOM_NAME, SET_WORD, NEXT_GUESS } from '../../types/word-guesser-types'
+import { iPlayer, PlayerModel, PLAYER_ID, ROOM_NAME, SET_WORD, NEXT_GUESS, ACTIVE, ROOM_JOINED, USER_COUNT } from '../../types/word-guesser-types'
 import { Player_CheckPlayerId, Player_CreateNewPlayer, RemoveQuotes } from './word-guesser-tools'
 
 import { io, Socket } from 'socket.io-client'
 const socket: Socket = io();
 
 const Main = () => {
+    const [userCount, setUserCount]: [number, Dispatch<number>] = useState<number>(0)
     const [roomName, setRoomName]: [string, Dispatch<string>] = useState<string>("");
     const [playerId, setPlayerId]: [string, Dispatch<string>] = useState<string>("");
     const CheckPlayerId = async (player_id: string) => {
@@ -47,11 +48,15 @@ const Main = () => {
             
         }
     }, [])
-    useEffect(() => { playerId ? socket.emit("active", playerId) : null }, [playerId])
-    useEffect(() => { roomName ? socket.emit("room_joined", roomName ) : null }, [roomName])
+    useEffect(() => { playerId ? socket.emit(ACTIVE, playerId) : null }, [playerId])
+    useEffect(() => { roomName ? socket.emit(ROOM_JOINED, roomName ) : null }, [roomName])
+    socket.on(USER_COUNT, (user_count: number) => setUserCount(user_count));
     return (
         <Box component='section' display='flex' flexDirection='column' justifyContent='space-between' alignItems='center' height='100dvh' width='100dvw'>
-            <Typography variant='h1' fontWeight='bold'>BattleWords</Typography>
+            <Typography variant='h1' fontWeight='bold'>
+                BattleWords
+                <Typography variant='subtitle2' fontWeight='bold' textAlign='center'>{`${userCount} players are online`}</Typography>
+            </Typography>
             { playerId && !roomName &&
                 <Box height='100%' display='flex' flexDirection='column' justifyContent='center' gap='2rem'>
                     <CreateRoom setRoomName={setRoomName} playerId={playerId} />

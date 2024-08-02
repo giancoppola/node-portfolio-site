@@ -55,25 +55,28 @@ const server = app.listen(process.env.PORT || 3000, () => {
 
 // MongoDB Database Functions
 import { Player_ResetLastPlayedDate } from './server/word-guesser-api';
-import { SocketIoUser, SocketIoUserObj } from './types/word-guesser-types';
+import { ACTIVE, ROOM_JOINED, SocketIoUser, SocketIoUserObj, USER_COUNT } from './types/word-guesser-types';
 // Socket IO Connections and Responses
 const users: SocketIoUserObj = {};
 const io: Server = new SocketServer(server);
 io.on("connection", (socket: Socket) => {
     users[socket.id] = { player_id: '', room_name: '' };
+    io.sockets.emit(USER_COUNT, Object.keys(users).length);
     console.log(users);
     socket.on('disconnect', () => {
         // TODO - Remove user from room once disconnected
         delete users[socket.id];
+        io.sockets.emit(USER_COUNT, Object.keys(users).length);
         console.log("user disconnected");
     })
-    socket.on("active", async (player_id: string) => {
+    socket.on(ACTIVE, async (player_id: string) => {
         users[socket.id].player_id = player_id;
         console.log(users);
         Player_ResetLastPlayedDate(player_id);
     })
-    socket.on("room_joined", async (room_name: string) => {
+    socket.on(ROOM_JOINED, async (room_name: string) => {
         users[socket.id].room_name = room_name;
+        socket.join(room_name);
         console.log(users);
     })
 })

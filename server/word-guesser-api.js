@@ -244,6 +244,59 @@ exports.router.route('/rooms/join')
         }
     });
 }); });
+// TODO - create rejoin api
+exports.router.route('/rooms/rejoin')
+    .put(function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var room, error, err_4, error;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, word_guesser_types_1.RoomModel.findOne({ name: req.query.name })];
+            case 1:
+                room = _a.sent();
+                if (room.player_2.id != "") {
+                    res.status(400).json({
+                        success: false,
+                        msg: 'Room is full!'
+                    });
+                }
+                else if (room.player_2.id != "") {
+                    res.status(400).json({
+                        success: false,
+                        msg: 'Room is full!'
+                    });
+                }
+                else {
+                    try {
+                        room.updateOne({ player_2: { id: req.query.id } });
+                        res.status(200).json({
+                            success: true,
+                            msg: 'Room joined!'
+                        });
+                    }
+                    catch (err) {
+                        error = err;
+                        res.status(400).json({
+                            success: false,
+                            msg: 'Could not update room! ' + error.message
+                        });
+                    }
+                }
+                return [3 /*break*/, 3];
+            case 2:
+                err_4 = _a.sent();
+                error = err_4;
+                console.log(error.message);
+                res.status(400).json({
+                    success: false,
+                    msg: 'Cant find room! ' + error.message
+                });
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); });
 /////////////////////////////
 // Rooms API Endpoints End //
 /////////////////////////////

@@ -84,18 +84,21 @@ var server = app.listen(process.env.PORT || 3000, function () {
 });
 // MongoDB Database Functions
 var word_guesser_api_1 = require("./server/word-guesser-api");
+var word_guesser_types_1 = require("./types/word-guesser-types");
 // Socket IO Connections and Responses
 var users = {};
 var io = new socket_io_1.Server(server);
 io.on("connection", function (socket) {
     users[socket.id] = { player_id: '', room_name: '' };
+    io.sockets.emit(word_guesser_types_1.USER_COUNT, Object.keys(users).length);
     console.log(users);
     socket.on('disconnect', function () {
         // TODO - Remove user from room once disconnected
         delete users[socket.id];
+        io.sockets.emit(word_guesser_types_1.USER_COUNT, Object.keys(users).length);
         console.log("user disconnected");
     });
-    socket.on("active", function (player_id) { return __awaiter(void 0, void 0, void 0, function () {
+    socket.on(word_guesser_types_1.ACTIVE, function (player_id) { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             users[socket.id].player_id = player_id;
             console.log(users);
@@ -103,9 +106,10 @@ io.on("connection", function (socket) {
             return [2 /*return*/];
         });
     }); });
-    socket.on("room_joined", function (room_name) { return __awaiter(void 0, void 0, void 0, function () {
+    socket.on(word_guesser_types_1.ROOM_JOINED, function (room_name) { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             users[socket.id].room_name = room_name;
+            socket.join(room_name);
             console.log(users);
             return [2 /*return*/];
         });

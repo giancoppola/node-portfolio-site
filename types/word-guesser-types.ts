@@ -62,12 +62,25 @@ export interface SocketIoUser {
 export interface SocketIoUserObj {
     [key: string]: SocketIoUser;
 }
+
+////////////////////
+// Server Actions //
+////////////////////
+
+export const USER_COUNT = 'user_count';
+
+////////////////////////
+// Server Actions End //
+////////////////////////
+
 ////////////////////
 // Player Actions //
 ////////////////////
 
 export const SET_WORD = 'set_word';
 export const NEXT_GUESS = 'next_guess';
+export const ROOM_JOINED = 'room_joined';
+export const ACTIVE = "active";
 
 ////////////////////////
 // Player Actions End //
