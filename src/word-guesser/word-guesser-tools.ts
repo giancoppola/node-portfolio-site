@@ -38,7 +38,7 @@ export const Room_CreateRoom = async (room_name: string, player_id: string) => {
 
 export const Room_JoinRoom = async (room_name: string, player_id: string): Promise<SuccessResponse> => {
     let joined: SuccessResponse = await fetch(`/api/word-guesser/rooms/join?name=${room_name}&id=${player_id}`, {
-        method: "PUT"
+        method: "PATCH"
     })
     .then(res => res.json())
     .then((data: SuccessResponse) => data)
@@ -77,6 +77,16 @@ export const Player_CreateNewPlayer = async (): Promise<string> => {
     .then(res => res.text())
     .then(id => RemoveQuotes(id))
     return newId;
+}
+
+export const Player_LeaveRoom = async (player_id: string, room_name: string) => {
+    let left: SuccessResponse = await fetch(`/api/word-guesser/rooms/leave?name=${room_name}&id=${player_id}`, {
+        method: "PATCH"
+    })
+    .then(res => res.json())
+    .then((data: SuccessResponse) => data)
+    .catch(err => {console.log(err); return { success: false, msg: err.message }})
+    return left;
 }
 
 //////////////////////////

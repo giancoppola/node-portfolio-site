@@ -35,6 +35,9 @@ const Main = () => {
         setPlayerId(newId);
         localStorage.setItem(PLAYER_ID, newId);
     }
+    socket.on("fart", () => {
+        console.log('farted')
+    })
     useEffect(() => {
         let player_id = localStorage.getItem(PLAYER_ID);
         let room_name = localStorage.getItem(ROOM_NAME);

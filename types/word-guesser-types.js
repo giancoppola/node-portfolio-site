@@ -10,17 +10,21 @@ exports.RoomSchema = new mongoose.Schema({
         id: { type: String },
         word: { type: String, default: "" },
         wins: { type: Number, default: 0 },
-        current_guess: { type: String, default: "" }
+        current_guess: { type: String, default: "" },
+        ready: { type: Boolean, default: false },
     },
     player_2: {
         id: { type: String, },
         word: { type: String, default: "" },
         wins: { type: Number, default: 0 },
-        current_guess: { type: String, default: "" }
+        current_guess: { type: String, default: "" },
+        ready: { type: Boolean, default: false },
     },
     current_guess: { type: String, default: "" },
     current_guesser: { type: String, default: "player_1" },
-    number_of_games_played: { type: Number, required: true, default: 0 }
+    number_of_games_played: { type: Number, required: true, default: 0 },
+    next_action: { type: String, default: "GAME_START" },
+    update_type: { type: String, default: "ROOM_CREATED" }
 });
 exports.RoomModel = mongoose.model('Room', exports.RoomSchema);
 exports.PlayerSchema = new mongoose.Schema({

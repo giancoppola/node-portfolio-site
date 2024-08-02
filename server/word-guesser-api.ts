@@ -5,10 +5,10 @@ export const router: Router = express.Router();
 
 import { RemoveQuotes } from "../src/word-guesser/word-guesser-tools";
 
-import { Mongoose } from "mongoose";
+import { Mongoose, Query } from "mongoose";
 const mongoose: Mongoose = require('mongoose');
 // MongoDB model imports
-import { iPlayer, PlayerSchema, PlayerModel, RoomModel, iRoom } from "../types/word-guesser-types";
+import { iPlayer, PlayerSchema, PlayerModel, RoomModel, iRoom, SuccessResponse, iPlayerInRoom, UPDATE_TYPE } from "../types/word-guesser-types";
 
 const limit = rateLimit({
     // Every 5 minutes
@@ -104,16 +104,20 @@ router.route('/rooms/new')
             word: '',
             wins: 0,
             current_guess: '',
+            ready: false,
         },
         player_2: {
             id: '',
             word: '',
             wins: 0,
             current_guess: '',
+            ready: false,
         },
         current_guess: '',
         current_guesser: 'player_1',
         number_of_games_played: 0,
+        next_action: 'GAME_START',
+        update_type: 'ROOM_CREATED'
     }
     let room = new RoomModel(newRoom);
     console.log(room);
@@ -122,7 +126,7 @@ router.route('/rooms/new')
 })
 
 router.route('/rooms/join')
-.put( async (req: Request, res: Response, next: NextFunction) => {
+.patch( async (req: Request, res: Response, next: NextFunction) => {
     try {
         let room = await RoomModel.findOne({ name: req.query.name })
         if ((room as unknown as iRoom)!.player_2.id != "") {
@@ -135,7 +139,9 @@ router.route('/rooms/join')
         }
         else {
             try {
-                room!.updateOne({ player_2: { id: req.query.id } })
+                let updateData: iPlayerInRoom = { id: (req.query.id as string), word: '', wins: 0, current_guess: '', ready: false }
+                let updateType: UPDATE_TYPE = 'PLAYER_2_JOINED'
+                await room!.updateOne({ player_2: updateData, update_type: updateType })
                 res.status(200).json(
                     {
                         success: true,
@@ -166,10 +172,20 @@ router.route('/rooms/join')
     }
 })
 
+router.route('/rooms/leave')
+.patch( async (req: Request, res: Response, next: NextFunction) => {
+    let response: SuccessResponse = await Player_RemoveFromRoom((req.query.id as string), (req.query.name as string))
+    if (response.success) {
+        res.status(200).json(response);
+    }
+    else {
+        res.status(400).json(response);
+    }
+})
 
 // TODO - create rejoin api
 router.route('/rooms/rejoin')
-.put( async (req: Request, res: Response, next: NextFunction) => {
+.patch( async (req: Request, res: Response, next: NextFunction) => {
     try {
         let room = await RoomModel.findOne({ name: req.query.name })
         if ((room as unknown as iRoom)!.player_2.id != "") {
@@ -238,6 +254,94 @@ export const Player_ResetLastPlayedDate = async (player_id: string)=> {
     }
     catch (e) {
         console.log(e);
+    }
+}
+
+export const Player_RemoveFromRoom = async (player_id: string, room_name: string): Promise<SuccessResponse> => {
+    try {
+        let room = await RoomModel.findOne({ name: room_name })
+        if ((room as unknown as iRoom)!.player_2.id === player_id) {
+            try{
+                let updateData = { id: '', word: '', wins: 0 }
+                await room!.updateOne({ player_2: updateData })
+                return(
+                    {
+                        success: true,
+                        msg: `Removed ${player_id} from ${room_name}`
+                    }
+                );
+            }
+            catch (err) {
+                return(
+                    {
+                        success: false,
+                        msg: (err as Error).message
+                    }
+                );
+            }
+        }
+        else if ((room as unknown as iRoom)!.player_1.id === player_id) {
+            try{
+                let updateData = { id: '', word: '', wins: 0 }
+                await room!.updateOne({ player_1: updateData})
+                return(
+                    {
+                        success: true,
+                        msg: `Removed ${player_id} from ${room_name}`
+                    }
+                );
+            }
+            catch (err) {
+                return(
+                    {
+                        success: false,
+                        msg: (err as Error).message
+                    }
+                );
+            }
+        }
+        else {
+            return(
+                {
+                    success: false,
+                    msg: 'Cannot find player in room'
+                }
+            );
+        }
+    }
+    catch (err) {
+        let error = err as Error;
+        console.log(error.message);
+        return(
+            {
+                success: false,
+                msg: 'Cant find room! ' + error.message
+            }
+        );
+    }
+}
+
+export const Room_DeleteIfEmpty = async (db_id: string) => {
+    try {
+        let room = await RoomModel.findOne({ _id: db_id });
+        if (room && (room as unknown as iRoom).player_1.id === '' && (room as unknown as iRoom).player_2.id === ''){
+            try {
+                await room!.deleteOne()
+                console.log('deleted empty room' + db_id);
+                return;
+            }
+            catch (err) {
+                console.log((err as Error).message);
+                return;
+            }
+        }
+        else {
+            return;
+        }
+    }
+    catch (err) {
+        console.log((err as Error).message);
+        return;
     }
 }
 

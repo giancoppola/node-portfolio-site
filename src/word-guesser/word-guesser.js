@@ -85,6 +85,9 @@ var Main = function () {
             }
         });
     }); };
+    socket.on("fart", function () {
+        console.log('farted');
+    });
     (0, react_1.useEffect)(function () {
         var player_id = localStorage.getItem(word_guesser_types_1.PLAYER_ID);
         var room_name = localStorage.getItem(word_guesser_types_1.ROOM_NAME);

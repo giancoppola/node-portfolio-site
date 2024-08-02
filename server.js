@@ -92,12 +92,23 @@ io.on("connection", function (socket) {
     users[socket.id] = { player_id: '', room_name: '' };
     io.sockets.emit(word_guesser_types_1.USER_COUNT, Object.keys(users).length);
     console.log(users);
-    socket.on('disconnect', function () {
-        // TODO - Remove user from room once disconnected
-        delete users[socket.id];
-        io.sockets.emit(word_guesser_types_1.USER_COUNT, Object.keys(users).length);
-        console.log("user disconnected");
-    });
+    socket.on('disconnect', function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (!users[socket.id].room_name) return [3 /*break*/, 2];
+                    return [4 /*yield*/, (0, word_guesser_api_1.Player_RemoveFromRoom)(users[socket.id].player_id, users[socket.id].room_name)];
+                case 1:
+                    _a.sent();
+                    _a.label = 2;
+                case 2:
+                    delete users[socket.id];
+                    io.sockets.emit(word_guesser_types_1.USER_COUNT, Object.keys(users).length);
+                    console.log("user disconnected");
+                    return [2 /*return*/];
+            }
+        });
+    }); });
     socket.on(word_guesser_types_1.ACTIVE, function (player_id) { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             users[socket.id].player_id = player_id;
@@ -109,9 +120,21 @@ io.on("connection", function (socket) {
     socket.on(word_guesser_types_1.ROOM_JOINED, function (room_name) { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             users[socket.id].room_name = room_name;
+            console.log("Rooms", io.sockets.adapter.rooms);
             socket.join(room_name);
             console.log(users);
             return [2 /*return*/];
         });
     }); });
+});
+var Room_CheckNextAction = function (db_id) {
+};
+// Watching for room updates, to pass on to players or take action
+word_guesser_types_1.RoomModel.watch()
+    .on("change", function (data) {
+    if (data.operationType === 'update') {
+        console.log("Room Updates", data.updateDescription.updatedFields);
+        // Check if the room is now empty, if it is then delete it
+        (0, word_guesser_api_1.Room_DeleteIfEmpty)(data.documentKey._id.toString());
+    }
 });

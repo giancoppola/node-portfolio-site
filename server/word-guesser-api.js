@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Player_ResetLastPlayedDate = exports.router = void 0;
+exports.Room_DeleteIfEmpty = exports.Player_RemoveFromRoom = exports.Player_ResetLastPlayedDate = exports.router = void 0;
 var express = require('express');
 var rateLimit = require("express-rate-limit");
 exports.router = express.Router();
@@ -177,16 +177,20 @@ exports.router.route('/rooms/new')
                         word: '',
                         wins: 0,
                         current_guess: '',
+                        ready: false,
                     },
                     player_2: {
                         id: '',
                         word: '',
                         wins: 0,
                         current_guess: '',
+                        ready: false,
                     },
                     current_guess: '',
                     current_guesser: 'player_1',
                     number_of_games_played: 0,
+                    next_action: 'GAME_START',
+                    update_type: 'ROOM_CREATED'
                 };
                 room = new word_guesser_types_1.RoomModel(newRoom);
                 console.log(room);
@@ -199,55 +203,77 @@ exports.router.route('/rooms/new')
     });
 }); });
 exports.router.route('/rooms/join')
-    .put(function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var room, error, err_3, error;
+    .patch(function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var room, updateData, updateType, err_3, error, err_4, error;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 2, , 3]);
+                _a.trys.push([0, 6, , 7]);
                 return [4 /*yield*/, word_guesser_types_1.RoomModel.findOne({ name: req.query.name })];
             case 1:
                 room = _a.sent();
-                if (room.player_2.id != "") {
-                    res.status(400).json({
-                        success: false,
-                        msg: 'Room is full!'
-                    });
-                }
-                else {
-                    try {
-                        room.updateOne({ player_2: { id: req.query.id } });
-                        res.status(200).json({
-                            success: true,
-                            msg: 'Room joined!'
-                        });
-                    }
-                    catch (err) {
-                        error = err;
-                        res.status(400).json({
-                            success: false,
-                            msg: 'Could not update room! ' + error.message
-                        });
-                    }
-                }
-                return [3 /*break*/, 3];
+                if (!(room.player_2.id != "")) return [3 /*break*/, 2];
+                res.status(400).json({
+                    success: false,
+                    msg: 'Room is full!'
+                });
+                return [3 /*break*/, 5];
             case 2:
+                _a.trys.push([2, 4, , 5]);
+                updateData = { id: req.query.id, word: '', wins: 0, current_guess: '', ready: false };
+                updateType = 'PLAYER_2_JOINED';
+                return [4 /*yield*/, room.updateOne({ player_2: updateData, update_type: updateType })];
+            case 3:
+                _a.sent();
+                res.status(200).json({
+                    success: true,
+                    msg: 'Room joined!'
+                });
+                return [3 /*break*/, 5];
+            case 4:
                 err_3 = _a.sent();
                 error = err_3;
+                res.status(400).json({
+                    success: false,
+                    msg: 'Could not update room! ' + error.message
+                });
+                return [3 /*break*/, 5];
+            case 5: return [3 /*break*/, 7];
+            case 6:
+                err_4 = _a.sent();
+                error = err_4;
                 console.log(error.message);
                 res.status(400).json({
                     success: false,
                     msg: 'Cant find room! ' + error.message
                 });
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
+                return [3 /*break*/, 7];
+            case 7: return [2 /*return*/];
+        }
+    });
+}); });
+exports.router.route('/rooms/leave')
+    .patch(function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var response;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, (0, exports.Player_RemoveFromRoom)(req.query.id, req.query.name)];
+            case 1:
+                response = _a.sent();
+                if (response.success) {
+                    res.status(200).json(response);
+                }
+                else {
+                    res.status(400).json(response);
+                }
+                return [2 /*return*/];
         }
     });
 }); });
 // TODO - create rejoin api
 exports.router.route('/rooms/rejoin')
-    .put(function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var room, error, err_4, error;
+    .patch(function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var room, error, err_5, error;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -285,8 +311,8 @@ exports.router.route('/rooms/rejoin')
                 }
                 return [3 /*break*/, 3];
             case 2:
-                err_4 = _a.sent();
-                error = err_4;
+                err_5 = _a.sent();
+                error = err_5;
                 console.log(error.message);
                 res.status(400).json({
                     success: false,
@@ -322,6 +348,106 @@ var Player_ResetLastPlayedDate = function (player_id) { return __awaiter(void 0,
     });
 }); };
 exports.Player_ResetLastPlayedDate = Player_ResetLastPlayedDate;
+var Player_RemoveFromRoom = function (player_id, room_name) { return __awaiter(void 0, void 0, void 0, function () {
+    var room, updateData, err_6, updateData, err_7, err_8, error;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 13, , 14]);
+                return [4 /*yield*/, word_guesser_types_1.RoomModel.findOne({ name: room_name })];
+            case 1:
+                room = _a.sent();
+                if (!(room.player_2.id === player_id)) return [3 /*break*/, 6];
+                _a.label = 2;
+            case 2:
+                _a.trys.push([2, 4, , 5]);
+                updateData = { id: '', word: '', wins: 0 };
+                return [4 /*yield*/, room.updateOne({ player_2: updateData })];
+            case 3:
+                _a.sent();
+                return [2 /*return*/, ({
+                        success: true,
+                        msg: "Removed ".concat(player_id, " from ").concat(room_name)
+                    })];
+            case 4:
+                err_6 = _a.sent();
+                return [2 /*return*/, ({
+                        success: false,
+                        msg: err_6.message
+                    })];
+            case 5: return [3 /*break*/, 12];
+            case 6:
+                if (!(room.player_1.id === player_id)) return [3 /*break*/, 11];
+                _a.label = 7;
+            case 7:
+                _a.trys.push([7, 9, , 10]);
+                updateData = { id: '', word: '', wins: 0 };
+                return [4 /*yield*/, room.updateOne({ player_1: updateData })];
+            case 8:
+                _a.sent();
+                return [2 /*return*/, ({
+                        success: true,
+                        msg: "Removed ".concat(player_id, " from ").concat(room_name)
+                    })];
+            case 9:
+                err_7 = _a.sent();
+                return [2 /*return*/, ({
+                        success: false,
+                        msg: err_7.message
+                    })];
+            case 10: return [3 /*break*/, 12];
+            case 11: return [2 /*return*/, ({
+                    success: false,
+                    msg: 'Cannot find player in room'
+                })];
+            case 12: return [3 /*break*/, 14];
+            case 13:
+                err_8 = _a.sent();
+                error = err_8;
+                console.log(error.message);
+                return [2 /*return*/, ({
+                        success: false,
+                        msg: 'Cant find room! ' + error.message
+                    })];
+            case 14: return [2 /*return*/];
+        }
+    });
+}); };
+exports.Player_RemoveFromRoom = Player_RemoveFromRoom;
+var Room_DeleteIfEmpty = function (db_id) { return __awaiter(void 0, void 0, void 0, function () {
+    var room, err_9, err_10;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 8, , 9]);
+                return [4 /*yield*/, word_guesser_types_1.RoomModel.findOne({ _id: db_id })];
+            case 1:
+                room = _a.sent();
+                if (!(room && room.player_1.id === '' && room.player_2.id === '')) return [3 /*break*/, 6];
+                _a.label = 2;
+            case 2:
+                _a.trys.push([2, 4, , 5]);
+                return [4 /*yield*/, room.deleteOne()];
+            case 3:
+                _a.sent();
+                console.log('deleted empty room' + db_id);
+                return [2 /*return*/];
+            case 4:
+                err_9 = _a.sent();
+                console.log(err_9.message);
+                return [2 /*return*/];
+            case 5: return [3 /*break*/, 7];
+            case 6: return [2 /*return*/];
+            case 7: return [3 /*break*/, 9];
+            case 8:
+                err_10 = _a.sent();
+                console.log(err_10.message);
+                return [2 /*return*/];
+            case 9: return [2 /*return*/];
+        }
+    });
+}); };
+exports.Room_DeleteIfEmpty = Room_DeleteIfEmpty;
 ////////////////////////////
 // Database Functions End //
 ////////////////////////////

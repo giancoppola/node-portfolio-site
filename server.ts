@@ -5,6 +5,7 @@ const app: Express = express();
 const cors = require('cors');
 import { Server, Socket, Server as SocketServer,  } from 'socket.io';
 
+import { ChangeStream, ChangeStreamDocument, ChangeStreamEvents } from 'mongodb';
 import { Mongoose } from 'mongoose';
 const mongoose: Mongoose = require('mongoose');
 const dbUri = `mongodb+srv://giancoppola:${process.env.MONGO_PW}@cluster0.gjnjhuw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
@@ -54,8 +55,9 @@ const server = app.listen(process.env.PORT || 3000, () => {
 })
 
 // MongoDB Database Functions
-import { Player_ResetLastPlayedDate } from './server/word-guesser-api';
-import { ACTIVE, ROOM_JOINED, SocketIoUser, SocketIoUserObj, USER_COUNT } from './types/word-guesser-types';
+import { Player_RemoveFromRoom, Player_ResetLastPlayedDate, Room_DeleteIfEmpty } from './server/word-guesser-api';
+import { ACTIVE, PlayerModel, ROOM_JOINED, RoomModel, SocketIoUser, SocketIoUserObj, USER_COUNT } from './types/word-guesser-types';
+import { Player_LeaveRoom } from './src/word-guesser/word-guesser-tools';
 // Socket IO Connections and Responses
 const users: SocketIoUserObj = {};
 const io: Server = new SocketServer(server);
@@ -63,8 +65,10 @@ io.on("connection", (socket: Socket) => {
     users[socket.id] = { player_id: '', room_name: '' };
     io.sockets.emit(USER_COUNT, Object.keys(users).length);
     console.log(users);
-    socket.on('disconnect', () => {
-        // TODO - Remove user from room once disconnected
+    socket.on('disconnect', async () => {
+        if (users[socket.id].room_name) {
+            await Player_RemoveFromRoom(users[socket.id].player_id, users[socket.id].room_name);
+        }
         delete users[socket.id];
         io.sockets.emit(USER_COUNT, Object.keys(users).length);
         console.log("user disconnected");
@@ -76,7 +80,22 @@ io.on("connection", (socket: Socket) => {
     })
     socket.on(ROOM_JOINED, async (room_name: string) => {
         users[socket.id].room_name = room_name;
+        console.log("Rooms", io.sockets.adapter.rooms);
         socket.join(room_name);
         console.log(users);
     })
 })
+
+const Room_CheckNextAction = (db_id: string) => {
+
+}
+
+// Watching for room updates, to pass on to players or take action
+RoomModel.watch()
+.on("change", (data: ChangeStreamDocument) => {
+    if (data.operationType === 'update') {
+        console.log("Room Updates", data.updateDescription.updatedFields)
+        // Check if the room is now empty, if it is then delete it
+        Room_DeleteIfEmpty(data.documentKey._id.toString())
+    }
+});

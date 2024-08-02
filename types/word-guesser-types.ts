@@ -4,11 +4,14 @@ const mongoose = require('mongoose');
 export const PLAYER_ID = "WG.player_id";
 export const ROOM_NAME = "WG.room_name";
 
+export type UPDATE_TYPE = 'ROOM_CREATED' | 'PLAYER_2_JOINED' | 'PLAYER_1_JOINED' | 'PLAYER_1_GUESSED' | 'PLAYER_2_GUESSED';
+export type NEXT_ACTION = 'GAME_START' | 'PLAYER_1_GUESS' | 'PLAYER_2_GUESS' | 'FINISH';
 export interface iPlayerInRoom {
     id: string;
     word: string;
     wins: number;
     current_guess: string;
+    ready: boolean;
 }
 export interface iRoom {
     name: string;
@@ -17,6 +20,8 @@ export interface iRoom {
     current_guess: string;
     current_guesser: string;
     number_of_games_played: number;
+    next_action: NEXT_ACTION;
+    update_type: UPDATE_TYPE;
 }
 export const RoomSchema = new mongoose.Schema({
     name: { type: String, required: true },
@@ -24,17 +29,21 @@ export const RoomSchema = new mongoose.Schema({
         id: { type: String },
         word: { type: String, default: "" },
         wins: { type: Number, default: 0 },
-        current_guess: { type: String, default: "" }
+        current_guess: { type: String, default: "" },
+        ready: { type: Boolean, default: false },
     },
     player_2: {
         id: { type: String, },
         word: { type: String, default: "" },
         wins: { type: Number, default: 0 },
-        current_guess: { type: String, default: ""}
+        current_guess: { type: String, default: ""},
+        ready: { type: Boolean, default: false },
     },
     current_guess: { type: String, default: "" },
     current_guesser: { type: String, default: "player_1" },
-    number_of_games_played: { type: Number, required: true, default: 0 }
+    number_of_games_played: { type: Number, required: true, default: 0 },
+    next_action: { type: String, default: "GAME_START"},
+    update_type: { type: String, default: "ROOM_CREATED"}
 })
 export const RoomModel: Model<Object> = mongoose.model('Room', RoomSchema);
 

@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Player_CreateNewPlayer = exports.Player_CheckPlayerId = exports.Room_RejoinRoom = exports.Room_JoinRoom = exports.Room_CreateRoom = exports.Room_DoesRoomExist = exports.RemoveQuotes = void 0;
+exports.Player_LeaveRoom = exports.Player_CreateNewPlayer = exports.Player_CheckPlayerId = exports.Room_RejoinRoom = exports.Room_JoinRoom = exports.Room_CreateRoom = exports.Room_DoesRoomExist = exports.RemoveQuotes = void 0;
 /////////////
 // General //
 /////////////
@@ -88,7 +88,7 @@ var Room_JoinRoom = function (room_name, player_id) { return __awaiter(void 0, v
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, fetch("/api/word-guesser/rooms/join?name=".concat(room_name, "&id=").concat(player_id), {
-                    method: "PUT"
+                    method: "PATCH"
                 })
                     .then(function (res) { return res.json(); })
                     .then(function (data) { return data; })
@@ -148,6 +148,23 @@ var Player_CreateNewPlayer = function () { return __awaiter(void 0, void 0, void
     });
 }); };
 exports.Player_CreateNewPlayer = Player_CreateNewPlayer;
+var Player_LeaveRoom = function (player_id, room_name) { return __awaiter(void 0, void 0, void 0, function () {
+    var left;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, fetch("/api/word-guesser/rooms/leave?name=".concat(room_name, "&id=").concat(player_id), {
+                    method: "PATCH"
+                })
+                    .then(function (res) { return res.json(); })
+                    .then(function (data) { return data; })
+                    .catch(function (err) { console.log(err); return { success: false, msg: err.message }; })];
+            case 1:
+                left = _a.sent();
+                return [2 /*return*/, left];
+        }
+    });
+}); };
+exports.Player_LeaveRoom = Player_LeaveRoom;
 //////////////////////////
 // Player API Calls End //
 //////////////////////////
