@@ -118,21 +118,58 @@ io.on("connection", function (socket) {
     socket.on(word_guesser_types_1.ROOM_JOINED, function (room_name) { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             users[socket.id].room_name = room_name;
-            console.log("Rooms", io.sockets.adapter.rooms);
             socket.join(room_name);
+            console.log("Rooms", io.sockets.adapter.rooms);
             console.log(users);
             return [2 /*return*/];
         });
     }); });
 });
-var Room_CheckNextAction = function (db_id) {
-};
 // Watching for room updates, to pass on to players or take action
-word_guesser_types_1.RoomModel.watch()
-    .on("change", function (data) {
-    if (data.operationType === 'update') {
-        console.log("Room Updates", data.updateDescription.updatedFields);
-        // Check if the room is now empty, if it is then delete it
-        (0, word_guesser_api_1.Room_DeleteIfEmpty)(data.documentKey._id.toString());
-    }
-});
+word_guesser_types_1.RoomModel.watch([], { fullDocument: 'updateLookup' })
+    .on("change", function (data) { return __awaiter(void 0, void 0, void 0, function () {
+    var room, updates, updateType, _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                if (!(data.operationType === 'update')) return [3 /*break*/, 8];
+                console.log("Room Updates", data.updateDescription.updatedFields);
+                room = data.fullDocument;
+                updates = data.updateDescription.updatedFields;
+                // Check if the room is now empty, if it is then delete it
+                (0, word_guesser_api_1.Room_DeleteIfEmpty)(data.documentKey._id.toString());
+                if (!(updates.update_type != null)) return [3 /*break*/, 8];
+                updateType = updates.update_type;
+                _a = updateType;
+                switch (_a) {
+                    case 'PLAYER_2_JOINED': return [3 /*break*/, 1];
+                    case 'GAME_READY': return [3 /*break*/, 3];
+                    case 'PLAYER_1_READY': return [3 /*break*/, 4];
+                    case 'PLAYER_2_READY': return [3 /*break*/, 5];
+                    case 'PLAYER_1_GUESSED': return [3 /*break*/, 6];
+                    case 'PLAYER_2_GUESSED': return [3 /*break*/, 7];
+                }
+                return [3 /*break*/, 8];
+            case 1: return [4 /*yield*/, (0, word_guesser_api_1.Room_SetGameReady)(data.documentKey._id.toString())];
+            case 2:
+                _b.sent();
+                return [3 /*break*/, 8];
+            case 3:
+                io.to(room.name).emit('GAME_READY');
+                return [3 /*break*/, 8];
+            case 4:
+                io.to(room.name).emit('PLAYER_1_READY');
+                return [3 /*break*/, 8];
+            case 5:
+                io.to(room.name).emit('PLAYER_2_READY');
+                return [3 /*break*/, 8];
+            case 6:
+                io.to(room.name).emit('PLAYER_1_GUESSED');
+                return [3 /*break*/, 8];
+            case 7:
+                io.to(room.name).emit('PLAYER_2_GUESSED');
+                return [3 /*break*/, 8];
+            case 8: return [2 /*return*/];
+        }
+    });
+}); });

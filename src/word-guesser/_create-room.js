@@ -41,6 +41,7 @@ var jsx_runtime_1 = require("react/jsx-runtime");
 var react_1 = require("react");
 var material_1 = require("@mui/material");
 var word_guesser_tools_1 = require("./word-guesser-tools");
+var word_guesser_types_1 = require("../../types/word-guesser-types");
 var CreateRoom = function (props) {
     var _a = (0, react_1.useState)(""), errMsg = _a[0], setErrMsg = _a[1];
     var _b = (0, react_1.useState)(""), newRoomName = _b[0], setNewRoomName = _b[1];
@@ -63,7 +64,13 @@ var CreateRoom = function (props) {
                     return [4 /*yield*/, (0, word_guesser_tools_1.Room_CreateRoom)(room_name, props.playerId)];
                 case 2:
                     room_created = _a.sent();
-                    room_created ? props.setRoomName(room_name) : console.log('room not created');
+                    if (room_created) {
+                        props.setRoomName(room_name);
+                        props.setPlayerNumber(word_guesser_types_1.PLAYER_1);
+                    }
+                    else {
+                        console.log('room not created');
+                    }
                     return [2 /*return*/];
             }
         });

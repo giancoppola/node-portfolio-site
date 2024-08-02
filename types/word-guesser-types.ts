@@ -5,8 +5,9 @@ export const PLAYER_ID = "WG.player_id";
 export const PLAYER_1 = 'player_1';
 export const PLAYER_2 = 'player_2';
 
-export type UPDATE_TYPE = 'ROOM_CREATED' | 'PLAYER_2_JOINED' | 'PLAYER_1_READY' | 'PLAYER_2_READY' | 'PLAYER_1_JOINED' | 'PLAYER_1_GUESSED' | 'PLAYER_2_GUESSED';
-export type NEXT_ACTION = 'GAME_START' | 'PLAYER_1_GUESS' | 'PLAYER_2_GUESS' | 'FINISH';
+export type UPDATE_TYPE = 'ROOM_CREATED' | 'PLAYER_2_JOINED' | 'GAME_READY' |
+'PLAYER_1_READY' | 'PLAYER_2_READY' | 'PLAYER_1_GUESSED' | 'PLAYER_2_GUESSED' |
+'PLAYER_1_RESTART' | 'PLAYER_2_RESTART' | 'GAME_FINISH' | 'ROOM_CLOSED';
 export interface iPlayerInRoom {
     id: string;
     word: string;
@@ -21,7 +22,6 @@ export interface iRoom {
     current_guess: string;
     current_guesser: string;
     number_of_games_played: number;
-    next_action: NEXT_ACTION;
     update_type: UPDATE_TYPE;
 }
 export const RoomSchema = new mongoose.Schema({
@@ -43,7 +43,6 @@ export const RoomSchema = new mongoose.Schema({
     current_guess: { type: String, default: "" },
     current_guesser: { type: String, default: "player_1" },
     number_of_games_played: { type: Number, required: true, default: 0 },
-    next_action: { type: String, default: "GAME_START"},
     update_type: { type: String, default: "ROOM_CREATED"}
 })
 export const RoomModel: Model<Object> = mongoose.model('Room', RoomSchema);

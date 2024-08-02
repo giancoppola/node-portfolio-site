@@ -36,8 +36,8 @@ const Main = () => {
         setPlayerId(newId);
         localStorage.setItem(PLAYER_ID, newId);
     }
-    socket.on("fart", () => {
-        console.log('farted')
+    socket.on("GAME_READY", () => {
+        console.log('game is now ready');
     })
     useEffect(() => {
         let player_id = localStorage.getItem(PLAYER_ID);
@@ -50,7 +50,7 @@ const Main = () => {
         }
     }, [])
     useEffect(() => { playerId ? socket.emit(ACTIVE, playerId) : null }, [playerId])
-    useEffect(() => { roomName ? socket.emit(ROOM_JOINED, roomName ) : null }, [roomName])
+    useEffect(() => { roomName ? socket.emit(ROOM_JOINED, roomName) : null }, [roomName])
     socket.on(USER_COUNT, (user_count: number) => setUserCount(user_count));
     return (
         <Box component='section' display='flex' flexDirection='column' justifyContent='space-between' alignItems='center' height='100dvh' width='100dvw'>

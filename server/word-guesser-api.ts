@@ -116,7 +116,6 @@ router.route('/rooms/new')
         current_guess: '',
         current_guesser: 'player_1',
         number_of_games_played: 0,
-        next_action: 'GAME_START',
         update_type: 'ROOM_CREATED'
     }
     let room = new RoomModel(newRoom);
@@ -342,6 +341,25 @@ export const Room_DeleteIfEmpty = async (db_id: string) => {
     catch (err) {
         console.log((err as Error).message);
         return;
+    }
+}
+
+export const Room_SetGameReady = async (db_id: string): Promise<SuccessResponse> => {
+    try {
+        let room = await RoomModel.findOneAndUpdate(
+            { _id: db_id },
+            { update_type: 'GAME_READY' }
+        );
+        return {
+            success: true,
+            msg: 'Game is now ready'
+        }
+    }
+    catch (err) {
+        return {
+            success: false,
+            msg: (err as Error).message
+        }
     }
 }
 

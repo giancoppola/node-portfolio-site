@@ -52,8 +52,8 @@ const server = app.listen(process.env.PORT || 3000, () => {
 })
 
 // MongoDB Database Functions
-import { Player_RemoveFromRoom, Player_ResetLastPlayedDate, Room_DeleteIfEmpty } from './server/word-guesser-api';
-import { ACTIVE, PlayerModel, ROOM_JOINED, RoomModel, SocketIoUser, SocketIoUserObj, USER_COUNT } from './types/word-guesser-types';
+import { Player_RemoveFromRoom, Player_ResetLastPlayedDate, Room_DeleteIfEmpty, Room_SetGameReady } from './server/word-guesser-api';
+import { ACTIVE, iRoom, PlayerModel, ROOM_JOINED, RoomModel, SocketIoUser, SocketIoUserObj, UPDATE_TYPE, USER_COUNT } from './types/word-guesser-types';
 import { Player_LeaveRoom } from './src/word-guesser/word-guesser-tools';
 // Socket IO Connections and Responses
 const users: SocketIoUserObj = {};
@@ -77,28 +77,42 @@ io.on("connection", (socket: Socket) => {
     })
     socket.on(ROOM_JOINED, async (room_name: string) => {
         users[socket.id].room_name = room_name;
-        console.log("Rooms", io.sockets.adapter.rooms);
         socket.join(room_name);
+        console.log("Rooms", io.sockets.adapter.rooms);
         console.log(users);
     })
 })
 
-const Room_CheckNextAction = (db_id: string) => {
-
-}
-
 // Watching for room updates, to pass on to players or take action
-RoomModel.watch()
-.on("change", (data: ChangeStreamDocument) => {
+RoomModel.watch([], { fullDocument: 'updateLookup' })
+.on("change", async (data: ChangeStreamDocument) => {
     if (data.operationType === 'update') {
         console.log("Room Updates", data.updateDescription.updatedFields)
+        let room = (data.fullDocument as iRoom);
         let updates = data.updateDescription.updatedFields;
         // Check if the room is now empty, if it is then delete it
         Room_DeleteIfEmpty(data.documentKey._id.toString())
         if (updates!.update_type != null) {
-            let updateType = updates!.update_type;
+            let updateType: UPDATE_TYPE = updates!.update_type;
             switch (updateType) {
-                // TODO
+                case 'PLAYER_2_JOINED':
+                    await Room_SetGameReady(data.documentKey._id.toString())
+                    break;
+                case 'GAME_READY':
+                    io.to(room.name).emit('GAME_READY');
+                    break;
+                case 'PLAYER_1_READY':
+                    io.to(room.name).emit('PLAYER_1_READY');
+                    break;
+                case 'PLAYER_2_READY':
+                    io.to(room.name).emit('PLAYER_2_READY');
+                    break;
+                case 'PLAYER_1_GUESSED':
+                    io.to(room.name).emit('PLAYER_1_GUESSED');
+                    break;
+                case 'PLAYER_2_GUESSED':
+                    io.to(room.name).emit('PLAYER_2_GUESSED');
+                    break;
             }
         }
     }

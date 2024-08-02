@@ -1,8 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ACTIVE = exports.ROOM_JOINED = exports.NEXT_GUESS = exports.SET_WORD = exports.USER_COUNT = exports.PlayerModel = exports.PlayerSchema = exports.RoomModel = exports.RoomSchema = exports.PLAYER_ID = void 0;
+exports.ACTIVE = exports.ROOM_JOINED = exports.NEXT_GUESS = exports.SET_WORD = exports.USER_COUNT = exports.PlayerModel = exports.PlayerSchema = exports.RoomModel = exports.RoomSchema = exports.PLAYER_2 = exports.PLAYER_1 = exports.PLAYER_ID = void 0;
 var mongoose = require('mongoose');
 exports.PLAYER_ID = "WG.player_id";
+exports.PLAYER_1 = 'player_1';
+exports.PLAYER_2 = 'player_2';
 exports.RoomSchema = new mongoose.Schema({
     name: { type: String, required: true },
     player_1: {
@@ -22,7 +24,6 @@ exports.RoomSchema = new mongoose.Schema({
     current_guess: { type: String, default: "" },
     current_guesser: { type: String, default: "player_1" },
     number_of_games_played: { type: Number, required: true, default: 0 },
-    next_action: { type: String, default: "GAME_START" },
     update_type: { type: String, default: "ROOM_CREATED" }
 });
 exports.RoomModel = mongoose.model('Room', exports.RoomSchema);

@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Room_DeleteIfEmpty = exports.Player_RemoveFromRoom = exports.Player_ResetLastPlayedDate = exports.router = void 0;
+exports.Room_SetGameReady = exports.Room_DeleteIfEmpty = exports.Player_RemoveFromRoom = exports.Player_ResetLastPlayedDate = exports.router = void 0;
 var express = require('express');
 var rateLimit = require("express-rate-limit");
 exports.router = express.Router();
@@ -189,7 +189,6 @@ exports.router.route('/rooms/new')
                     current_guess: '',
                     current_guesser: 'player_1',
                     number_of_games_played: 0,
-                    next_action: 'GAME_START',
                     update_type: 'ROOM_CREATED'
                 };
                 room = new word_guesser_types_1.RoomModel(newRoom);
@@ -448,6 +447,30 @@ var Room_DeleteIfEmpty = function (db_id) { return __awaiter(void 0, void 0, voi
     });
 }); };
 exports.Room_DeleteIfEmpty = Room_DeleteIfEmpty;
+var Room_SetGameReady = function (db_id) { return __awaiter(void 0, void 0, void 0, function () {
+    var room, err_11;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, word_guesser_types_1.RoomModel.findOneAndUpdate({ _id: db_id }, { update_type: 'GAME_READY' })];
+            case 1:
+                room = _a.sent();
+                return [2 /*return*/, {
+                        success: true,
+                        msg: 'Game is now ready'
+                    }];
+            case 2:
+                err_11 = _a.sent();
+                return [2 /*return*/, {
+                        success: false,
+                        msg: err_11.message
+                    }];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.Room_SetGameReady = Room_SetGameReady;
 ////////////////////////////
 // Database Functions End //
 ////////////////////////////
