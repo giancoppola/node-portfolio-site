@@ -15,12 +15,8 @@ export const CreateRoom = (props: Props) => {
         if (!room_name) { setErrMsg('Please provide a room name!'); return; }
         let room_exists = await Room_DoesRoomExist(room_name);
         if (room_exists) { setErrMsg("Room with that name already exists!"); return; }
-        let room_created = await Room_CreateRoom(room_name, props.playerId);
-        if (room_created) {
-            props.setRoomName(room_name);
-            props.setPlayerNumber(PLAYER_1);
-        }
-        else { console.log('room not created'); }
+        props.setRoomName(room_name);
+        props.setPlayerNumber(PLAYER_1);
     }
     useEffect(() => { setErrMsg('') }, [newRoomName])
     return (

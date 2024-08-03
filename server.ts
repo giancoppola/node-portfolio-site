@@ -52,19 +52,20 @@ const server = app.listen(process.env.PORT || 3000, () => {
 })
 
 // MongoDB Database Functions
-import { Player_RemoveFromRoom, Player_ResetLastPlayedDate, Room_DeleteIfEmpty, Room_SetGameReady } from './server/word-guesser-api';
-import { ACTIVE, iRoom, PlayerModel, ROOM_JOINED, RoomModel, SocketIoUser, SocketIoUserObj, UPDATE_TYPE, USER_COUNT } from './types/word-guesser-types';
+import { Player_ResetLastPlayedDate } from './server/word-guesser-api';
+import { ACTIVE, EMPTY_ROOM, iRoom, PlayerModel, ROOM_JOINED, RoomCollection, SocketIoUser, SocketIoUserObj, USER_COUNT } from './types/word-guesser-types';
 import { Player_LeaveRoom } from './src/word-guesser/word-guesser-tools';
 // Socket IO Connections and Responses
-const users: SocketIoUserObj = {};
-const io: Server = new SocketServer(server);
+export const users: SocketIoUserObj = {};
+export const rooms: RoomCollection = {};
+export const io: Server = new SocketServer(server);
 io.on("connection", (socket: Socket) => {
     users[socket.id] = { player_id: '', room_name: '' };
     io.sockets.emit(USER_COUNT, Object.keys(users).length);
     console.log(users);
     socket.on('disconnect', async () => {
         if (users[socket.id].room_name) {
-            await Player_RemoveFromRoom(users[socket.id].player_id, users[socket.id].room_name);
+            socket.leave(users[socket.id].room_name);
         }
         delete users[socket.id];
         io.sockets.emit(USER_COUNT, Object.keys(users).length);
@@ -77,43 +78,10 @@ io.on("connection", (socket: Socket) => {
     })
     socket.on(ROOM_JOINED, async (room_name: string) => {
         users[socket.id].room_name = room_name;
+        rooms[room_name] = EMPTY_ROOM;
+        rooms[room_name].player_1_id = users[socket.id].player_id;
         socket.join(room_name);
         console.log("Rooms", io.sockets.adapter.rooms);
         console.log(users);
     })
 })
-
-// Watching for room updates, to pass on to players or take action
-RoomModel.watch([], { fullDocument: 'updateLookup' })
-.on("change", async (data: ChangeStreamDocument) => {
-    if (data.operationType === 'update') {
-        console.log("Room Updates", data.updateDescription.updatedFields)
-        let room = (data.fullDocument as iRoom);
-        let updates = data.updateDescription.updatedFields;
-        // Check if the room is now empty, if it is then delete it
-        Room_DeleteIfEmpty(data.documentKey._id.toString())
-        if (updates!.update_type != null) {
-            let updateType: UPDATE_TYPE = updates!.update_type;
-            switch (updateType) {
-                case 'PLAYER_2_JOINED':
-                    await Room_SetGameReady(data.documentKey._id.toString())
-                    break;
-                case 'GAME_READY':
-                    io.to(room.name).emit('GAME_READY');
-                    break;
-                case 'PLAYER_1_READY':
-                    io.to(room.name).emit('PLAYER_1_READY');
-                    break;
-                case 'PLAYER_2_READY':
-                    io.to(room.name).emit('PLAYER_2_READY');
-                    break;
-                case 'PLAYER_1_GUESSED':
-                    io.to(room.name).emit('PLAYER_1_GUESSED');
-                    break;
-                case 'PLAYER_2_GUESSED':
-                    io.to(room.name).emit('PLAYER_2_GUESSED');
-                    break;
-            }
-        }
-    }
-});

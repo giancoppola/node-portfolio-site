@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.io = exports.rooms = exports.users = void 0;
 require('dotenv').config();
 var express = require('express');
 var app = express();
@@ -84,92 +85,41 @@ var server = app.listen(process.env.PORT || 3000, function () {
 var word_guesser_api_1 = require("./server/word-guesser-api");
 var word_guesser_types_1 = require("./types/word-guesser-types");
 // Socket IO Connections and Responses
-var users = {};
-var io = new socket_io_1.Server(server);
-io.on("connection", function (socket) {
-    users[socket.id] = { player_id: '', room_name: '' };
-    io.sockets.emit(word_guesser_types_1.USER_COUNT, Object.keys(users).length);
-    console.log(users);
+exports.users = {};
+exports.rooms = {};
+exports.io = new socket_io_1.Server(server);
+exports.io.on("connection", function (socket) {
+    exports.users[socket.id] = { player_id: '', room_name: '' };
+    exports.io.sockets.emit(word_guesser_types_1.USER_COUNT, Object.keys(exports.users).length);
+    console.log(exports.users);
     socket.on('disconnect', function () { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    if (!users[socket.id].room_name) return [3 /*break*/, 2];
-                    return [4 /*yield*/, (0, word_guesser_api_1.Player_RemoveFromRoom)(users[socket.id].player_id, users[socket.id].room_name)];
-                case 1:
-                    _a.sent();
-                    _a.label = 2;
-                case 2:
-                    delete users[socket.id];
-                    io.sockets.emit(word_guesser_types_1.USER_COUNT, Object.keys(users).length);
-                    console.log("user disconnected");
-                    return [2 /*return*/];
+            if (exports.users[socket.id].room_name) {
+                socket.leave(exports.users[socket.id].room_name);
             }
+            delete exports.users[socket.id];
+            exports.io.sockets.emit(word_guesser_types_1.USER_COUNT, Object.keys(exports.users).length);
+            console.log("user disconnected");
+            return [2 /*return*/];
         });
     }); });
     socket.on(word_guesser_types_1.ACTIVE, function (player_id) { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
-            users[socket.id].player_id = player_id;
-            console.log(users);
+            exports.users[socket.id].player_id = player_id;
+            console.log(exports.users);
             (0, word_guesser_api_1.Player_ResetLastPlayedDate)(player_id);
             return [2 /*return*/];
         });
     }); });
     socket.on(word_guesser_types_1.ROOM_JOINED, function (room_name) { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
-            users[socket.id].room_name = room_name;
+            exports.users[socket.id].room_name = room_name;
+            exports.rooms[room_name] = word_guesser_types_1.EMPTY_ROOM;
+            exports.rooms[room_name].player_1_id = exports.users[socket.id].player_id;
             socket.join(room_name);
-            console.log("Rooms", io.sockets.adapter.rooms);
-            console.log(users);
+            console.log("Rooms", exports.io.sockets.adapter.rooms);
+            console.log(exports.users);
             return [2 /*return*/];
         });
     }); });
 });
-// Watching for room updates, to pass on to players or take action
-word_guesser_types_1.RoomModel.watch([], { fullDocument: 'updateLookup' })
-    .on("change", function (data) { return __awaiter(void 0, void 0, void 0, function () {
-    var room, updates, updateType, _a;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
-            case 0:
-                if (!(data.operationType === 'update')) return [3 /*break*/, 8];
-                console.log("Room Updates", data.updateDescription.updatedFields);
-                room = data.fullDocument;
-                updates = data.updateDescription.updatedFields;
-                // Check if the room is now empty, if it is then delete it
-                (0, word_guesser_api_1.Room_DeleteIfEmpty)(data.documentKey._id.toString());
-                if (!(updates.update_type != null)) return [3 /*break*/, 8];
-                updateType = updates.update_type;
-                _a = updateType;
-                switch (_a) {
-                    case 'PLAYER_2_JOINED': return [3 /*break*/, 1];
-                    case 'GAME_READY': return [3 /*break*/, 3];
-                    case 'PLAYER_1_READY': return [3 /*break*/, 4];
-                    case 'PLAYER_2_READY': return [3 /*break*/, 5];
-                    case 'PLAYER_1_GUESSED': return [3 /*break*/, 6];
-                    case 'PLAYER_2_GUESSED': return [3 /*break*/, 7];
-                }
-                return [3 /*break*/, 8];
-            case 1: return [4 /*yield*/, (0, word_guesser_api_1.Room_SetGameReady)(data.documentKey._id.toString())];
-            case 2:
-                _b.sent();
-                return [3 /*break*/, 8];
-            case 3:
-                io.to(room.name).emit('GAME_READY');
-                return [3 /*break*/, 8];
-            case 4:
-                io.to(room.name).emit('PLAYER_1_READY');
-                return [3 /*break*/, 8];
-            case 5:
-                io.to(room.name).emit('PLAYER_2_READY');
-                return [3 /*break*/, 8];
-            case 6:
-                io.to(room.name).emit('PLAYER_1_GUESSED');
-                return [3 /*break*/, 8];
-            case 7:
-                io.to(room.name).emit('PLAYER_2_GUESSED');
-                return [3 /*break*/, 8];
-            case 8: return [2 /*return*/];
-        }
-    });
-}); });

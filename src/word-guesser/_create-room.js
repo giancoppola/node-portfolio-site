@@ -46,7 +46,7 @@ var CreateRoom = function (props) {
     var _a = (0, react_1.useState)(""), errMsg = _a[0], setErrMsg = _a[1];
     var _b = (0, react_1.useState)(""), newRoomName = _b[0], setNewRoomName = _b[1];
     var CheckRoom = function (room_name) { return __awaiter(void 0, void 0, void 0, function () {
-        var room_exists, room_created;
+        var room_exists;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -61,16 +61,8 @@ var CreateRoom = function (props) {
                         setErrMsg("Room with that name already exists!");
                         return [2 /*return*/];
                     }
-                    return [4 /*yield*/, (0, word_guesser_tools_1.Room_CreateRoom)(room_name, props.playerId)];
-                case 2:
-                    room_created = _a.sent();
-                    if (room_created) {
-                        props.setRoomName(room_name);
-                        props.setPlayerNumber(word_guesser_types_1.PLAYER_1);
-                    }
-                    else {
-                        console.log('room not created');
-                    }
+                    props.setRoomName(room_name);
+                    props.setPlayerNumber(word_guesser_types_1.PLAYER_1);
                     return [2 /*return*/];
             }
         });

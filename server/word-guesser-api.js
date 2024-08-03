@@ -36,13 +36,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Room_SetGameReady = exports.Room_DeleteIfEmpty = exports.Player_RemoveFromRoom = exports.Player_ResetLastPlayedDate = exports.router = void 0;
+exports.Player_ResetLastPlayedDate = exports.Player_CheckExists = exports.Player_GetAll = exports.Player_CreateNew = exports.router = void 0;
 var express = require('express');
 var rateLimit = require("express-rate-limit");
 exports.router = express.Router();
 var mongoose = require('mongoose');
 // MongoDB model imports
 var word_guesser_types_1 = require("../types/word-guesser-types");
+var server_1 = require("../server");
 var limit = rateLimit({
     // Every 5 minutes
     windowMs: 5 * 60 * 1000,
@@ -60,10 +61,9 @@ exports.router.route('/players/')
     var players;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, word_guesser_types_1.PlayerModel.find().exec()];
+            case 0: return [4 /*yield*/, (0, exports.Player_GetAll)()];
             case 1:
                 players = _a.sent();
-                console.log(players.length);
                 res.json({
                     players: players
                 });
@@ -76,16 +76,9 @@ exports.router.route('/players/new')
     var player;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0:
-                player = new word_guesser_types_1.PlayerModel({
-                    wins: 0,
-                    losses: 0,
-                    last_played: Date.now(),
-                });
-                console.log(player);
-                return [4 /*yield*/, player.save()];
+            case 0: return [4 /*yield*/, (0, exports.Player_CreateNew)()];
             case 1:
-                _a.sent();
+                player = _a.sent();
                 res.send(player._id);
                 return [2 /*return*/];
         }
@@ -93,26 +86,19 @@ exports.router.route('/players/new')
 }); });
 exports.router.route('/players/find')
     .get(function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var player, err_1;
+    var exists;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, word_guesser_types_1.PlayerModel.find({ _id: req.query.id }).exec()];
+            case 0: return [4 /*yield*/, (0, exports.Player_CheckExists)(req.query.id)];
             case 1:
-                player = _a.sent();
-                if (player.length === 1) {
-                    res.send(true);
+                exists = _a.sent();
+                if (exists) {
+                    res.status(200).send(true);
                 }
                 else {
                     res.status(400).send(false);
                 }
-                return [3 /*break*/, 3];
-            case 2:
-                err_1 = _a.sent();
-                res.status(400).send(false);
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
+                return [2 /*return*/];
         }
     });
 }); });
@@ -122,204 +108,20 @@ exports.router.route('/players/find')
 /////////////////////////
 // Rooms API Endpoints //
 /////////////////////////
-// Get all rooms in DB
-exports.router.route('/rooms/')
-    .get(function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var rooms;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, word_guesser_types_1.RoomModel.find().exec()];
-            case 1:
-                rooms = _a.sent();
-                console.log(rooms.length);
-                res.json({
-                    rooms: rooms
-                });
-                return [2 /*return*/];
-        }
-    });
-}); });
 exports.router.route('/rooms/find')
     .get(function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var room, err_2;
+    var name, exists;
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, word_guesser_types_1.RoomModel.find({ name: req.query.name }).exec()];
-            case 1:
-                room = _a.sent();
-                if (room.length === 1) {
-                    res.send(true);
-                }
-                else {
-                    res.send(false);
-                }
-                return [3 /*break*/, 3];
-            case 2:
-                err_2 = _a.sent();
-                res.send(false);
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
+        name = req.query.name;
+        console.log("Checking if room exists", server_1.rooms);
+        exists = server_1.rooms[name] != null;
+        if (exists) {
+            res.status(200).send(true);
         }
-    });
-}); });
-exports.router.route('/rooms/new')
-    .post(function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var newRoom, room;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                newRoom = {
-                    name: req.query.name,
-                    player_1: {
-                        id: req.query.id,
-                        word: '',
-                        wins: 0,
-                        current_guess: '',
-                        ready: false,
-                    },
-                    player_2: {
-                        id: '',
-                        word: '',
-                        wins: 0,
-                        current_guess: '',
-                        ready: false,
-                    },
-                    current_guess: '',
-                    current_guesser: 'player_1',
-                    number_of_games_played: 0,
-                    update_type: 'ROOM_CREATED'
-                };
-                room = new word_guesser_types_1.RoomModel(newRoom);
-                console.log(room);
-                return [4 /*yield*/, room.save()];
-            case 1:
-                _a.sent();
-                res.status(200).json(room);
-                return [2 /*return*/];
+        else {
+            res.status(400).send(false);
         }
-    });
-}); });
-exports.router.route('/rooms/join')
-    .patch(function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var room, updateData, updateType, err_3, error, err_4, error;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 6, , 7]);
-                return [4 /*yield*/, word_guesser_types_1.RoomModel.findOne({ name: req.query.name })];
-            case 1:
-                room = _a.sent();
-                if (!(room.player_2.id != "")) return [3 /*break*/, 2];
-                res.status(400).json({
-                    success: false,
-                    msg: 'Room is full!'
-                });
-                return [3 /*break*/, 5];
-            case 2:
-                _a.trys.push([2, 4, , 5]);
-                updateData = { id: req.query.id, word: '', wins: 0, current_guess: '', ready: false };
-                updateType = 'PLAYER_2_JOINED';
-                return [4 /*yield*/, room.updateOne({ player_2: updateData, update_type: updateType })];
-            case 3:
-                _a.sent();
-                res.status(200).json({
-                    success: true,
-                    msg: 'Room joined!'
-                });
-                return [3 /*break*/, 5];
-            case 4:
-                err_3 = _a.sent();
-                error = err_3;
-                res.status(400).json({
-                    success: false,
-                    msg: 'Could not update room! ' + error.message
-                });
-                return [3 /*break*/, 5];
-            case 5: return [3 /*break*/, 7];
-            case 6:
-                err_4 = _a.sent();
-                error = err_4;
-                console.log(error.message);
-                res.status(400).json({
-                    success: false,
-                    msg: 'Cant find room! ' + error.message
-                });
-                return [3 /*break*/, 7];
-            case 7: return [2 /*return*/];
-        }
-    });
-}); });
-exports.router.route('/rooms/leave')
-    .patch(function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var response;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, (0, exports.Player_RemoveFromRoom)(req.query.id, req.query.name)];
-            case 1:
-                response = _a.sent();
-                if (response.success) {
-                    res.status(200).json(response);
-                }
-                else {
-                    res.status(400).json(response);
-                }
-                return [2 /*return*/];
-        }
-    });
-}); });
-// TODO - create rejoin api
-exports.router.route('/rooms/rejoin')
-    .patch(function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var room, error, err_5, error;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, word_guesser_types_1.RoomModel.findOne({ name: req.query.name })];
-            case 1:
-                room = _a.sent();
-                if (room.player_2.id != "") {
-                    res.status(400).json({
-                        success: false,
-                        msg: 'Room is full!'
-                    });
-                }
-                else if (room.player_2.id != "") {
-                    res.status(400).json({
-                        success: false,
-                        msg: 'Room is full!'
-                    });
-                }
-                else {
-                    try {
-                        room.updateOne({ player_2: { id: req.query.id } });
-                        res.status(200).json({
-                            success: true,
-                            msg: 'Room joined!'
-                        });
-                    }
-                    catch (err) {
-                        error = err;
-                        res.status(400).json({
-                            success: false,
-                            msg: 'Could not update room! ' + error.message
-                        });
-                    }
-                }
-                return [3 /*break*/, 3];
-            case 2:
-                err_5 = _a.sent();
-                error = err_5;
-                console.log(error.message);
-                res.status(400).json({
-                    success: false,
-                    msg: 'Cant find room! ' + error.message
-                });
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
-        }
+        return [2 /*return*/];
     });
 }); });
 /////////////////////////////
@@ -328,6 +130,61 @@ exports.router.route('/rooms/rejoin')
 ////////////////////////
 // Database Functions //
 ////////////////////////
+var Player_CreateNew = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var player;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                player = new word_guesser_types_1.PlayerModel({
+                    wins: 0,
+                    losses: 0,
+                    last_played: Date.now(),
+                });
+                return [4 /*yield*/, player.save()];
+            case 1:
+                _a.sent();
+                return [2 /*return*/, player];
+        }
+    });
+}); };
+exports.Player_CreateNew = Player_CreateNew;
+var Player_GetAll = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var players;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, word_guesser_types_1.PlayerModel.find().exec()];
+            case 1:
+                players = _a.sent();
+                console.log(players.length);
+                return [2 /*return*/, players];
+        }
+    });
+}); };
+exports.Player_GetAll = Player_GetAll;
+var Player_CheckExists = function (player_id) { return __awaiter(void 0, void 0, void 0, function () {
+    var player, err_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, word_guesser_types_1.PlayerModel.find({ _id: player_id }).exec()];
+            case 1:
+                player = _a.sent();
+                if (player.length === 1) {
+                    return [2 /*return*/, true];
+                }
+                else {
+                    return [2 /*return*/, false];
+                }
+                return [3 /*break*/, 3];
+            case 2:
+                err_1 = _a.sent();
+                return [2 /*return*/, false];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.Player_CheckExists = Player_CheckExists;
 var Player_ResetLastPlayedDate = function (player_id) { return __awaiter(void 0, void 0, void 0, function () {
     var player, e_1;
     return __generator(this, function (_a) {
@@ -347,130 +204,6 @@ var Player_ResetLastPlayedDate = function (player_id) { return __awaiter(void 0,
     });
 }); };
 exports.Player_ResetLastPlayedDate = Player_ResetLastPlayedDate;
-var Player_RemoveFromRoom = function (player_id, room_name) { return __awaiter(void 0, void 0, void 0, function () {
-    var room, updateData, err_6, updateData, err_7, err_8, error;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 13, , 14]);
-                return [4 /*yield*/, word_guesser_types_1.RoomModel.findOne({ name: room_name })];
-            case 1:
-                room = _a.sent();
-                if (!(room.player_2.id === player_id)) return [3 /*break*/, 6];
-                _a.label = 2;
-            case 2:
-                _a.trys.push([2, 4, , 5]);
-                updateData = { id: '', word: '', wins: 0 };
-                return [4 /*yield*/, room.updateOne({ player_2: updateData })];
-            case 3:
-                _a.sent();
-                return [2 /*return*/, ({
-                        success: true,
-                        msg: "Removed ".concat(player_id, " from ").concat(room_name)
-                    })];
-            case 4:
-                err_6 = _a.sent();
-                return [2 /*return*/, ({
-                        success: false,
-                        msg: err_6.message
-                    })];
-            case 5: return [3 /*break*/, 12];
-            case 6:
-                if (!(room.player_1.id === player_id)) return [3 /*break*/, 11];
-                _a.label = 7;
-            case 7:
-                _a.trys.push([7, 9, , 10]);
-                updateData = { id: '', word: '', wins: 0 };
-                return [4 /*yield*/, room.updateOne({ player_1: updateData })];
-            case 8:
-                _a.sent();
-                return [2 /*return*/, ({
-                        success: true,
-                        msg: "Removed ".concat(player_id, " from ").concat(room_name)
-                    })];
-            case 9:
-                err_7 = _a.sent();
-                return [2 /*return*/, ({
-                        success: false,
-                        msg: err_7.message
-                    })];
-            case 10: return [3 /*break*/, 12];
-            case 11: return [2 /*return*/, ({
-                    success: false,
-                    msg: 'Cannot find player in room'
-                })];
-            case 12: return [3 /*break*/, 14];
-            case 13:
-                err_8 = _a.sent();
-                error = err_8;
-                console.log(error.message);
-                return [2 /*return*/, ({
-                        success: false,
-                        msg: 'Cant find room! ' + error.message
-                    })];
-            case 14: return [2 /*return*/];
-        }
-    });
-}); };
-exports.Player_RemoveFromRoom = Player_RemoveFromRoom;
-var Room_DeleteIfEmpty = function (db_id) { return __awaiter(void 0, void 0, void 0, function () {
-    var room, err_9, err_10;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 8, , 9]);
-                return [4 /*yield*/, word_guesser_types_1.RoomModel.findOne({ _id: db_id })];
-            case 1:
-                room = _a.sent();
-                if (!(room && room.player_1.id === '' && room.player_2.id === '')) return [3 /*break*/, 6];
-                _a.label = 2;
-            case 2:
-                _a.trys.push([2, 4, , 5]);
-                return [4 /*yield*/, room.deleteOne()];
-            case 3:
-                _a.sent();
-                console.log('deleted empty room' + db_id);
-                return [2 /*return*/];
-            case 4:
-                err_9 = _a.sent();
-                console.log(err_9.message);
-                return [2 /*return*/];
-            case 5: return [3 /*break*/, 7];
-            case 6: return [2 /*return*/];
-            case 7: return [3 /*break*/, 9];
-            case 8:
-                err_10 = _a.sent();
-                console.log(err_10.message);
-                return [2 /*return*/];
-            case 9: return [2 /*return*/];
-        }
-    });
-}); };
-exports.Room_DeleteIfEmpty = Room_DeleteIfEmpty;
-var Room_SetGameReady = function (db_id) { return __awaiter(void 0, void 0, void 0, function () {
-    var room, err_11;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, word_guesser_types_1.RoomModel.findOneAndUpdate({ _id: db_id }, { update_type: 'GAME_READY' })];
-            case 1:
-                room = _a.sent();
-                return [2 /*return*/, {
-                        success: true,
-                        msg: 'Game is now ready'
-                    }];
-            case 2:
-                err_11 = _a.sent();
-                return [2 /*return*/, {
-                        success: false,
-                        msg: err_11.message
-                    }];
-            case 3: return [2 /*return*/];
-        }
-    });
-}); };
-exports.Room_SetGameReady = Room_SetGameReady;
 ////////////////////////////
 // Database Functions End //
 ////////////////////////////

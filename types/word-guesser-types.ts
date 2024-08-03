@@ -5,47 +5,45 @@ export const PLAYER_ID = "WG.player_id";
 export const PLAYER_1 = 'player_1';
 export const PLAYER_2 = 'player_2';
 
-export type UPDATE_TYPE = 'ROOM_CREATED' | 'PLAYER_2_JOINED' | 'GAME_READY' |
+export type CURRENT_STATUS = 'ROOM_CREATED' | 'GAME_READY' |
 'PLAYER_1_READY' | 'PLAYER_2_READY' | 'PLAYER_1_GUESSED' | 'PLAYER_2_GUESSED' |
 'PLAYER_1_RESTART' | 'PLAYER_2_RESTART' | 'GAME_FINISH' | 'ROOM_CLOSED';
+export type PLAYERS = 'player_1' | 'player_2';
 export interface iPlayerInRoom {
-    id: string;
     word: string;
     wins: number;
     current_guess: string;
     ready: boolean;
 }
 export interface iRoom {
-    name: string;
     player_1: iPlayerInRoom;
+    player_1_id: string;
     player_2: iPlayerInRoom;
+    player_2_id: string;
     current_guess: string;
-    current_guesser: string;
+    current_guesser: PLAYERS;
     number_of_games_played: number;
-    update_type: UPDATE_TYPE;
+    current_status: CURRENT_STATUS;
 }
-export const RoomSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    player_1: {
-        id: { type: String },
-        word: { type: String, default: "" },
-        wins: { type: Number, default: 0 },
-        current_guess: { type: String, default: "" },
-        ready: { type: Boolean, default: false },
-    },
-    player_2: {
-        id: { type: String, },
-        word: { type: String, default: "" },
-        wins: { type: Number, default: 0 },
-        current_guess: { type: String, default: ""},
-        ready: { type: Boolean, default: false },
-    },
-    current_guess: { type: String, default: "" },
-    current_guesser: { type: String, default: "player_1" },
-    number_of_games_played: { type: Number, required: true, default: 0 },
-    update_type: { type: String, default: "ROOM_CREATED"}
-})
-export const RoomModel: Model<Object> = mongoose.model('Room', RoomSchema);
+export interface RoomCollection {
+    [key: string]: iRoom;
+}
+export const EMPTY_PLAYER_IN_ROOM: iPlayerInRoom = {
+    word: "",
+    wins: 0,
+    current_guess: "",
+    ready: false,
+}
+export const EMPTY_ROOM: iRoom = {
+    player_1: EMPTY_PLAYER_IN_ROOM,
+    player_1_id: "",
+    player_2: EMPTY_PLAYER_IN_ROOM,
+    player_2_id: "",
+    current_guess: "",
+    current_guesser: 'player_1',
+    number_of_games_played: 0,
+    current_status: 'ROOM_CREATED'
+}
 
 export interface iPlayer {
     wins: number;
