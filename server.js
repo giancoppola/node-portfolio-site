@@ -96,6 +96,7 @@ exports.io.on("connection", function (socket) {
         return __generator(this, function (_a) {
             if (exports.users[socket.id].room_name) {
                 exports.rooms[exports.users[socket.id].room_name].player_1_id === exports.users[socket.id].player_id ? exports.rooms[exports.users[socket.id].room_name].player_1_id = '' : exports.rooms[exports.users[socket.id].room_name].player_2_id = '';
+                console.log(exports.rooms);
                 socket.leave(exports.users[socket.id].room_name);
             }
             delete exports.users[socket.id];

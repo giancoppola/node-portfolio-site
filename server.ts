@@ -66,6 +66,8 @@ io.on("connection", (socket: Socket) => {
     socket.on('disconnect', async () => {
         if (users[socket.id].room_name) {
             rooms[users[socket.id].room_name].player_1_id === users[socket.id].player_id ? rooms[users[socket.id].room_name].player_1_id = '' : rooms[users[socket.id].room_name].player_2_id = '';
+            rooms[users[socket.id].room_name].player_count = rooms[users[socket.id].room_name].player_count - 1;
+            console.log(rooms);
             socket.leave(users[socket.id].room_name);
         }
         delete users[socket.id];
