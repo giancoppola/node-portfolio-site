@@ -46,7 +46,7 @@ var JoinRoom = function (props) {
     var _a = (0, react_1.useState)(""), errMsg = _a[0], setErrMsg = _a[1];
     var _b = (0, react_1.useState)(""), newRoomName = _b[0], setNewRoomName = _b[1];
     var CheckRoom = function (room_name) { return __awaiter(void 0, void 0, void 0, function () {
-        var room_exists;
+        var room_exists, room_joinable;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -54,31 +54,19 @@ var JoinRoom = function (props) {
                         setErrMsg('Please provide a room name!');
                         return [2 /*return*/];
                     }
-                    return [4 /*yield*/, (0, word_guesser_tools_1.Room_DoesRoomExist)(room_name)];
+                    return [4 /*yield*/, (0, word_guesser_tools_1.Fetch_Room_DoesRoomExist)(room_name)];
                 case 1:
                     room_exists = _a.sent();
                     if (!room_exists) {
                         setErrMsg("No room with that name exists!");
                         return [2 /*return*/];
                     }
-                    JoinRoom(room_name);
-                    return [2 /*return*/];
-            }
-        });
-    }); };
-    var JoinRoom = function (room_name) { return __awaiter(void 0, void 0, void 0, function () {
-        var joined;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, (0, word_guesser_tools_1.Room_JoinRoom)(room_name, props.playerId)];
-                case 1:
-                    joined = _a.sent();
-                    if (joined.success) {
+                    return [4 /*yield*/, (0, word_guesser_tools_1.Fetch_Room_IsRoomJoinable)(room_name)];
+                case 2:
+                    room_joinable = _a.sent();
+                    if (room_joinable) {
                         props.setRoomName(room_name);
                         props.setPlayerNumber(word_guesser_types_1.PLAYER_2);
-                    }
-                    else {
-                        setErrMsg(joined.msg);
                     }
                     return [2 /*return*/];
             }

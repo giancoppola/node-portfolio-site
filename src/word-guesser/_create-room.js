@@ -54,7 +54,7 @@ var CreateRoom = function (props) {
                         setErrMsg('Please provide a room name!');
                         return [2 /*return*/];
                     }
-                    return [4 /*yield*/, (0, word_guesser_tools_1.Room_DoesRoomExist)(room_name)];
+                    return [4 /*yield*/, (0, word_guesser_tools_1.Fetch_Room_DoesRoomExist)(room_name)];
                 case 1:
                     room_exists = _a.sent();
                     if (room_exists) {

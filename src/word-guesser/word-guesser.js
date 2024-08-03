@@ -58,7 +58,7 @@ var Main = function () {
         var valid;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, (0, word_guesser_tools_1.Player_CheckPlayerId)(player_id)];
+                case 0: return [4 /*yield*/, (0, word_guesser_tools_1.Fetch_Player_CheckPlayerId)(player_id)];
                 case 1:
                     valid = _a.sent();
                     if (valid) {
@@ -76,7 +76,7 @@ var Main = function () {
         var newId;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, (0, word_guesser_tools_1.Player_CreateNewPlayer)()];
+                case 0: return [4 /*yield*/, (0, word_guesser_tools_1.Fetch_Player_CreateNewPlayer)()];
                 case 1:
                     newId = _a.sent();
                     console.log(newId);

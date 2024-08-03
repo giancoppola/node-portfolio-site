@@ -20,6 +20,7 @@ export interface iRoom {
     player_1_id: string;
     player_2: iPlayerInRoom;
     player_2_id: string;
+    player_count: number;
     current_guess: string;
     current_guesser: PLAYERS;
     number_of_games_played: number;
@@ -39,6 +40,7 @@ export const EMPTY_ROOM: iRoom = {
     player_1_id: "",
     player_2: EMPTY_PLAYER_IN_ROOM,
     player_2_id: "",
+    player_count: 0,
     current_guess: "",
     current_guesser: 'player_1',
     number_of_games_played: 0,

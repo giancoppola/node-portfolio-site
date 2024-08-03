@@ -95,6 +95,7 @@ exports.io.on("connection", function (socket) {
     socket.on('disconnect', function () { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             if (exports.users[socket.id].room_name) {
+                exports.rooms[exports.users[socket.id].room_name].player_1_id === exports.users[socket.id].player_id ? exports.rooms[exports.users[socket.id].room_name].player_1_id = '' : exports.rooms[exports.users[socket.id].room_name].player_2_id = '';
                 socket.leave(exports.users[socket.id].room_name);
             }
             delete exports.users[socket.id];
@@ -114,11 +115,11 @@ exports.io.on("connection", function (socket) {
     socket.on(word_guesser_types_1.ROOM_JOINED, function (room_name) { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             exports.users[socket.id].room_name = room_name;
-            exports.rooms[room_name] = word_guesser_types_1.EMPTY_ROOM;
-            exports.rooms[room_name].player_1_id = exports.users[socket.id].player_id;
+            !exports.rooms[room_name] ? exports.rooms[room_name] = word_guesser_types_1.EMPTY_ROOM : null;
+            !exports.rooms[room_name].player_1_id ? exports.rooms[room_name].player_1_id = exports.users[socket.id].player_id : exports.rooms[room_name].player_2_id = exports.users[socket.id].player_id;
+            exports.rooms[room_name].player_count = exports.rooms[room_name].player_count + 1;
             socket.join(room_name);
-            console.log("Rooms", exports.io.sockets.adapter.rooms);
-            console.log(exports.users);
+            console.log("Rooms", exports.rooms);
             return [2 /*return*/];
         });
     }); });

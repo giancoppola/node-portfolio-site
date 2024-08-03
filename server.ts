@@ -54,7 +54,7 @@ const server = app.listen(process.env.PORT || 3000, () => {
 // MongoDB Database Functions
 import { Player_ResetLastPlayedDate } from './server/word-guesser-api';
 import { ACTIVE, EMPTY_ROOM, iRoom, PlayerModel, ROOM_JOINED, RoomCollection, SocketIoUser, SocketIoUserObj, USER_COUNT } from './types/word-guesser-types';
-import { Player_LeaveRoom } from './src/word-guesser/word-guesser-tools';
+import { Fetch_Player_LeaveRoom } from './src/word-guesser/word-guesser-tools';
 // Socket IO Connections and Responses
 export const users: SocketIoUserObj = {};
 export const rooms: RoomCollection = {};
@@ -65,6 +65,7 @@ io.on("connection", (socket: Socket) => {
     console.log(users);
     socket.on('disconnect', async () => {
         if (users[socket.id].room_name) {
+            rooms[users[socket.id].room_name].player_1_id === users[socket.id].player_id ? rooms[users[socket.id].room_name].player_1_id = '' : rooms[users[socket.id].room_name].player_2_id = '';
             socket.leave(users[socket.id].room_name);
         }
         delete users[socket.id];
@@ -78,10 +79,10 @@ io.on("connection", (socket: Socket) => {
     })
     socket.on(ROOM_JOINED, async (room_name: string) => {
         users[socket.id].room_name = room_name;
-        rooms[room_name] = EMPTY_ROOM;
-        rooms[room_name].player_1_id = users[socket.id].player_id;
+        !rooms[room_name] ? rooms[room_name] = EMPTY_ROOM : null;
+        !rooms[room_name].player_1_id ? rooms[room_name].player_1_id = users[socket.id].player_id : rooms[room_name].player_2_id = users[socket.id].player_id;
+        rooms[room_name].player_count = rooms[room_name].player_count + 1;
         socket.join(room_name);
-        console.log("Rooms", io.sockets.adapter.rooms);
-        console.log(users);
+        console.log("Rooms", rooms);
     })
 })

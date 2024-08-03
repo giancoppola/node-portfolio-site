@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Player_ResetLastPlayedDate = exports.Player_CheckExists = exports.Player_GetAll = exports.Player_CreateNew = exports.router = void 0;
+exports.Room_IsRoomJoinable = exports.Room_DoesRoomExist = exports.Player_ResetLastPlayedDate = exports.Player_CheckExists = exports.Player_GetAll = exports.Player_CreateNew = exports.router = void 0;
 var express = require('express');
 var rateLimit = require("express-rate-limit");
 exports.router = express.Router();
@@ -110,12 +110,24 @@ exports.router.route('/players/find')
 /////////////////////////
 exports.router.route('/rooms/find')
     .get(function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var name, exists;
+    var exists;
     return __generator(this, function (_a) {
-        name = req.query.name;
-        console.log("Checking if room exists", server_1.rooms);
-        exists = server_1.rooms[name] != null;
+        exists = (0, exports.Room_DoesRoomExist)(req.query.name);
         if (exists) {
+            res.status(200).send(true);
+        }
+        else {
+            res.status(400).send(false);
+        }
+        return [2 /*return*/];
+    });
+}); });
+exports.router.route('/rooms/joinable')
+    .get(function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var joinable;
+    return __generator(this, function (_a) {
+        joinable = (0, exports.Room_IsRoomJoinable)(req.query.name);
+        if (joinable) {
             res.status(200).send(true);
         }
         else {
@@ -204,6 +216,26 @@ var Player_ResetLastPlayedDate = function (player_id) { return __awaiter(void 0,
     });
 }); };
 exports.Player_ResetLastPlayedDate = Player_ResetLastPlayedDate;
+var Room_DoesRoomExist = function (room_name) {
+    var name = room_name;
+    var exists = server_1.rooms[name] != null;
+    if (exists) {
+        return true;
+    }
+    return false;
+};
+exports.Room_DoesRoomExist = Room_DoesRoomExist;
+var Room_IsRoomJoinable = function (room_name) {
+    var exists = (0, exports.Room_DoesRoomExist)(room_name);
+    if (exists) {
+        if (server_1.rooms[room_name].player_count < 2) {
+            return true;
+        }
+        return false;
+    }
+    return false;
+};
+exports.Room_IsRoomJoinable = Room_IsRoomJoinable;
 ////////////////////////////
 // Database Functions End //
 ////////////////////////////

@@ -60,10 +60,19 @@ router.route('/players/find')
 
 router.route('/rooms/find')
 .get( async ( req: Request, res: Response, next: NextFunction) => {
-    let name = (req.query.name as string);
-    console.log("Checking if room exists", rooms)
-    let exists: boolean = rooms[name] != null;
+    let exists = Room_DoesRoomExist(req.query.name as string);
     if (exists) {
+        res.status(200).send(true);
+    }
+    else {
+        res.status(400).send(false);
+    }
+})
+
+router.route('/rooms/joinable')
+.get( async ( req: Request, res: Response, next: NextFunction) => {
+    let joinable = Room_IsRoomJoinable(req.query.name as string);
+    if (joinable) {
         res.status(200).send(true);
     }
     else {
@@ -120,6 +129,26 @@ export const Player_ResetLastPlayedDate = async (player_id: string)=> {
     catch (e) {
         console.log(e);
     }
+}
+
+export const Room_DoesRoomExist = (room_name: string) => {
+    let name = room_name;
+    let exists: boolean = rooms[name] != null;
+    if (exists) {
+        return true;
+    }
+    return false;
+}
+
+export const Room_IsRoomJoinable = (room_name: string) => {
+    let exists = Room_DoesRoomExist(room_name);
+    if (exists) {
+        if (rooms[room_name].player_count < 2) {
+            return true
+        }
+        return false;
+    }
+    return false;
 }
 
 ////////////////////////////

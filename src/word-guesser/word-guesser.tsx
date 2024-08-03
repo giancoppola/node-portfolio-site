@@ -8,7 +8,7 @@ import { Room } from './_room'
 import { Footer } from './_footer'
 
 import { iPlayer, PlayerModel, PLAYER_ID, SET_WORD, NEXT_GUESS, ACTIVE, ROOM_JOINED, USER_COUNT } from '../../types/word-guesser-types'
-import { Player_CheckPlayerId, Player_CreateNewPlayer, RemoveQuotes } from './word-guesser-tools'
+import { Fetch_Player_CheckPlayerId, Fetch_Player_CreateNewPlayer, RemoveQuotes } from './word-guesser-tools'
 
 import { io, Socket } from 'socket.io-client'
 import { WordInput } from './_word_input'
@@ -21,7 +21,7 @@ const Main = () => {
     const [playerId, setPlayerId]: [string, Dispatch<string>] = useState<string>("");
     const [playerNumber, setPlayerNumber]: [string, Dispatch<string>] = useState<string>('');
     const CheckPlayerId = async (player_id: string) => {
-        let valid: boolean = await Player_CheckPlayerId(player_id);
+        let valid: boolean = await Fetch_Player_CheckPlayerId(player_id);
         if (valid) {
             setPlayerId(player_id);
         }
@@ -31,7 +31,7 @@ const Main = () => {
         }
     }
     const CreateNewPlayer = async () => {
-        let newId: string = await Player_CreateNewPlayer();
+        let newId: string = await Fetch_Player_CreateNewPlayer();
         console.log(newId);
         setPlayerId(newId);
         localStorage.setItem(PLAYER_ID, newId);

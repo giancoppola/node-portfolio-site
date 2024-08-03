@@ -1,6 +1,6 @@
 import { Dispatch, useEffect, useState } from 'react'
 import { Box, Button, List, ListItem, TextField, Typography } from '@mui/material'
-import { RemoveQuotes, Room_DoesRoomExist, Room_JoinRoom } from './word-guesser-tools'
+import { RemoveQuotes, Fetch_Room_DoesRoomExist, Fetch_Room_IsRoomJoinable } from './word-guesser-tools'
 import { PLAYER_2, SuccessResponse } from '../../types/word-guesser-types';
 
 interface Props {
@@ -13,18 +13,12 @@ export const JoinRoom = (props: Props) => {
     const [newRoomName, setNewRoomName]: [string, Dispatch<string>] = useState<string>("");
     const CheckRoom = async (room_name: string) => {
         if (!room_name) { setErrMsg('Please provide a room name!'); return; }
-        let room_exists = await Room_DoesRoomExist(room_name);
+        let room_exists = await Fetch_Room_DoesRoomExist(room_name);
         if (!room_exists) { setErrMsg("No room with that name exists!"); return; }
-        JoinRoom(room_name);
-    }
-    const JoinRoom = async (room_name: string) => {
-        let joined: SuccessResponse = await Room_JoinRoom(room_name, props.playerId);
-        if (joined.success) {
+        let room_joinable = await Fetch_Room_IsRoomJoinable(room_name);
+        if (room_joinable) {
             props.setRoomName(room_name);
             props.setPlayerNumber(PLAYER_2);
-        }
-        else {
-            setErrMsg(joined.msg);
         }
     }
     useEffect(() => { setErrMsg('') }, [newRoomName])
