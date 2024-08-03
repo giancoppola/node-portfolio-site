@@ -54,37 +54,58 @@ const server = app.listen(process.env.PORT || 3000, () => {
 // MongoDB Database Functions
 import { Player_ResetLastPlayedDate } from './server/word-guesser-api';
 import { ACTIVE, EMPTY_ROOM, iRoom, PlayerModel, ROOM_JOINED, RoomCollection, SocketIoUser, SocketIoUserObj, USER_COUNT } from './types/word-guesser-types';
-import { Fetch_Player_LeaveRoom } from './src/word-guesser/word-guesser-tools';
 // Socket IO Connections and Responses
 export const users: SocketIoUserObj = {};
 export const rooms: RoomCollection = {};
 export const io: Server = new SocketServer(server);
 io.on("connection", (socket: Socket) => {
+    Handle_New_Connection(socket);
+    console.log(users);
+    Handle_Player_Disconnect(socket);
+    Handle_Player_Active(socket);
+    Handle_Room_Joined(socket);
+})
+
+const Handle_New_Connection = (socket: Socket) => {
     users[socket.id] = { player_id: '', room_name: '' };
     io.sockets.emit(USER_COUNT, Object.keys(users).length);
-    console.log(users);
-    socket.on('disconnect', async () => {
-        if (users[socket.id].room_name) {
-            rooms[users[socket.id].room_name].player_1_id === users[socket.id].player_id ? rooms[users[socket.id].room_name].player_1_id = '' : rooms[users[socket.id].room_name].player_2_id = '';
-            rooms[users[socket.id].room_name].player_count = rooms[users[socket.id].room_name].player_count - 1;
-            console.log(rooms);
-            socket.leave(users[socket.id].room_name);
-        }
-        delete users[socket.id];
-        io.sockets.emit(USER_COUNT, Object.keys(users).length);
-        console.log("user disconnected");
-    })
+}
+
+const Handle_Player_Active = (socket: Socket) => {
     socket.on(ACTIVE, async (player_id: string) => {
         users[socket.id].player_id = player_id;
         console.log(users);
         Player_ResetLastPlayedDate(player_id);
     })
+}
+
+const Handle_Player_Disconnect = (socket: Socket) => {
+    socket.on('disconnect', async () => {
+        // If a user is in a room remove them, reduce rooms player count, if player count 0 then delete room
+        if (users[socket.id].room_name) {
+            rooms[users[socket.id].room_name].player_1_id === users[socket.id].player_id ? rooms[users[socket.id].room_name].player_1_id = '' : rooms[users[socket.id].room_name].player_2_id = '';
+            rooms[users[socket.id].room_name].player_count = rooms[users[socket.id].room_name].player_count - 1;
+            rooms[users[socket.id].room_name].player_count === 0 ? delete rooms[users[socket.id].room_name] : null;
+            console.log(rooms);
+            socket.leave(users[socket.id].room_name);
+        }
+        // Remove user from user list
+        delete users[socket.id];
+        // Update users about remaining online users
+        io.sockets.emit(USER_COUNT, Object.keys(users).length);
+        console.log("user disconnected");
+    })
+}
+
+const Handle_Room_Joined = (socket: Socket) => {
     socket.on(ROOM_JOINED, async (room_name: string) => {
+        console.log('ROOM JOINED')
         users[socket.id].room_name = room_name;
         !rooms[room_name] ? rooms[room_name] = EMPTY_ROOM : null;
         !rooms[room_name].player_1_id ? rooms[room_name].player_1_id = users[socket.id].player_id : rooms[room_name].player_2_id = users[socket.id].player_id;
         rooms[room_name].player_count = rooms[room_name].player_count + 1;
         socket.join(room_name);
+        io.to(room_name).emit("latest_data", rooms[room_name]);
         console.log("Rooms", rooms);
     })
-})
+}

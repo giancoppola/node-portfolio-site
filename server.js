@@ -89,22 +89,17 @@ exports.users = {};
 exports.rooms = {};
 exports.io = new socket_io_1.Server(server);
 exports.io.on("connection", function (socket) {
+    Handle_New_Connection(socket);
+    console.log(exports.users);
+    Handle_Player_Disconnect(socket);
+    Handle_Player_Active(socket);
+    Handle_Room_Joined(socket);
+});
+var Handle_New_Connection = function (socket) {
     exports.users[socket.id] = { player_id: '', room_name: '' };
     exports.io.sockets.emit(word_guesser_types_1.USER_COUNT, Object.keys(exports.users).length);
-    console.log(exports.users);
-    socket.on('disconnect', function () { return __awaiter(void 0, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            if (exports.users[socket.id].room_name) {
-                exports.rooms[exports.users[socket.id].room_name].player_1_id === exports.users[socket.id].player_id ? exports.rooms[exports.users[socket.id].room_name].player_1_id = '' : exports.rooms[exports.users[socket.id].room_name].player_2_id = '';
-                console.log(exports.rooms);
-                socket.leave(exports.users[socket.id].room_name);
-            }
-            delete exports.users[socket.id];
-            exports.io.sockets.emit(word_guesser_types_1.USER_COUNT, Object.keys(exports.users).length);
-            console.log("user disconnected");
-            return [2 /*return*/];
-        });
-    }); });
+};
+var Handle_Player_Active = function (socket) {
     socket.on(word_guesser_types_1.ACTIVE, function (player_id) { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             exports.users[socket.id].player_id = player_id;
@@ -113,15 +108,39 @@ exports.io.on("connection", function (socket) {
             return [2 /*return*/];
         });
     }); });
+};
+var Handle_Player_Disconnect = function (socket) {
+    socket.on('disconnect', function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            // If a user is in a room remove them, reduce rooms player count, if player count 0 then delete room
+            if (exports.users[socket.id].room_name) {
+                exports.rooms[exports.users[socket.id].room_name].player_1_id === exports.users[socket.id].player_id ? exports.rooms[exports.users[socket.id].room_name].player_1_id = '' : exports.rooms[exports.users[socket.id].room_name].player_2_id = '';
+                exports.rooms[exports.users[socket.id].room_name].player_count = exports.rooms[exports.users[socket.id].room_name].player_count - 1;
+                exports.rooms[exports.users[socket.id].room_name].player_count === 0 ? delete exports.rooms[exports.users[socket.id].room_name] : null;
+                console.log(exports.rooms);
+                socket.leave(exports.users[socket.id].room_name);
+            }
+            // Remove user from user list
+            delete exports.users[socket.id];
+            // Update users about remaining online users
+            exports.io.sockets.emit(word_guesser_types_1.USER_COUNT, Object.keys(exports.users).length);
+            console.log("user disconnected");
+            return [2 /*return*/];
+        });
+    }); });
+};
+var Handle_Room_Joined = function (socket) {
     socket.on(word_guesser_types_1.ROOM_JOINED, function (room_name) { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
+            console.log('ROOM JOINED');
             exports.users[socket.id].room_name = room_name;
             !exports.rooms[room_name] ? exports.rooms[room_name] = word_guesser_types_1.EMPTY_ROOM : null;
             !exports.rooms[room_name].player_1_id ? exports.rooms[room_name].player_1_id = exports.users[socket.id].player_id : exports.rooms[room_name].player_2_id = exports.users[socket.id].player_id;
             exports.rooms[room_name].player_count = exports.rooms[room_name].player_count + 1;
             socket.join(room_name);
+            exports.io.to(room_name).emit("latest_data", exports.rooms[room_name]);
             console.log("Rooms", exports.rooms);
             return [2 /*return*/];
         });
     }); });
-});
+};
