@@ -124,6 +124,13 @@ const Handle_Player_Ready = (socket: Socket) => {
                 rooms[room_name].player_2.ready = true;
             }
             Send_Latest_Data(room_name);
+            // Give the players 5 seconds to change their mind
+            // TODO 5 second countdown on front end
+            setTimeout(() => {
+                if (rooms[room_name].player_1.ready && rooms[room_name].player_2.ready) {
+                    rooms[room_name].current_status = 'GAME_READY';
+                }
+            }, 5000)
         }
     })
 }
