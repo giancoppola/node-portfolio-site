@@ -42,18 +42,24 @@ var react_1 = require("react");
 var material_1 = require("@mui/material");
 var _create_room_1 = require("./_create-room");
 var _join_room_1 = require("./_join_room");
-var _room_1 = require("./_room");
 var _footer_1 = require("./_footer");
 var word_guesser_types_1 = require("../../types/word-guesser-types");
 var word_guesser_tools_1 = require("./word-guesser-tools");
 var socket_io_client_1 = require("socket.io-client");
+var _word_input_1 = require("./_word_input");
+var _player_status_1 = require("./_player_status");
 var socket = (0, socket_io_client_1.io)();
 var Main = function () {
-    var _a = (0, react_1.useState)(""), word = _a[0], setWord = _a[1];
-    var _b = (0, react_1.useState)(0), userCount = _b[0], setUserCount = _b[1];
-    var _c = (0, react_1.useState)(""), roomName = _c[0], setRoomName = _c[1];
-    var _d = (0, react_1.useState)(""), playerId = _d[0], setPlayerId = _d[1];
+    // State for when in room
+    var _a = (0, react_1.useState)(word_guesser_types_1.EMPTY_ROOM), roomData = _a[0], setRoomData = _a[1];
+    var _b = (0, react_1.useState)(false), ready = _b[0], setReady = _b[1];
+    var _c = (0, react_1.useState)(true), canSubmitWord = _c[0], setCanSubmitWord = _c[1];
+    var _d = (0, react_1.useState)(""), word = _d[0], setWord = _d[1];
     var _e = (0, react_1.useState)(''), playerNumber = _e[0], setPlayerNumber = _e[1];
+    // State used at all times
+    var _f = (0, react_1.useState)(0), userCount = _f[0], setUserCount = _f[1];
+    var _g = (0, react_1.useState)(""), roomName = _g[0], setRoomName = _g[1];
+    var _h = (0, react_1.useState)(""), playerId = _h[0], setPlayerId = _h[1];
     var CheckPlayerId = function (player_id) { return __awaiter(void 0, void 0, void 0, function () {
         var valid;
         return __generator(this, function (_a) {
@@ -86,8 +92,9 @@ var Main = function () {
             }
         });
     }); };
-    socket.on("GAME_READY", function () {
-        console.log('game is now ready');
+    socket.on(word_guesser_types_1.LATEST_DATA, function (room_data) {
+        console.log('Got new room data:', room_data);
+        setRoomData(room_data);
     });
     (0, react_1.useEffect)(function () {
         var player_id = localStorage.getItem(word_guesser_types_1.PLAYER_ID);
@@ -103,7 +110,8 @@ var Main = function () {
     (0, react_1.useEffect)(function () { roomName ? socket.emit(word_guesser_types_1.ROOM_JOINED, roomName) : null; }, [roomName]);
     socket.on(word_guesser_types_1.USER_COUNT, function (user_count) { return setUserCount(user_count); });
     return ((0, jsx_runtime_1.jsxs)(material_1.Box, { component: 'section', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', height: '100dvh', width: '100dvw', children: [(0, jsx_runtime_1.jsxs)(material_1.Typography, { variant: 'h1', fontWeight: 'bold', children: ["BattleWords", (0, jsx_runtime_1.jsx)(material_1.Typography, { variant: 'subtitle2', fontWeight: 'bold', textAlign: 'center', children: "".concat(userCount, " player").concat(userCount > 1 ? 's are' : ' is', " online") })] }), playerId && !roomName &&
-                (0, jsx_runtime_1.jsxs)(material_1.Box, { height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '2rem', children: [(0, jsx_runtime_1.jsx)(_create_room_1.CreateRoom, { setPlayerNumber: setPlayerNumber, setRoomName: setRoomName, playerId: playerId }), (0, jsx_runtime_1.jsx)(_join_room_1.JoinRoom, { setPlayerNumber: setPlayerNumber, setRoomName: setRoomName, playerId: playerId })] }), (0, jsx_runtime_1.jsx)(material_1.Box, { height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '2rem', children: (0, jsx_runtime_1.jsx)(_room_1.Room, { setWord: setWord }) }), word, (0, jsx_runtime_1.jsx)(_footer_1.Footer, {})] }));
+                (0, jsx_runtime_1.jsxs)(material_1.Box, { height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '2rem', children: [(0, jsx_runtime_1.jsx)(_create_room_1.CreateRoom, { setPlayerNumber: setPlayerNumber, setRoomName: setRoomName, playerId: playerId }), (0, jsx_runtime_1.jsx)(_join_room_1.JoinRoom, { setPlayerNumber: setPlayerNumber, setRoomName: setRoomName, playerId: playerId })] }), playerId && roomName &&
+                (0, jsx_runtime_1.jsxs)(material_1.Box, { height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly', gap: '2rem', children: [(0, jsx_runtime_1.jsx)(_player_status_1.PlayerStatus, { roomData: roomData }), (0, jsx_runtime_1.jsx)(_word_input_1.WordInput, { canSubmitWord: canSubmitWord, setWord: setWord })] }), word, (0, jsx_runtime_1.jsx)(_footer_1.Footer, {})] }));
 };
 var root = (0, client_1.createRoot)(document.getElementById('main'));
 root.render((0, jsx_runtime_1.jsx)(Main, {}));

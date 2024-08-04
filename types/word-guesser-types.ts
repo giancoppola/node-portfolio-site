@@ -8,7 +8,7 @@ export const PLAYER_2 = 'player_2';
 export type CURRENT_STATUS = 'ROOM_CREATED' | 'GAME_READY' |
 'PLAYER_1_READY' | 'PLAYER_2_READY' | 'PLAYER_1_GUESSED' | 'PLAYER_2_GUESSED' |
 'PLAYER_1_RESTART' | 'PLAYER_2_RESTART' | 'GAME_FINISH' | 'ROOM_CLOSED';
-export type PLAYERS = 'player_1' | 'player_2';
+export type PLAYERS = 'player_1' | 'player_2' | '';
 export interface iPlayerInRoom {
     word: string;
     wins: number;
@@ -90,6 +90,9 @@ export const SET_WORD = 'set_word';
 export const NEXT_GUESS = 'next_guess';
 export const ROOM_JOINED = 'room_joined';
 export const ACTIVE = "active";
+export const READY = 'ready';
+export const NOT_READY = 'not_ready';
+export const LATEST_DATA = 'latest_data';
 
 ////////////////////////
 // Player Actions End //

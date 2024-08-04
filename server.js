@@ -94,6 +94,9 @@ exports.io.on("connection", function (socket) {
     Handle_Player_Disconnect(socket);
     Handle_Player_Active(socket);
     Handle_Room_Joined(socket);
+    Handle_Player_Ready(socket);
+    Handle_Player_Not_Ready(socket);
+    Handle_Player_Action(socket);
 });
 var Handle_New_Connection = function (socket) {
     exports.users[socket.id] = { player_id: '', room_name: '' };
@@ -116,6 +119,7 @@ var Handle_Player_Disconnect = function (socket) {
             if (exports.users[socket.id].room_name) {
                 exports.rooms[exports.users[socket.id].room_name].player_1_id === exports.users[socket.id].player_id ? exports.rooms[exports.users[socket.id].room_name].player_1_id = '' : exports.rooms[exports.users[socket.id].room_name].player_2_id = '';
                 exports.rooms[exports.users[socket.id].room_name].player_count = exports.rooms[exports.users[socket.id].room_name].player_count - 1;
+                Send_Latest_Data(exports.users[socket.id].room_name);
                 exports.rooms[exports.users[socket.id].room_name].player_count === 0 ? delete exports.rooms[exports.users[socket.id].room_name] : null;
                 console.log(exports.rooms);
                 socket.leave(exports.users[socket.id].room_name);
@@ -138,9 +142,46 @@ var Handle_Room_Joined = function (socket) {
             !exports.rooms[room_name].player_1_id ? exports.rooms[room_name].player_1_id = exports.users[socket.id].player_id : exports.rooms[room_name].player_2_id = exports.users[socket.id].player_id;
             exports.rooms[room_name].player_count = exports.rooms[room_name].player_count + 1;
             socket.join(room_name);
-            exports.io.to(room_name).emit("latest_data", exports.rooms[room_name]);
+            Send_Latest_Data(room_name);
             console.log("Rooms", exports.rooms);
             return [2 /*return*/];
         });
     }); });
+};
+var Handle_Player_Ready = function (socket) {
+    socket.on(word_guesser_types_1.READY, function (player_id, room_name) { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            if (exports.rooms[room_name].player_1_id === player_id) {
+                exports.rooms[room_name].player_1.ready = true;
+            }
+            else if (exports.rooms[room_name].player_2_id === player_id) {
+                exports.rooms[room_name].player_2.ready = true;
+            }
+            Send_Latest_Data(room_name);
+            return [2 /*return*/];
+        });
+    }); });
+};
+var Handle_Player_Not_Ready = function (socket) {
+    socket.on(word_guesser_types_1.READY, function (player_id, room_name) { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            if (exports.rooms[room_name].player_1_id === player_id) {
+                exports.rooms[room_name].player_1.ready = false;
+            }
+            else if (exports.rooms[room_name].player_2_id === player_id) {
+                exports.rooms[room_name].player_2.ready = false;
+            }
+            Send_Latest_Data(room_name);
+            return [2 /*return*/];
+        });
+    }); });
+};
+var Handle_Player_Action = function (socket) {
+};
+var Handle_Game_Finished = function (socket) {
+};
+var Handle_Game_Restart = function () {
+};
+var Send_Latest_Data = function (room_name) {
+    exports.io.to(room_name).emit(word_guesser_types_1.LATEST_DATA, exports.rooms[room_name]);
 };

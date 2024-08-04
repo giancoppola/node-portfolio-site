@@ -53,7 +53,7 @@ const server = app.listen(process.env.PORT || 3000, () => {
 
 // MongoDB Database Functions
 import { Player_ResetLastPlayedDate } from './server/word-guesser-api';
-import { ACTIVE, EMPTY_ROOM, iRoom, PlayerModel, ROOM_JOINED, RoomCollection, SocketIoUser, SocketIoUserObj, USER_COUNT } from './types/word-guesser-types';
+import { ACTIVE, EMPTY_ROOM, iRoom, LATEST_DATA, PlayerModel, READY, ROOM_JOINED, RoomCollection, SocketIoUser, SocketIoUserObj, USER_COUNT } from './types/word-guesser-types';
 // Socket IO Connections and Responses
 export const users: SocketIoUserObj = {};
 export const rooms: RoomCollection = {};
@@ -64,6 +64,9 @@ io.on("connection", (socket: Socket) => {
     Handle_Player_Disconnect(socket);
     Handle_Player_Active(socket);
     Handle_Room_Joined(socket);
+    Handle_Player_Ready(socket);
+    Handle_Player_Not_Ready(socket);
+    Handle_Player_Action(socket);
 })
 
 const Handle_New_Connection = (socket: Socket) => {
@@ -85,6 +88,7 @@ const Handle_Player_Disconnect = (socket: Socket) => {
         if (users[socket.id].room_name) {
             rooms[users[socket.id].room_name].player_1_id === users[socket.id].player_id ? rooms[users[socket.id].room_name].player_1_id = '' : rooms[users[socket.id].room_name].player_2_id = '';
             rooms[users[socket.id].room_name].player_count = rooms[users[socket.id].room_name].player_count - 1;
+            Send_Latest_Data(users[socket.id].room_name);
             rooms[users[socket.id].room_name].player_count === 0 ? delete rooms[users[socket.id].room_name] : null;
             console.log(rooms);
             socket.leave(users[socket.id].room_name);
@@ -105,7 +109,46 @@ const Handle_Room_Joined = (socket: Socket) => {
         !rooms[room_name].player_1_id ? rooms[room_name].player_1_id = users[socket.id].player_id : rooms[room_name].player_2_id = users[socket.id].player_id;
         rooms[room_name].player_count = rooms[room_name].player_count + 1;
         socket.join(room_name);
-        io.to(room_name).emit("latest_data", rooms[room_name]);
+        Send_Latest_Data(room_name);
         console.log("Rooms", rooms);
     })
+}
+
+const Handle_Player_Ready = (socket: Socket) => {
+    socket.on(READY, async (player_id: string, room_name: string) => {
+        if (rooms[room_name].player_1_id === player_id) {
+            rooms[room_name].player_1.ready = true;
+        }
+        else if (rooms[room_name].player_2_id === player_id) {
+            rooms[room_name].player_2.ready = true;
+        }
+        Send_Latest_Data(room_name);
+    })
+}
+const Handle_Player_Not_Ready = (socket: Socket) => {
+    socket.on(READY, async (player_id: string, room_name: string) => {
+        if (rooms[room_name].player_1_id === player_id) {
+            rooms[room_name].player_1.ready = false;
+        }
+        else if (rooms[room_name].player_2_id === player_id) {
+            rooms[room_name].player_2.ready = false;
+        }
+        Send_Latest_Data(room_name);
+    })
+}
+
+const Handle_Player_Action = (socket: Socket) => {
+
+}
+
+const Handle_Game_Finished = (socket: Socket) => {
+
+}
+
+const Handle_Game_Restart = () => {
+
+}
+
+const Send_Latest_Data = (room_name: string) => {
+    io.to(room_name).emit(LATEST_DATA, rooms[room_name])
 }

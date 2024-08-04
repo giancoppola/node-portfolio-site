@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ACTIVE = exports.ROOM_JOINED = exports.NEXT_GUESS = exports.SET_WORD = exports.USER_COUNT = exports.PlayerModel = exports.PlayerSchema = exports.EMPTY_ROOM = exports.EMPTY_PLAYER_IN_ROOM = exports.PLAYER_2 = exports.PLAYER_1 = exports.PLAYER_ID = void 0;
+exports.LATEST_DATA = exports.NOT_READY = exports.READY = exports.ACTIVE = exports.ROOM_JOINED = exports.NEXT_GUESS = exports.SET_WORD = exports.USER_COUNT = exports.PlayerModel = exports.PlayerSchema = exports.EMPTY_ROOM = exports.EMPTY_PLAYER_IN_ROOM = exports.PLAYER_2 = exports.PLAYER_1 = exports.PLAYER_ID = void 0;
 var mongoose = require('mongoose');
 exports.PLAYER_ID = "WG.player_id";
 exports.PLAYER_1 = 'player_1';
@@ -42,6 +42,9 @@ exports.SET_WORD = 'set_word';
 exports.NEXT_GUESS = 'next_guess';
 exports.ROOM_JOINED = 'room_joined';
 exports.ACTIVE = "active";
+exports.READY = 'ready';
+exports.NOT_READY = 'not_ready';
+exports.LATEST_DATA = 'latest_data';
 ////////////////////////
 // Player Actions End //
 ////////////////////////

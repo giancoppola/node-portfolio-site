@@ -4,6 +4,7 @@ import { RemoveQuotes, Fetch_Room_DoesRoomExist, Fetch_Room_CreateRoom } from '.
 
 
 interface Props {
+    canSubmitWord: boolean;
     setWord: Function;
 }
 export const WordInput = (props: Props) => {
@@ -51,12 +52,12 @@ export const WordInput = (props: Props) => {
     return (
         <Box display='flex' flexDirection='column' justifyContent='center' alignItems='center' gap='1rem'>
             <Box display='flex' gap='1rem'>
-                <TextField id='letter-one' inputProps={InputProps} value={letterOne} onChange={(e) => HandleChange(e.target.value, 'letter-one')} />
-                <TextField id='letter-two' inputProps={InputProps} value={letterTwo} onChange={(e) => HandleChange(e.target.value, 'letter-two')} />
-                <TextField id='letter-three' inputProps={InputProps} value={letterThree} onChange={(e) => HandleChange(e.target.value, 'letter-three')} />
-                <TextField id='letter-four' inputProps={InputProps} value={letterFour} onChange={(e) => HandleChange(e.target.value, 'letter-four')} />
+                <TextField disabled={!props.canSubmitWord} id='letter-one' inputProps={InputProps} value={letterOne} onChange={(e) => HandleChange(e.target.value, 'letter-one')} />
+                <TextField disabled={!props.canSubmitWord} id='letter-two' inputProps={InputProps} value={letterTwo} onChange={(e) => HandleChange(e.target.value, 'letter-two')} />
+                <TextField disabled={!props.canSubmitWord} id='letter-three' inputProps={InputProps} value={letterThree} onChange={(e) => HandleChange(e.target.value, 'letter-three')} />
+                <TextField disabled={!props.canSubmitWord} id='letter-four' inputProps={InputProps} value={letterFour} onChange={(e) => HandleChange(e.target.value, 'letter-four')} />
             </Box>
-            <Button variant='outlined' onClick={UpdateWord} color={errMsg ? 'error' : 'primary'}>Submit</Button>
+            <Button disabled={!props.canSubmitWord} variant='outlined' onClick={UpdateWord} color={errMsg ? 'error' : 'primary'}>Submit</Button>
             <Typography sx={{minHeight: '1.5rem', color: 'red'}} variant='subtitle2' fontWeight='bold'>{errMsg}</Typography>
         </Box>
     )
