@@ -5,9 +5,7 @@ export const PLAYER_ID = "WG.player_id";
 export const PLAYER_1 = 'player_1';
 export const PLAYER_2 = 'player_2';
 
-export type CURRENT_STATUS = 'ROOM_CREATED' | 'GAME_READY' |
-'PLAYER_1_READY' | 'PLAYER_2_READY' | 'PLAYER_1_GUESSED' | 'PLAYER_2_GUESSED' |
-'PLAYER_1_RESTART' | 'PLAYER_2_RESTART' | 'GAME_FINISH' | 'ROOM_CLOSED';
+export type CURRENT_STATUS = 'ROOM_CREATED' | 'GAME_READY' | 'PLAYER_1_GUESSED' | 'PLAYER_2_GUESSED' | 'GAME_FINISH';
 export type PLAYERS = 'player_1' | 'player_2' | '';
 export interface iPlayerInRoom {
     word: string;
@@ -36,9 +34,9 @@ export const EMPTY_PLAYER_IN_ROOM: iPlayerInRoom = {
     ready: false,
 }
 export const EMPTY_ROOM: iRoom = {
-    player_1: EMPTY_PLAYER_IN_ROOM,
+    player_1: structuredClone(EMPTY_PLAYER_IN_ROOM),
     player_1_id: "",
-    player_2: EMPTY_PLAYER_IN_ROOM,
+    player_2: structuredClone(EMPTY_PLAYER_IN_ROOM),
     player_2_id: "",
     player_count: 0,
     current_guess: "",

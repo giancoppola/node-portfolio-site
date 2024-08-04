@@ -12,9 +12,9 @@ exports.EMPTY_PLAYER_IN_ROOM = {
     ready: false,
 };
 exports.EMPTY_ROOM = {
-    player_1: exports.EMPTY_PLAYER_IN_ROOM,
+    player_1: structuredClone(exports.EMPTY_PLAYER_IN_ROOM),
     player_1_id: "",
-    player_2: exports.EMPTY_PLAYER_IN_ROOM,
+    player_2: structuredClone(exports.EMPTY_PLAYER_IN_ROOM),
     player_2_id: "",
     player_count: 0,
     current_guess: "",

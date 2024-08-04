@@ -42,6 +42,7 @@ var express = require('express');
 var app = express();
 var cors = require('cors');
 var socket_io_1 = require("socket.io");
+var debug = require("debug")('rooms');
 var mongoose = require('mongoose');
 var dbUri = "mongodb+srv://giancoppola:".concat(process.env.MONGO_PW, "@cluster0.gjnjhuw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
 mongoose.connect(dbUri);
@@ -138,12 +139,11 @@ var Handle_Room_Joined = function (socket) {
         return __generator(this, function (_a) {
             console.log('ROOM JOINED');
             exports.users[socket.id].room_name = room_name;
-            !exports.rooms[room_name] ? exports.rooms[room_name] = word_guesser_types_1.EMPTY_ROOM : null;
+            !exports.rooms[room_name] ? exports.rooms[room_name] = structuredClone(word_guesser_types_1.EMPTY_ROOM) : null;
             !exports.rooms[room_name].player_1_id ? exports.rooms[room_name].player_1_id = exports.users[socket.id].player_id : exports.rooms[room_name].player_2_id = exports.users[socket.id].player_id;
             exports.rooms[room_name].player_count = exports.rooms[room_name].player_count + 1;
             socket.join(room_name);
             Send_Latest_Data(room_name);
-            console.log("Rooms", exports.rooms);
             return [2 /*return*/];
         });
     }); });
@@ -151,27 +151,32 @@ var Handle_Room_Joined = function (socket) {
 var Handle_Player_Ready = function (socket) {
     socket.on(word_guesser_types_1.READY, function (player_id, room_name) { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
-            if (exports.rooms[room_name].player_1_id === player_id) {
-                exports.rooms[room_name].player_1.ready = true;
+            if (exports.rooms[room_name]) {
+                if (exports.rooms[room_name].player_1_id && exports.rooms[room_name].player_1_id === player_id) {
+                    exports.rooms[room_name].player_1.ready = true;
+                }
+                if (exports.rooms[room_name].player_2_id && exports.rooms[room_name].player_2_id === player_id) {
+                    exports.rooms[room_name].player_2.ready = true;
+                }
+                Send_Latest_Data(room_name);
             }
-            else if (exports.rooms[room_name].player_2_id === player_id) {
-                exports.rooms[room_name].player_2.ready = true;
-            }
-            Send_Latest_Data(room_name);
             return [2 /*return*/];
         });
     }); });
 };
 var Handle_Player_Not_Ready = function (socket) {
-    socket.on(word_guesser_types_1.READY, function (player_id, room_name) { return __awaiter(void 0, void 0, void 0, function () {
+    socket.on(word_guesser_types_1.NOT_READY, function (player_id, room_name) { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
-            if (exports.rooms[room_name].player_1_id === player_id) {
-                exports.rooms[room_name].player_1.ready = false;
+            if (exports.rooms[room_name]) {
+                if (exports.rooms[room_name].player_1_id === player_id) {
+                    exports.rooms[room_name].player_1.ready = false;
+                }
+                if (exports.rooms[room_name].player_2_id === player_id) {
+                    exports.rooms[room_name].player_2.ready = false;
+                }
+                console.log(exports.rooms[room_name]);
+                Send_Latest_Data(room_name);
             }
-            else if (exports.rooms[room_name].player_2_id === player_id) {
-                exports.rooms[room_name].player_2.ready = false;
-            }
-            Send_Latest_Data(room_name);
             return [2 /*return*/];
         });
     }); });

@@ -1,12 +1,12 @@
 import { createRoot } from 'react-dom/client'
-import { useEffect, useState, Dispatch } from 'react'
+import { useEffect, useState, Dispatch, StrictMode } from 'react'
 import { Box, List, ListItem, TextField, Typography } from '@mui/material'
 
 import { CreateRoom } from './_create-room'
 import { JoinRoom } from './_join_room'
 import { Footer } from './_footer'
 
-import { iPlayer, PlayerModel, PLAYER_ID, SET_WORD, NEXT_GUESS, ACTIVE, ROOM_JOINED, USER_COUNT, LATEST_DATA, iRoom, EMPTY_ROOM, PLAYERS } from '../../types/word-guesser-types'
+import { iPlayer, PlayerModel, PLAYER_ID, SET_WORD, NEXT_GUESS, ACTIVE, ROOM_JOINED, USER_COUNT, LATEST_DATA, iRoom, EMPTY_ROOM, PLAYERS, CURRENT_STATUS, READY, NOT_READY } from '../../types/word-guesser-types'
 import { Fetch_Player_CheckPlayerId, Fetch_Player_CreateNewPlayer, RemoveQuotes } from './word-guesser-tools'
 
 import { io, Socket } from 'socket.io-client'
@@ -16,6 +16,7 @@ const socket: Socket = io();
 
 const Main = () => {
     // State for when in room
+    const [currentStatus, setCurrentStatus]: [CURRENT_STATUS, Dispatch<CURRENT_STATUS>] = useState<CURRENT_STATUS>('ROOM_CREATED');
     const [roomData, setRoomData]: [iRoom, Dispatch<iRoom>] = useState<iRoom>(EMPTY_ROOM);
     const [ready, setReady]: [boolean, Dispatch<boolean>] = useState<boolean>(false);
     const [canSubmitWord, setCanSubmitWord]: [boolean, Dispatch<boolean>] = useState<boolean>(true);
@@ -57,6 +58,8 @@ const Main = () => {
     }, [])
     useEffect(() => { playerId ? socket.emit(ACTIVE, playerId) : null }, [playerId])
     useEffect(() => { roomName ? socket.emit(ROOM_JOINED, roomName) : null }, [roomName])
+    useEffect(() => { ready ? socket.emit(READY, playerId, roomName) : socket.emit(NOT_READY, playerId, roomName) }, [ready])
+    useEffect(() => { word.length === 4 && currentStatus === "ROOM_CREATED" ? setReady(true) : setReady(false) }, [word])
     socket.on(USER_COUNT, (user_count: number) => setUserCount(user_count));
     return (
         <Box component='section' display='flex' flexDirection='column' justifyContent='space-between' alignItems='center' height='100dvh' width='100dvw'>
@@ -73,6 +76,7 @@ const Main = () => {
             { playerId && roomName &&
                 <Box height='100%' display='flex' flexDirection='column' justifyContent='space-evenly' gap='2rem'>
                     <PlayerStatus roomData={roomData} />
+                    <Typography fontWeight='bold' variant='body2'>{currentStatus}</Typography>
                     <WordInput canSubmitWord={canSubmitWord} setWord={setWord}/>
                 </Box>
             }
@@ -83,4 +87,8 @@ const Main = () => {
 }
 
 const root = createRoot(document.getElementById('main')!);
-root.render(<Main/>);
+root.render(
+    <StrictMode>
+        <Main/>
+    </StrictMode>
+);

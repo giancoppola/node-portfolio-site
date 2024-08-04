@@ -51,15 +51,16 @@ var _player_status_1 = require("./_player_status");
 var socket = (0, socket_io_client_1.io)();
 var Main = function () {
     // State for when in room
-    var _a = (0, react_1.useState)(word_guesser_types_1.EMPTY_ROOM), roomData = _a[0], setRoomData = _a[1];
-    var _b = (0, react_1.useState)(false), ready = _b[0], setReady = _b[1];
-    var _c = (0, react_1.useState)(true), canSubmitWord = _c[0], setCanSubmitWord = _c[1];
-    var _d = (0, react_1.useState)(""), word = _d[0], setWord = _d[1];
-    var _e = (0, react_1.useState)(''), playerNumber = _e[0], setPlayerNumber = _e[1];
+    var _a = (0, react_1.useState)('ROOM_CREATED'), currentStatus = _a[0], setCurrentStatus = _a[1];
+    var _b = (0, react_1.useState)(word_guesser_types_1.EMPTY_ROOM), roomData = _b[0], setRoomData = _b[1];
+    var _c = (0, react_1.useState)(false), ready = _c[0], setReady = _c[1];
+    var _d = (0, react_1.useState)(true), canSubmitWord = _d[0], setCanSubmitWord = _d[1];
+    var _e = (0, react_1.useState)(""), word = _e[0], setWord = _e[1];
+    var _f = (0, react_1.useState)(''), playerNumber = _f[0], setPlayerNumber = _f[1];
     // State used at all times
-    var _f = (0, react_1.useState)(0), userCount = _f[0], setUserCount = _f[1];
-    var _g = (0, react_1.useState)(""), roomName = _g[0], setRoomName = _g[1];
-    var _h = (0, react_1.useState)(""), playerId = _h[0], setPlayerId = _h[1];
+    var _g = (0, react_1.useState)(0), userCount = _g[0], setUserCount = _g[1];
+    var _h = (0, react_1.useState)(""), roomName = _h[0], setRoomName = _h[1];
+    var _j = (0, react_1.useState)(""), playerId = _j[0], setPlayerId = _j[1];
     var CheckPlayerId = function (player_id) { return __awaiter(void 0, void 0, void 0, function () {
         var valid;
         return __generator(this, function (_a) {
@@ -108,10 +109,12 @@ var Main = function () {
     }, []);
     (0, react_1.useEffect)(function () { playerId ? socket.emit(word_guesser_types_1.ACTIVE, playerId) : null; }, [playerId]);
     (0, react_1.useEffect)(function () { roomName ? socket.emit(word_guesser_types_1.ROOM_JOINED, roomName) : null; }, [roomName]);
+    (0, react_1.useEffect)(function () { ready ? socket.emit(word_guesser_types_1.READY, playerId, roomName) : socket.emit(word_guesser_types_1.NOT_READY, playerId, roomName); }, [ready]);
+    (0, react_1.useEffect)(function () { word.length === 4 && currentStatus === "ROOM_CREATED" ? setReady(true) : setReady(false); }, [word]);
     socket.on(word_guesser_types_1.USER_COUNT, function (user_count) { return setUserCount(user_count); });
     return ((0, jsx_runtime_1.jsxs)(material_1.Box, { component: 'section', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', height: '100dvh', width: '100dvw', children: [(0, jsx_runtime_1.jsxs)(material_1.Typography, { variant: 'h1', fontWeight: 'bold', children: ["BattleWords", (0, jsx_runtime_1.jsx)(material_1.Typography, { variant: 'subtitle2', fontWeight: 'bold', textAlign: 'center', children: "".concat(userCount, " player").concat(userCount > 1 ? 's are' : ' is', " online") })] }), playerId && !roomName &&
                 (0, jsx_runtime_1.jsxs)(material_1.Box, { height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '2rem', children: [(0, jsx_runtime_1.jsx)(_create_room_1.CreateRoom, { setPlayerNumber: setPlayerNumber, setRoomName: setRoomName, playerId: playerId }), (0, jsx_runtime_1.jsx)(_join_room_1.JoinRoom, { setPlayerNumber: setPlayerNumber, setRoomName: setRoomName, playerId: playerId })] }), playerId && roomName &&
-                (0, jsx_runtime_1.jsxs)(material_1.Box, { height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly', gap: '2rem', children: [(0, jsx_runtime_1.jsx)(_player_status_1.PlayerStatus, { roomData: roomData }), (0, jsx_runtime_1.jsx)(_word_input_1.WordInput, { canSubmitWord: canSubmitWord, setWord: setWord })] }), word, (0, jsx_runtime_1.jsx)(_footer_1.Footer, {})] }));
+                (0, jsx_runtime_1.jsxs)(material_1.Box, { height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly', gap: '2rem', children: [(0, jsx_runtime_1.jsx)(_player_status_1.PlayerStatus, { roomData: roomData }), (0, jsx_runtime_1.jsx)(material_1.Typography, { fontWeight: 'bold', variant: 'body2', children: currentStatus }), (0, jsx_runtime_1.jsx)(_word_input_1.WordInput, { canSubmitWord: canSubmitWord, setWord: setWord })] }), word, (0, jsx_runtime_1.jsx)(_footer_1.Footer, {})] }));
 };
 var root = (0, client_1.createRoot)(document.getElementById('main'));
-root.render((0, jsx_runtime_1.jsx)(Main, {}));
+root.render((0, jsx_runtime_1.jsx)(react_1.StrictMode, { children: (0, jsx_runtime_1.jsx)(Main, {}) }));
