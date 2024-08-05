@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LATEST_DATA = exports.NOT_READY = exports.READY = exports.ACTIVE = exports.ROOM_JOINED = exports.NEXT_GUESS = exports.SET_WORD = exports.USER_COUNT = exports.PlayerModel = exports.PlayerSchema = exports.EMPTY_ROOM = exports.EMPTY_PLAYER_IN_ROOM = exports.PLAYER_2 = exports.PLAYER_1 = exports.PLAYER_ID = void 0;
+exports.LATEST_DATA = exports.NOT_READY = exports.READY = exports.ACTIVE = exports.ROOM_JOINED = exports.PLAYER_2_WORD = exports.PLAYER_1_WORD = exports.PLAYER_2_GUESSED = exports.PLAYER_1_GUESSED = exports.USER_COUNT = exports.PlayerModel = exports.PlayerSchema = exports.EMPTY_ROOM = exports.EMPTY_PLAYER_IN_ROOM = exports.PLAYER_2 = exports.PLAYER_1 = exports.PLAYER_ID = void 0;
 var mongoose = require('mongoose');
 exports.PLAYER_ID = "WG.player_id";
 exports.PLAYER_1 = 'player_1';
@@ -38,8 +38,10 @@ exports.USER_COUNT = 'user_count';
 ////////////////////
 // Player Actions //
 ////////////////////
-exports.SET_WORD = 'set_word';
-exports.NEXT_GUESS = 'next_guess';
+exports.PLAYER_1_GUESSED = 'PLAYER_1_GUESSED';
+exports.PLAYER_2_GUESSED = 'PLAYER_2_GUESSED';
+exports.PLAYER_1_WORD = 'PLAYER_1_WORD';
+exports.PLAYER_2_WORD = 'PLAYER_2_WORD';
 exports.ROOM_JOINED = 'room_joined';
 exports.ACTIVE = "active";
 exports.READY = 'ready';

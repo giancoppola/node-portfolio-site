@@ -96,7 +96,7 @@ exports.router.route('/players/find')
                     res.status(200).send(true);
                 }
                 else {
-                    res.status(400).send(false);
+                    res.status(200).send(false);
                 }
                 return [2 /*return*/];
         }
@@ -117,7 +117,7 @@ exports.router.route('/rooms/find')
             res.status(200).send(true);
         }
         else {
-            res.status(400).send(false);
+            res.status(200).send(false);
         }
         return [2 /*return*/];
     });
@@ -131,7 +131,7 @@ exports.router.route('/rooms/joinable')
             res.status(200).send(true);
         }
         else {
-            res.status(400).send(false);
+            res.status(200).send(false);
         }
         return [2 /*return*/];
     });

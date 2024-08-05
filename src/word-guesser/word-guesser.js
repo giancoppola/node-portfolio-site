@@ -95,10 +95,34 @@ var Main = function () {
             }
         });
     }); };
+    var CanSubmitCheck = function (room_data) {
+        var canSubmit;
+        switch (room_data.current_status) {
+            case 'ROOM_CREATED':
+                word ? canSubmit = false : canSubmit = true;
+                break;
+            case 'GAME_READY':
+                playerNumber === room_data.current_guesser ? canSubmit = true : canSubmit = false;
+                break;
+            case 'PLAYER_1_GUESSED':
+                playerNumber === word_guesser_types_1.PLAYER_2 ? canSubmit = true : canSubmit = false;
+                break;
+            case 'PLAYER_2_GUESSED':
+                playerNumber === word_guesser_types_1.PLAYER_1 ? canSubmit = true : canSubmit = false;
+                break;
+            case 'GAME_FINISH':
+                canSubmit = false;
+                break;
+            default:
+                canSubmit = false;
+        }
+        return canSubmit;
+    };
     socket.on(word_guesser_types_1.LATEST_DATA, function (room_data) {
         console.log('Got new room data:', room_data);
         setRoomData(room_data);
-        setCurrentStatus(roomData.current_status);
+        setCurrentStatus(room_data.current_status);
+        setCanSubmitWord(CanSubmitCheck(room_data));
     });
     (0, react_1.useEffect)(function () {
         var player_id = localStorage.getItem(word_guesser_types_1.PLAYER_ID);
@@ -114,21 +138,28 @@ var Main = function () {
     (0, react_1.useEffect)(function () { roomName ? socket.emit(word_guesser_types_1.ROOM_JOINED, roomName) : null; }, [roomName]);
     (0, react_1.useEffect)(function () { ready ? socket.emit(word_guesser_types_1.READY, playerId, roomName) : socket.emit(word_guesser_types_1.NOT_READY, playerId, roomName); }, [ready]);
     (0, react_1.useEffect)(function () {
-        switch (currentStatus) {
-            case 'ROOM_CREATED':
-                if (word) {
-                    setReady(true);
-                    setCanSubmitWord(false);
-                }
-                else {
-                    setReady(false);
-                    setCanSubmitWord(true);
-                }
-                break;
+        if (currentStatus === 'ROOM_CREATED') {
+            var guesser = playerNumber === word_guesser_types_1.PLAYER_1 ? word_guesser_types_1.PLAYER_1_WORD : word_guesser_types_1.PLAYER_2_WORD;
+            if (word) {
+                setReady(true);
+                setCanSubmitWord(false);
+                socket.emit(guesser, word);
+            }
+            else {
+                setReady(false);
+                setCanSubmitWord(true);
+                socket.emit(guesser, '');
+            }
         }
     }, [word]);
+    (0, react_1.useEffect)(function () {
+        if (currentGuess && canSubmitWord) {
+            var guesser = playerNumber === word_guesser_types_1.PLAYER_1 ? word_guesser_types_1.PLAYER_1_GUESSED : word_guesser_types_1.PLAYER_2_GUESSED;
+            socket.emit(guesser);
+        }
+    }, [currentGuess]);
     socket.on(word_guesser_types_1.USER_COUNT, function (user_count) { return setUserCount(user_count); });
-    return ((0, jsx_runtime_1.jsxs)(material_1.Box, { component: 'section', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', height: '100dvh', width: '100dvw', children: [(0, jsx_runtime_1.jsxs)(material_1.Typography, { variant: 'h1', fontWeight: 'bold', children: ["BattleWords", (0, jsx_runtime_1.jsx)(material_1.Typography, { variant: 'subtitle2', fontWeight: 'bold', textAlign: 'center', children: "".concat(userCount, " player").concat(userCount > 1 ? 's are' : ' is', " online") })] }), playerId && !roomName &&
+    return ((0, jsx_runtime_1.jsxs)(material_1.Box, { component: 'section', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', height: '100dvh', width: '100dvw', children: [(0, jsx_runtime_1.jsxs)(material_1.Box, { children: [(0, jsx_runtime_1.jsx)(material_1.Typography, { variant: 'h1', fontWeight: 'bold', children: "BattleWords" }), (0, jsx_runtime_1.jsx)(material_1.Typography, { variant: 'subtitle2', fontWeight: 'bold', textAlign: 'center', children: "".concat(userCount, " player").concat(userCount > 1 ? 's are' : ' is', " online") })] }), playerId && !roomName &&
                 (0, jsx_runtime_1.jsxs)(material_1.Box, { height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '2rem', children: [(0, jsx_runtime_1.jsx)(_create_room_1.CreateRoom, { setPlayerNumber: setPlayerNumber, setRoomName: setRoomName, playerId: playerId }), (0, jsx_runtime_1.jsx)(_join_room_1.JoinRoom, { setPlayerNumber: setPlayerNumber, setRoomName: setRoomName, playerId: playerId })] }), playerId && roomName &&
                 (0, jsx_runtime_1.jsxs)(material_1.Box, { height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly', gap: '2rem', children: [(0, jsx_runtime_1.jsxs)(material_1.Box, { children: [(0, jsx_runtime_1.jsx)(material_1.Typography, { minHeight: '3rem', textAlign: 'center', fontWeight: 'bold', variant: 'h4', children: word ? "Your word is ".concat(word.toUpperCase()) : 'Please submit your word' }), (0, jsx_runtime_1.jsx)(_player_status_1.PlayerStatus, { roomData: roomData })] }), (0, jsx_runtime_1.jsx)(_status_message_1.StatusMessage, { roomData: roomData, currentStatus: currentStatus }), (0, jsx_runtime_1.jsx)(_word_input_1.WordInput, { canSubmitWord: canSubmitWord, currentStatus: currentStatus, setCurrentGuess: setCurrentGuess, setWord: setWord })] }), (0, jsx_runtime_1.jsx)(_footer_1.Footer, {})] }));
 };

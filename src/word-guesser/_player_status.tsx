@@ -14,11 +14,7 @@ const Player = (props: PlayerProps) => {
         <ListItem>
             <ListItemText
                 primary={props.name}
-                secondary={
-                    <>
-                        <Typography>{props.playerStatus}</Typography>
-                    </>
-                }
+                secondary={props.playerStatus}
             />
             <ListItemIcon sx={{ justifyContent: 'center', alignItems: "center", gap: '.5rem' }}>
                 <EmojiEvents/> <Typography fontWeight='bold' variant='subtitle2'> 0</Typography>

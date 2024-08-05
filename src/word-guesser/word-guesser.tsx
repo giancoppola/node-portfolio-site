@@ -6,7 +6,7 @@ import { CreateRoom } from './_create-room'
 import { JoinRoom } from './_join_room'
 import { Footer } from './_footer'
 
-import { iPlayer, PlayerModel, PLAYER_ID, SET_WORD, NEXT_GUESS, ACTIVE, ROOM_JOINED, USER_COUNT, LATEST_DATA, iRoom, EMPTY_ROOM, PLAYERS, CURRENT_STATUS, READY, NOT_READY } from '../../types/word-guesser-types'
+import { iPlayer, PlayerModel, PLAYER_ID, ACTIVE, ROOM_JOINED, USER_COUNT, LATEST_DATA, iRoom, EMPTY_ROOM, PLAYERS, CURRENT_STATUS, READY, NOT_READY, PLAYER_1, PLAYER_1_GUESSED, PLAYER_2_GUESSED, PLAYER_2, PLAYER_1_WORD, PLAYER_2_WORD } from '../../types/word-guesser-types'
 import { Fetch_Player_CheckPlayerId, Fetch_Player_CreateNewPlayer, RemoveQuotes } from './word-guesser-tools'
 
 import { io, Socket } from 'socket.io-client'
@@ -44,10 +44,34 @@ const Main = () => {
         setPlayerId(newId);
         localStorage.setItem(PLAYER_ID, newId);
     }
+    const CanSubmitCheck = (room_data: iRoom): boolean => {
+        let canSubmit: boolean;
+        switch(room_data.current_status) {
+            case 'ROOM_CREATED':
+                word ? canSubmit = false : canSubmit = true;
+                break;
+            case 'GAME_READY':
+                playerNumber === room_data.current_guesser ? canSubmit = true : canSubmit = false;
+                break;
+            case 'PLAYER_1_GUESSED':
+                playerNumber === PLAYER_2 ? canSubmit = true : canSubmit = false;
+                break;
+            case 'PLAYER_2_GUESSED':
+                playerNumber === PLAYER_1 ? canSubmit = true : canSubmit = false;
+                break;
+            case 'GAME_FINISH':
+                canSubmit = false;
+                break;
+            default:
+                canSubmit = false;
+        }
+        return canSubmit;
+    }
     socket.on(LATEST_DATA, (room_data: iRoom) => {
         console.log('Got new room data:', room_data);
         setRoomData(room_data);
-        setCurrentStatus(roomData.current_status);
+        setCurrentStatus(room_data.current_status);
+        setCanSubmitWord(CanSubmitCheck(room_data));
     })
     useEffect(() => {
         let player_id = localStorage.getItem(PLAYER_ID);
@@ -63,20 +87,25 @@ const Main = () => {
     useEffect(() => { roomName ? socket.emit(ROOM_JOINED, roomName) : null }, [roomName])
     useEffect(() => { ready ? socket.emit(READY, playerId, roomName) : socket.emit(NOT_READY, playerId, roomName) }, [ready])
     useEffect(() => {
-        switch (currentStatus) {
-            case 'ROOM_CREATED':
-                if (word) { setReady(true); setCanSubmitWord(false) }
-                else { setReady(false); setCanSubmitWord(true) }
-                break;
+        if (currentStatus === 'ROOM_CREATED') {
+            let guesser = playerNumber === PLAYER_1 ? PLAYER_1_WORD : PLAYER_2_WORD;
+            if (word) { setReady(true); setCanSubmitWord(false); socket.emit(guesser, word) }
+            else { setReady(false); setCanSubmitWord(true); socket.emit(guesser, '') }
         }
     }, [word])
+    useEffect(() => {
+        if (currentGuess && canSubmitWord) {
+            let guesser = playerNumber === PLAYER_1 ? PLAYER_1_GUESSED : PLAYER_2_GUESSED;
+            socket.emit(guesser);
+        }
+    }, [currentGuess])
     socket.on(USER_COUNT, (user_count: number) => setUserCount(user_count));
     return (
         <Box component='section' display='flex' flexDirection='column' justifyContent='space-between' alignItems='center' height='100dvh' width='100dvw'>
-            <Typography variant='h1' fontWeight='bold'>
-                BattleWords
+            <Box>
+                <Typography variant='h1' fontWeight='bold'>BattleWords</Typography>
                 <Typography variant='subtitle2' fontWeight='bold' textAlign='center'>{`${userCount} player${userCount > 1 ? 's are' : ' is'} online`}</Typography>
-            </Typography>
+            </Box>
             { playerId && !roomName &&
                 <Box height='100%' display='flex' flexDirection='column' justifyContent='center' gap='2rem'>
                     <CreateRoom setPlayerNumber={setPlayerNumber} setRoomName={setRoomName} playerId={playerId} />

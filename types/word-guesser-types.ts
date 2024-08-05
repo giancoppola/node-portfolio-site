@@ -84,8 +84,10 @@ export const USER_COUNT = 'user_count';
 // Player Actions //
 ////////////////////
 
-export const SET_WORD = 'set_word';
-export const NEXT_GUESS = 'next_guess';
+export const PLAYER_1_GUESSED = 'PLAYER_1_GUESSED';
+export const PLAYER_2_GUESSED = 'PLAYER_2_GUESSED';
+export const PLAYER_1_WORD = 'PLAYER_1_WORD';
+export const PLAYER_2_WORD = 'PLAYER_2_WORD';
 export const ROOM_JOINED = 'room_joined';
 export const ACTIVE = "active";
 export const READY = 'ready';
