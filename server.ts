@@ -130,6 +130,7 @@ const Handle_Player_Ready = (socket: Socket) => {
                 if (rooms[room_name].player_1.ready && rooms[room_name].player_2.ready) {
                     rooms[room_name].current_status = 'GAME_READY';
                 }
+                io.to(room_name).emit(LATEST_DATA, rooms[room_name]);
             }, 5000)
         }
     })

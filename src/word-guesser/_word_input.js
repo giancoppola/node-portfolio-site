@@ -33,7 +33,7 @@ var WordInput = function (props) {
     var UpdateWord = function () {
         var word = letterOne + letterTwo + letterThree + letterFour;
         if (word.length === 4) {
-            props.setWord(word);
+            props.currentStatus === 'ROOM_CREATED' ? props.setWord(word) : props.setCurrentGuess(word);
             setErrMsg('');
             setLetterOne('');
             setLetterTwo('');
@@ -44,9 +44,12 @@ var WordInput = function (props) {
             setErrMsg('Please provide a four letter word!');
         }
     };
+    var CancelReady = function () {
+        props.setWord('');
+    };
     (0, react_1.useEffect)(function () { setErrMsg(''); }, [letterOne, letterTwo, letterThree, letterFour]);
     var InputStyles = { width: '5rem', height: '5rem', fontSize: '5rem', textAlign: 'center' };
     var InputProps = { maxLength: 1, style: InputStyles };
-    return ((0, jsx_runtime_1.jsxs)(material_1.Box, { display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '1rem', children: [(0, jsx_runtime_1.jsxs)(material_1.Box, { display: 'flex', gap: '1rem', children: [(0, jsx_runtime_1.jsx)(material_1.TextField, { disabled: !props.canSubmitWord, id: 'letter-one', inputProps: InputProps, value: letterOne, onChange: function (e) { return HandleChange(e.target.value, 'letter-one'); } }), (0, jsx_runtime_1.jsx)(material_1.TextField, { disabled: !props.canSubmitWord, id: 'letter-two', inputProps: InputProps, value: letterTwo, onChange: function (e) { return HandleChange(e.target.value, 'letter-two'); } }), (0, jsx_runtime_1.jsx)(material_1.TextField, { disabled: !props.canSubmitWord, id: 'letter-three', inputProps: InputProps, value: letterThree, onChange: function (e) { return HandleChange(e.target.value, 'letter-three'); } }), (0, jsx_runtime_1.jsx)(material_1.TextField, { disabled: !props.canSubmitWord, id: 'letter-four', inputProps: InputProps, value: letterFour, onChange: function (e) { return HandleChange(e.target.value, 'letter-four'); } })] }), (0, jsx_runtime_1.jsx)(material_1.Button, { disabled: !props.canSubmitWord, variant: 'outlined', onClick: UpdateWord, color: errMsg ? 'error' : 'primary', children: "Submit" }), (0, jsx_runtime_1.jsx)(material_1.Typography, { sx: { minHeight: '1.5rem', color: 'red' }, variant: 'subtitle2', fontWeight: 'bold', children: errMsg })] }));
+    return ((0, jsx_runtime_1.jsxs)(material_1.Box, { display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '1rem', children: [(0, jsx_runtime_1.jsxs)(material_1.Box, { display: 'flex', gap: '1rem', children: [(0, jsx_runtime_1.jsx)(material_1.TextField, { disabled: !props.canSubmitWord, id: 'letter-one', inputProps: InputProps, value: letterOne, onChange: function (e) { return HandleChange(e.target.value, 'letter-one'); } }), (0, jsx_runtime_1.jsx)(material_1.TextField, { disabled: !props.canSubmitWord, id: 'letter-two', inputProps: InputProps, value: letterTwo, onChange: function (e) { return HandleChange(e.target.value, 'letter-two'); } }), (0, jsx_runtime_1.jsx)(material_1.TextField, { disabled: !props.canSubmitWord, id: 'letter-three', inputProps: InputProps, value: letterThree, onChange: function (e) { return HandleChange(e.target.value, 'letter-three'); } }), (0, jsx_runtime_1.jsx)(material_1.TextField, { disabled: !props.canSubmitWord, id: 'letter-four', inputProps: InputProps, value: letterFour, onChange: function (e) { return HandleChange(e.target.value, 'letter-four'); } })] }), props.canSubmitWord && (0, jsx_runtime_1.jsx)(material_1.Button, { disabled: !props.canSubmitWord, variant: 'outlined', onClick: UpdateWord, color: errMsg ? 'error' : 'primary', children: props.currentStatus === 'ROOM_CREATED' ? 'Submit' : 'Guess' }), !props.canSubmitWord && props.currentStatus === 'ROOM_CREATED' && (0, jsx_runtime_1.jsx)(material_1.Button, { variant: 'outlined', onClick: CancelReady, color: 'error', children: "Cancel" }), (0, jsx_runtime_1.jsx)(material_1.Typography, { sx: { minHeight: '1.5rem', color: 'red' }, variant: 'subtitle2', fontWeight: 'bold', children: errMsg })] }));
 };
 exports.WordInput = WordInput;

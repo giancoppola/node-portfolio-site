@@ -1,11 +1,14 @@
 import { Dispatch, useEffect, useState } from 'react'
 import { Box, Button, Input, InputBaseComponentProps, List, ListItem, OutlinedInput, StyledComponentProps, SxProps, TextField, Typography } from '@mui/material'
 import { RemoveQuotes, Fetch_Room_DoesRoomExist, Fetch_Room_CreateRoom } from './word-guesser-tools'
+import { CURRENT_STATUS } from '../../types/word-guesser-types';
 
 
 interface Props {
     canSubmitWord: boolean;
+    currentStatus: CURRENT_STATUS;
     setWord: Function;
+    setCurrentGuess: Function;
 }
 export const WordInput = (props: Props) => {
     const [errMsg, setErrMsg]: [string, Dispatch<string>] = useState<string>("");
@@ -35,7 +38,7 @@ export const WordInput = (props: Props) => {
     const UpdateWord = () => {
         let word = letterOne + letterTwo + letterThree + letterFour;
         if (word.length === 4) {
-            props.setWord(word)
+            props.currentStatus === 'ROOM_CREATED' ? props.setWord(word) : props.setCurrentGuess(word);
             setErrMsg('');
             setLetterOne('');
             setLetterTwo('');
@@ -45,6 +48,9 @@ export const WordInput = (props: Props) => {
         else {
             setErrMsg('Please provide a four letter word!');
         }
+    }
+    const CancelReady = () => {
+        props.setWord('');
     }
     useEffect(() => { setErrMsg('') }, [letterOne, letterTwo, letterThree, letterFour])
     const InputStyles: React.CSSProperties = { width: '5rem', height: '5rem', fontSize: '5rem', textAlign: 'center' }
@@ -57,7 +63,8 @@ export const WordInput = (props: Props) => {
                 <TextField disabled={!props.canSubmitWord} id='letter-three' inputProps={InputProps} value={letterThree} onChange={(e) => HandleChange(e.target.value, 'letter-three')} />
                 <TextField disabled={!props.canSubmitWord} id='letter-four' inputProps={InputProps} value={letterFour} onChange={(e) => HandleChange(e.target.value, 'letter-four')} />
             </Box>
-            <Button disabled={!props.canSubmitWord} variant='outlined' onClick={UpdateWord} color={errMsg ? 'error' : 'primary'}>Submit</Button>
+            { props.canSubmitWord &&  <Button disabled={!props.canSubmitWord} variant='outlined' onClick={UpdateWord} color={errMsg ? 'error' : 'primary'}>{props.currentStatus === 'ROOM_CREATED' ? 'Submit' : 'Guess'}</Button>}
+            { !props.canSubmitWord && props.currentStatus === 'ROOM_CREATED' && <Button variant='outlined' onClick={CancelReady} color={'error'}>Cancel</Button>}
             <Typography sx={{minHeight: '1.5rem', color: 'red'}} variant='subtitle2' fontWeight='bold'>{errMsg}</Typography>
         </Box>
     )

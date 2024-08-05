@@ -12,6 +12,7 @@ import { Fetch_Player_CheckPlayerId, Fetch_Player_CreateNewPlayer, RemoveQuotes 
 import { io, Socket } from 'socket.io-client'
 import { WordInput } from './_word_input'
 import { PlayerStatus } from './_player_status'
+import { StatusMessage } from './_status_message'
 const socket: Socket = io();
 
 const Main = () => {
@@ -21,6 +22,7 @@ const Main = () => {
     const [ready, setReady]: [boolean, Dispatch<boolean>] = useState<boolean>(false);
     const [canSubmitWord, setCanSubmitWord]: [boolean, Dispatch<boolean>] = useState<boolean>(true);
     const [word, setWord]: [string, Dispatch<string>] = useState<string>("");
+    const [currentGuess, setCurrentGuess]: [string, Dispatch<string>] = useState<string>('');
     const [playerNumber, setPlayerNumber]: [PLAYERS, Dispatch<PLAYERS>] = useState<PLAYERS>('');
     // State used at all times
     const [userCount, setUserCount]: [number, Dispatch<number>] = useState<number>(0);
@@ -45,6 +47,7 @@ const Main = () => {
     socket.on(LATEST_DATA, (room_data: iRoom) => {
         console.log('Got new room data:', room_data);
         setRoomData(room_data);
+        setCurrentStatus(roomData.current_status);
     })
     useEffect(() => {
         let player_id = localStorage.getItem(PLAYER_ID);
@@ -59,7 +62,14 @@ const Main = () => {
     useEffect(() => { playerId ? socket.emit(ACTIVE, playerId) : null }, [playerId])
     useEffect(() => { roomName ? socket.emit(ROOM_JOINED, roomName) : null }, [roomName])
     useEffect(() => { ready ? socket.emit(READY, playerId, roomName) : socket.emit(NOT_READY, playerId, roomName) }, [ready])
-    useEffect(() => { word.length === 4 && currentStatus === "ROOM_CREATED" ? setReady(true) : setReady(false) }, [word])
+    useEffect(() => {
+        switch (currentStatus) {
+            case 'ROOM_CREATED':
+                if (word) { setReady(true); setCanSubmitWord(false) }
+                else { setReady(false); setCanSubmitWord(true) }
+                break;
+        }
+    }, [word])
     socket.on(USER_COUNT, (user_count: number) => setUserCount(user_count));
     return (
         <Box component='section' display='flex' flexDirection='column' justifyContent='space-between' alignItems='center' height='100dvh' width='100dvw'>
@@ -75,12 +85,16 @@ const Main = () => {
             }
             { playerId && roomName &&
                 <Box height='100%' display='flex' flexDirection='column' justifyContent='space-evenly' gap='2rem'>
-                    <PlayerStatus roomData={roomData} />
-                    <Typography fontWeight='bold' variant='body2'>{currentStatus}</Typography>
-                    <WordInput canSubmitWord={canSubmitWord} setWord={setWord}/>
+                    <Box>
+                        <Typography minHeight='3rem' textAlign='center' fontWeight='bold' variant='h4'>
+                            { word ? `Your word is ${word.toUpperCase()}` : 'Please submit your word'}
+                        </Typography>
+                        <PlayerStatus roomData={roomData}/>
+                    </Box>
+                    <StatusMessage roomData={roomData} currentStatus={currentStatus}/>
+                    <WordInput canSubmitWord={canSubmitWord} currentStatus={currentStatus} setCurrentGuess={setCurrentGuess} setWord={setWord}/>
                 </Box>
             }
-            {word}
             <Footer/>
         </Box>
     )

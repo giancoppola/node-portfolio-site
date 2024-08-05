@@ -159,6 +159,14 @@ var Handle_Player_Ready = function (socket) {
                     exports.rooms[room_name].player_2.ready = true;
                 }
                 Send_Latest_Data(room_name);
+                // Give the players 5 seconds to change their mind
+                // TODO 5 second countdown on front end
+                setTimeout(function () {
+                    if (exports.rooms[room_name].player_1.ready && exports.rooms[room_name].player_2.ready) {
+                        exports.rooms[room_name].current_status = 'GAME_READY';
+                    }
+                    exports.io.to(room_name).emit(word_guesser_types_1.LATEST_DATA, exports.rooms[room_name]);
+                }, 5000);
             }
             return [2 /*return*/];
         });
