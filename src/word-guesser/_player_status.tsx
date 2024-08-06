@@ -3,11 +3,10 @@ import { Dispatch, useEffect, useState } from "react"
 import { Pending, EmojiEvents, HourglassEmpty, ThumbUpAlt } from '@mui/icons-material'
 import { iRoom } from "../../types/word-guesser-types";
 
-type PlayerStatus = 'Waiting for player to join' | 'Waiting for player to be ready' | 'Player ready!';
-
 interface PlayerProps {
     name: string;
-    playerStatus: PlayerStatus;
+    icon: StatusIcon;
+    playerStatus: string;
 }
 const Player = (props: PlayerProps) => {
     return (
@@ -20,35 +19,64 @@ const Player = (props: PlayerProps) => {
                 <EmojiEvents/> <Typography fontWeight='bold' variant='subtitle2'> 0</Typography>
                 </ListItemIcon>
             <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
-                { props.playerStatus === 'Waiting for player to join' && <Pending color='action'/> }
-                { props.playerStatus === 'Waiting for player to be ready' && <HourglassEmpty color='warning'/> }
-                { props.playerStatus === 'Player ready!' && <ThumbUpAlt color='success'/> }
+                { props.icon === 'pending' && <Pending color='action'/> }
+                { props.icon === 'hourglass' && <HourglassEmpty color='warning'/> }
+                { props.icon === 'thumbs_up' && <ThumbUpAlt color='success'/> }
             </ListItemIcon>
         </ListItem>
     )
 }
 
+type StatusIcon = 'pending' | "hourglass" | 'thumbs_up';
 interface PlayerStatusProps {
     roomData: iRoom;
 }
 export const PlayerStatus = (props: PlayerStatusProps) => {
-    const [playerOneStatus, setPlayerOneStatus]: [PlayerStatus, Dispatch<PlayerStatus>] = useState<PlayerStatus>('Waiting for player to join');
-    const [playerTwoStatus, setPlayerTwoStatus]: [PlayerStatus, Dispatch<PlayerStatus>] = useState<PlayerStatus>('Waiting for player to join');
+    const [playerOneStatus, setPlayerOneStatus]: [string, Dispatch<string>] = useState<string>('Waiting for player to join...');
+    const [playerOneIcon, setPlayerOneIcon]: [StatusIcon, Dispatch<StatusIcon>] = useState<StatusIcon>('pending');
+    const [playerTwoStatus, setPlayerTwoStatus]: [string, Dispatch<string>] = useState<string>('Waiting for player to join...');
+    const [playerTwoIcon, setPlayerTwoIcon]: [StatusIcon, Dispatch<StatusIcon>] = useState<StatusIcon>('pending');
     useEffect(() => {
         let room = props.roomData;
-        if (room.current_status === "ROOM_CREATED") {
-            room.player_1_id && room.player_1.ready && setPlayerOneStatus('Player ready!');
-            room.player_1_id && !room.player_1.ready && setPlayerOneStatus('Waiting for player to be ready');
-            !room.player_1_id && setPlayerOneStatus('Waiting for player to join');
-            room.player_2_id && room.player_2.ready && setPlayerTwoStatus('Player ready!');
-            room.player_2_id && !room.player_2.ready && setPlayerTwoStatus('Waiting for player to be ready');
-            !room.player_2_id && setPlayerTwoStatus('Waiting for player to join');
+        switch (room.current_status) {
+            case "ROOM_CREATED":
+                if (room.player_1_id && room.player_1.ready) { setPlayerOneStatus('Player ready! Waiting for game start...'); setPlayerOneIcon('thumbs_up'); }
+                if (room.player_1_id && !room.player_1.ready) { setPlayerOneStatus('Waiting for player to be ready...'); setPlayerOneIcon('hourglass'); }
+                if (!room.player_1_id) { setPlayerOneStatus('Waiting for player to join...'); setPlayerOneIcon('pending'); }
+                if (room.player_2_id && room.player_2.ready) { setPlayerTwoStatus('Player ready! Waiting for game start...'); setPlayerTwoIcon('thumbs_up'); }
+                if (room.player_2_id && !room.player_2.ready) { setPlayerTwoStatus('Waiting for player to be ready...'); setPlayerTwoIcon('hourglass'); }
+                if (!room.player_2_id) { setPlayerTwoStatus('Waiting for player to join...'); setPlayerTwoIcon('pending'); }
+                break;
+            case "GAME_READY":
+                setPlayerOneStatus('Now guessing...');
+                setPlayerOneIcon('hourglass');
+                setPlayerTwoStatus('Waiting for Player 1 to guess...');
+                setPlayerTwoIcon('pending');
+                break;
+            case "PLAYER_1_GUESSED":
+                setPlayerOneStatus(`Guessed ${room.player_1.current_guess.toUpperCase()}. Waiting for Player 2 to guess...`);
+                setPlayerOneIcon('pending');
+                setPlayerTwoStatus('Now guessing...');
+                setPlayerOneIcon('hourglass');
+                break;
+            case "PLAYER_2_GUESSED":
+                setPlayerTwoStatus(`Guessed ${room.player_2.current_guess.toUpperCase()}. Waiting for Player 2 to guess...`);
+                setPlayerTwoIcon('pending');
+                setPlayerOneStatus('Now guessing...');
+                setPlayerOneIcon('hourglass');
+                break;
+            case "GAME_FINISH":
+                setPlayerTwoStatus(`Waiting for player to vote...`);
+                setPlayerTwoIcon('hourglass');
+                setPlayerOneStatus('Waiting for player to vote...');
+                setPlayerOneIcon('hourglass');
+                break;
         }
     }, [props.roomData])
     return (
         <List>
-            <Player name='Player 1' playerStatus={playerOneStatus} />
-            <Player name='Player 2' playerStatus={playerTwoStatus} />
+            <Player name='Player 1' icon={playerOneIcon} playerStatus={playerOneStatus} />
+            <Player name='Player 2' icon={playerTwoIcon} playerStatus={playerTwoStatus} />
         </List>
     )
 }
