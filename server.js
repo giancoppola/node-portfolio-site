@@ -140,6 +140,7 @@ var Handle_Room_Joined = function (socket) {
             console.log('ROOM JOINED');
             exports.users[socket.id].room_name = room_name;
             !exports.rooms[room_name] ? exports.rooms[room_name] = structuredClone(word_guesser_types_1.EMPTY_ROOM) : null;
+            !exports.rooms[room_name].room_name ? exports.rooms[room_name].room_name = room_name : null;
             !exports.rooms[room_name].player_1_id ? exports.rooms[room_name].player_1_id = exports.users[socket.id].player_id : exports.rooms[room_name].player_2_id = exports.users[socket.id].player_id;
             exports.rooms[room_name].player_count = exports.rooms[room_name].player_count + 1;
             socket.join(room_name);

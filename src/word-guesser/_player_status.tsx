@@ -1,14 +1,26 @@
-import { Icon, List, ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material"
+import { Icon, Link, List, ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material"
 import { Dispatch, useEffect, useState } from "react"
-import { Pending, EmojiEvents, HourglassEmpty, ThumbUpAlt } from '@mui/icons-material'
+import { Pending, EmojiEvents, HourglassEmpty, ThumbUpAlt, Share } from '@mui/icons-material'
 import { iRoom } from "../../types/word-guesser-types";
 
 interface PlayerProps {
+    roomName: string;
     name: string;
     icon: StatusIcon;
     playerStatus: string;
 }
 const Player = (props: PlayerProps) => {
+    const SaveLinkToClipboard = () => {
+        let joinUrl = location.href.substring(0, location.href.length-1) + `?join=${props.roomName}`;
+        try {
+            navigator.clipboard.writeText(joinUrl);
+            console.log(`copied ${joinUrl} to clipboard`);
+            
+        }
+        catch (e) {
+            console.error(e);
+        }
+    }
     return (
         <ListItem>
             <ListItemText
@@ -19,7 +31,11 @@ const Player = (props: PlayerProps) => {
                 <EmojiEvents/> <Typography fontWeight='bold' variant='subtitle2'> 0</Typography>
                 </ListItemIcon>
             <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
-                { props.icon === 'pending' && <Pending color='action'/> }
+                { props.icon === 'pending' &&
+                    <Link style={{cursor: "pointer"}} component='button' onClick={SaveLinkToClipboard}>
+                        <Share color='action'/>
+                    </Link>
+                }
                 { props.icon === 'hourglass' && <HourglassEmpty color='warning'/> }
                 { props.icon === 'thumbs_up' && <ThumbUpAlt color='success'/> }
             </ListItemIcon>
@@ -75,8 +91,8 @@ export const PlayerStatus = (props: PlayerStatusProps) => {
     }, [props.roomData])
     return (
         <List>
-            <Player name='Player 1' icon={playerOneIcon} playerStatus={playerOneStatus} />
-            <Player name='Player 2' icon={playerTwoIcon} playerStatus={playerTwoStatus} />
+            <Player roomName={props.roomData.room_name} name='Player 1' icon={playerOneIcon} playerStatus={playerOneStatus} />
+            <Player roomName={props.roomData.room_name} name='Player 2' icon={playerTwoIcon} playerStatus={playerTwoStatus} />
         </List>
     )
 }

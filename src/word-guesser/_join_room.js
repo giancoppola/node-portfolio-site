@@ -72,6 +72,13 @@ var JoinRoom = function (props) {
             }
         });
     }); };
+    (0, react_1.useEffect)(function () {
+        var params = new URLSearchParams(window.location.search);
+        var join = params.get("join");
+        if (join) {
+            CheckRoom(join);
+        }
+    }, []);
     (0, react_1.useEffect)(function () { setErrMsg(''); }, [newRoomName]);
     return ((0, jsx_runtime_1.jsxs)(material_1.Box, { children: [(0, jsx_runtime_1.jsx)(material_1.Typography, { variant: 'h3', children: "Join a room" }), (0, jsx_runtime_1.jsx)(material_1.List, { children: (0, jsx_runtime_1.jsxs)(material_1.ListItem, { sx: { gap: '1rem', paddingLeft: 0 }, children: [(0, jsx_runtime_1.jsx)(material_1.TextField, { error: errMsg ? true : false, fullWidth: true, label: "Room Name", value: newRoomName, onChange: function (e) { return setNewRoomName(e.target.value); } }), (0, jsx_runtime_1.jsx)(material_1.Button, { className: 'btn__input', variant: 'contained', onClick: function () { return CheckRoom(newRoomName); }, children: "Join" })] }) }), (0, jsx_runtime_1.jsx)(material_1.Typography, { minHeight: '1.5rem', color: 'red', children: errMsg })] }));
 };

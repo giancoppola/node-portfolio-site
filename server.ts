@@ -107,6 +107,7 @@ const Handle_Room_Joined = (socket: Socket) => {
         console.log('ROOM JOINED')
         users[socket.id].room_name = room_name;
         !rooms[room_name] ? rooms[room_name] = structuredClone(EMPTY_ROOM) : null;
+        !rooms[room_name].room_name ? rooms[room_name].room_name = room_name : null;
         !rooms[room_name].player_1_id ? rooms[room_name].player_1_id = users[socket.id].player_id : rooms[room_name].player_2_id = users[socket.id].player_id;
         rooms[room_name].player_count = rooms[room_name].player_count + 1;
         socket.join(room_name);

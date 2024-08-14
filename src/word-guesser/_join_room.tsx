@@ -21,6 +21,13 @@ export const JoinRoom = (props: Props) => {
             props.setPlayerNumber(PLAYER_2);
         }
     }
+    useEffect(() => {
+        let params: URLSearchParams = new URLSearchParams(window.location.search);
+        let join: string | null = params.get("join");
+        if (join) {
+            CheckRoom(join);
+        }
+    }, [])
     useEffect(() => { setErrMsg('') }, [newRoomName])
     return (
         <Box>
