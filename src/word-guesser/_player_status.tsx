@@ -1,4 +1,4 @@
-import { Icon, Link, List, ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material"
+import { Icon, Link, List, ListItem, ListItemIcon, ListItemText, Tooltip, Typography } from "@mui/material"
 import { Dispatch, useEffect, useState } from "react"
 import { Pending, EmojiEvents, HourglassEmpty, ThumbUpAlt, Share } from '@mui/icons-material'
 import { iRoom } from "../../types/word-guesser-types";
@@ -10,12 +10,14 @@ interface PlayerProps {
     playerStatus: string;
 }
 const Player = (props: PlayerProps) => {
+    const [open, setOpen]: [boolean, Dispatch<boolean>] = useState<boolean>(false);
     const SaveLinkToClipboard = () => {
         let joinUrl = location.href.substring(0, location.href.length-1) + `?join=${props.roomName}`;
         try {
             navigator.clipboard.writeText(joinUrl);
             console.log(`copied ${joinUrl} to clipboard`);
-            
+            setOpen(true);
+            setTimeout(() => {setOpen(false)}, 2000)
         }
         catch (e) {
             console.error(e);
@@ -32,9 +34,12 @@ const Player = (props: PlayerProps) => {
                 </ListItemIcon>
             <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
                 { props.icon === 'pending' &&
-                    <Link style={{cursor: "pointer"}} component='button' onClick={SaveLinkToClipboard}>
-                        <Share color='action'/>
-                    </Link>
+                    <Tooltip placement="bottom" arrow disableFocusListener disableHoverListener
+                    disableTouchListener open={open} title="Join link copied to clipboard!">
+                        <Link style={{cursor: "pointer"}} component='button' onClick={SaveLinkToClipboard}>
+                            <Share color='action'/>
+                        </Link>
+                    </Tooltip>
                 }
                 { props.icon === 'hourglass' && <HourglassEmpty color='warning'/> }
                 { props.icon === 'thumbs_up' && <ThumbUpAlt color='success'/> }

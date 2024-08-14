@@ -6,18 +6,21 @@ var material_1 = require("@mui/material");
 var react_1 = require("react");
 var icons_material_1 = require("@mui/icons-material");
 var Player = function (props) {
+    var _a = (0, react_1.useState)(false), open = _a[0], setOpen = _a[1];
     var SaveLinkToClipboard = function () {
         var joinUrl = location.href.substring(0, location.href.length - 1) + "?join=".concat(props.roomName);
         try {
             navigator.clipboard.writeText(joinUrl);
             console.log("copied ".concat(joinUrl, " to clipboard"));
+            setOpen(true);
+            setTimeout(function () { setOpen(false); }, 2000);
         }
         catch (e) {
             console.error(e);
         }
     };
     return ((0, jsx_runtime_1.jsxs)(material_1.ListItem, { children: [(0, jsx_runtime_1.jsx)(material_1.ListItemText, { primary: props.name, secondary: props.playerStatus }), (0, jsx_runtime_1.jsxs)(material_1.ListItemIcon, { sx: { justifyContent: 'center', alignItems: "center", gap: '.5rem' }, children: [(0, jsx_runtime_1.jsx)(icons_material_1.EmojiEvents, {}), " ", (0, jsx_runtime_1.jsx)(material_1.Typography, { fontWeight: 'bold', variant: 'subtitle2', children: " 0" })] }), (0, jsx_runtime_1.jsxs)(material_1.ListItemIcon, { sx: { justifyContent: 'flex-end' }, children: [props.icon === 'pending' &&
-                        (0, jsx_runtime_1.jsx)(material_1.Link, { style: { cursor: "pointer" }, component: 'button', onClick: SaveLinkToClipboard, children: (0, jsx_runtime_1.jsx)(icons_material_1.Share, { color: 'action' }) }), props.icon === 'hourglass' && (0, jsx_runtime_1.jsx)(icons_material_1.HourglassEmpty, { color: 'warning' }), props.icon === 'thumbs_up' && (0, jsx_runtime_1.jsx)(icons_material_1.ThumbUpAlt, { color: 'success' })] })] }));
+                        (0, jsx_runtime_1.jsx)(material_1.Tooltip, { placement: "bottom", arrow: true, disableFocusListener: true, disableHoverListener: true, disableTouchListener: true, open: open, title: "Join link copied to clipboard!", children: (0, jsx_runtime_1.jsx)(material_1.Link, { style: { cursor: "pointer" }, component: 'button', onClick: SaveLinkToClipboard, children: (0, jsx_runtime_1.jsx)(icons_material_1.Share, { color: 'action' }) }) }), props.icon === 'hourglass' && (0, jsx_runtime_1.jsx)(icons_material_1.HourglassEmpty, { color: 'warning' }), props.icon === 'thumbs_up' && (0, jsx_runtime_1.jsx)(icons_material_1.ThumbUpAlt, { color: 'success' })] })] }));
 };
 var PlayerStatus = function (props) {
     var _a = (0, react_1.useState)('Waiting for player to join...'), playerOneStatus = _a[0], setPlayerOneStatus = _a[1];
