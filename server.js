@@ -150,24 +150,21 @@ var Handle_Room_Joined = function (socket) {
     }); });
 };
 var Handle_Player_Ready = function (socket) {
-    socket.on(word_guesser_types_1.READY, function (player_id, room_name) { return __awaiter(void 0, void 0, void 0, function () {
+    socket.on(word_guesser_types_1.READY, function (player_id, room_name, word) { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             if (exports.rooms[room_name]) {
                 if (exports.rooms[room_name].player_1_id && exports.rooms[room_name].player_1_id === player_id) {
                     exports.rooms[room_name].player_1.ready = true;
+                    exports.rooms[room_name].player_1.word = word;
                 }
                 if (exports.rooms[room_name].player_2_id && exports.rooms[room_name].player_2_id === player_id) {
                     exports.rooms[room_name].player_2.ready = true;
+                    exports.rooms[room_name].player_2.word = word;
+                }
+                if (exports.rooms[room_name].player_1.ready && exports.rooms[room_name].player_2.ready) {
+                    exports.rooms[room_name].current_status = 'GAME_READY';
                 }
                 Send_Latest_Data(room_name);
-                // Give the players 5 seconds to change their mind
-                // TODO 5 second countdown on front end
-                setTimeout(function () {
-                    if (exports.rooms[room_name].player_1.ready && exports.rooms[room_name].player_2.ready) {
-                        exports.rooms[room_name].current_status = 'GAME_READY';
-                    }
-                    exports.io.to(room_name).emit(word_guesser_types_1.LATEST_DATA, exports.rooms[room_name]);
-                }, 5000);
             }
             return [2 /*return*/];
         });
@@ -179,9 +176,11 @@ var Handle_Player_Not_Ready = function (socket) {
             if (exports.rooms[room_name]) {
                 if (exports.rooms[room_name].player_1_id === player_id) {
                     exports.rooms[room_name].player_1.ready = false;
+                    exports.rooms[room_name].player_1.word = "";
                 }
                 if (exports.rooms[room_name].player_2_id === player_id) {
                     exports.rooms[room_name].player_2.ready = false;
+                    exports.rooms[room_name].player_2.word = "";
                 }
                 console.log(exports.rooms[room_name]);
                 Send_Latest_Data(room_name);

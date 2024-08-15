@@ -2,6 +2,7 @@ import { Icon, Link, List, ListItem, ListItemIcon, ListItemText, Tooltip, Typogr
 import { Dispatch, useEffect, useState } from "react"
 import { Pending, EmojiEvents, HourglassEmpty, ThumbUpAlt, Share } from '@mui/icons-material'
 import { iRoom } from "../../types/word-guesser-types";
+import { set } from "mongoose";
 
 interface PlayerProps {
     roomName: string;
@@ -10,14 +11,14 @@ interface PlayerProps {
     playerStatus: string;
 }
 const Player = (props: PlayerProps) => {
-    const [open, setOpen]: [boolean, Dispatch<boolean>] = useState<boolean>(false);
+    const [tooltip, setTooltip]: [string, Dispatch<string>] = useState<string>("Click to copy share link...");
     const SaveLinkToClipboard = () => {
-        let joinUrl = location.href.substring(0, location.href.length-1) + `?join=${props.roomName}`;
+        let joinUrl = location.href + `?join=${props.roomName}`;
         try {
             navigator.clipboard.writeText(joinUrl);
             console.log(`copied ${joinUrl} to clipboard`);
-            setOpen(true);
-            setTimeout(() => {setOpen(false)}, 2000)
+            setTooltip("Join link copied to clipboard!");
+            setTimeout(() => {setTooltip("Click to copy share link...")}, 2000);
         }
         catch (e) {
             console.error(e);
@@ -34,8 +35,7 @@ const Player = (props: PlayerProps) => {
                 </ListItemIcon>
             <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
                 { props.icon === 'pending' &&
-                    <Tooltip placement="bottom" arrow disableFocusListener disableHoverListener
-                    disableTouchListener open={open} title="Join link copied to clipboard!">
+                    <Tooltip placement="bottom" arrow title={tooltip}>
                         <Link style={{cursor: "pointer"}} component='button' onClick={SaveLinkToClipboard}>
                             <Share color='action'/>
                         </Link>

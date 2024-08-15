@@ -85,7 +85,7 @@ const Main = () => {
     }, [])
     useEffect(() => { playerId ? socket.emit(ACTIVE, playerId) : null }, [playerId])
     useEffect(() => { roomName ? socket.emit(ROOM_JOINED, roomName) : null }, [roomName])
-    useEffect(() => { ready ? socket.emit(READY, playerId, roomName) : socket.emit(NOT_READY, playerId, roomName) }, [ready])
+    useEffect(() => { ready ? socket.emit(READY, playerId, roomName, word) : socket.emit(NOT_READY, playerId, roomName) }, [ready])
     useEffect(() => {
         if (currentStatus === 'ROOM_CREATED') {
             let guesser = playerNumber === PLAYER_1 ? PLAYER_1_WORD : PLAYER_2_WORD;

@@ -116,23 +116,20 @@ const Handle_Room_Joined = (socket: Socket) => {
 }
 
 const Handle_Player_Ready = (socket: Socket) => {
-    socket.on(READY, async (player_id: string, room_name: string) => {
+    socket.on(READY, async (player_id: string, room_name: string, word: string) => {
         if (rooms[room_name]) {
             if (rooms[room_name].player_1_id && rooms[room_name].player_1_id === player_id) {
                 rooms[room_name].player_1.ready = true;
+                rooms[room_name].player_1.word = word;
             }
             if (rooms[room_name].player_2_id && rooms[room_name].player_2_id === player_id) {
                 rooms[room_name].player_2.ready = true;
+                rooms[room_name].player_2.word = word;
+            }
+            if (rooms[room_name].player_1.ready && rooms[room_name].player_2.ready) {
+                rooms[room_name].current_status = 'GAME_READY';
             }
             Send_Latest_Data(room_name);
-            // Give the players 5 seconds to change their mind
-            // TODO 5 second countdown on front end
-            setTimeout(() => {
-                if (rooms[room_name].player_1.ready && rooms[room_name].player_2.ready) {
-                    rooms[room_name].current_status = 'GAME_READY';
-                }
-                io.to(room_name).emit(LATEST_DATA, rooms[room_name]);
-            }, 5000)
         }
     })
 }
@@ -141,9 +138,11 @@ const Handle_Player_Not_Ready = (socket: Socket) => {
         if (rooms[room_name]) {
             if (rooms[room_name].player_1_id === player_id) {
                 rooms[room_name].player_1.ready = false;
+                rooms[room_name].player_1.word = "";
             }
             if (rooms[room_name].player_2_id === player_id) {
                 rooms[room_name].player_2.ready = false;
+                rooms[room_name].player_2.word = "";
             }
             console.log(rooms[room_name])
             Send_Latest_Data(room_name);
@@ -152,7 +151,7 @@ const Handle_Player_Not_Ready = (socket: Socket) => {
 }
 
 const Handle_Player_Action = (socket: Socket) => {
-
+    
 }
 
 const Handle_Game_Finished = (socket: Socket) => {

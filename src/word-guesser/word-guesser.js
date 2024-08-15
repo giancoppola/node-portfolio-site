@@ -136,7 +136,7 @@ var Main = function () {
     }, []);
     (0, react_1.useEffect)(function () { playerId ? socket.emit(word_guesser_types_1.ACTIVE, playerId) : null; }, [playerId]);
     (0, react_1.useEffect)(function () { roomName ? socket.emit(word_guesser_types_1.ROOM_JOINED, roomName) : null; }, [roomName]);
-    (0, react_1.useEffect)(function () { ready ? socket.emit(word_guesser_types_1.READY, playerId, roomName) : socket.emit(word_guesser_types_1.NOT_READY, playerId, roomName); }, [ready]);
+    (0, react_1.useEffect)(function () { ready ? socket.emit(word_guesser_types_1.READY, playerId, roomName, word) : socket.emit(word_guesser_types_1.NOT_READY, playerId, roomName); }, [ready]);
     (0, react_1.useEffect)(function () {
         if (currentStatus === 'ROOM_CREATED') {
             var guesser = playerNumber === word_guesser_types_1.PLAYER_1 ? word_guesser_types_1.PLAYER_1_WORD : word_guesser_types_1.PLAYER_2_WORD;
