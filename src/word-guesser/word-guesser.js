@@ -49,6 +49,7 @@ var socket_io_client_1 = require("socket.io-client");
 var _word_input_1 = require("./_word_input");
 var _player_status_1 = require("./_player_status");
 var _status_message_1 = require("./_status_message");
+var guess_history_1 = require("./guess_history");
 var socket = (0, socket_io_client_1.io)();
 var Main = function () {
     // State for when in room
@@ -59,10 +60,11 @@ var Main = function () {
     var _e = (0, react_1.useState)(""), word = _e[0], setWord = _e[1];
     var _f = (0, react_1.useState)(''), currentGuess = _f[0], setCurrentGuess = _f[1];
     var _g = (0, react_1.useState)(''), playerNumber = _g[0], setPlayerNumber = _g[1];
+    var _h = (0, react_1.useState)(false), showGuessHistory = _h[0], setShowGuessHistory = _h[1];
     // State used at all times
-    var _h = (0, react_1.useState)(0), userCount = _h[0], setUserCount = _h[1];
-    var _j = (0, react_1.useState)(""), roomName = _j[0], setRoomName = _j[1];
-    var _k = (0, react_1.useState)(""), playerId = _k[0], setPlayerId = _k[1];
+    var _j = (0, react_1.useState)(0), userCount = _j[0], setUserCount = _j[1];
+    var _k = (0, react_1.useState)(""), roomName = _k[0], setRoomName = _k[1];
+    var _l = (0, react_1.useState)(""), playerId = _l[0], setPlayerId = _l[1];
     var CheckPlayerId = function (player_id) { return __awaiter(void 0, void 0, void 0, function () {
         var valid;
         return __generator(this, function (_a) {
@@ -161,7 +163,7 @@ var Main = function () {
     socket.on(word_guesser_types_1.USER_COUNT, function (user_count) { return setUserCount(user_count); });
     return ((0, jsx_runtime_1.jsxs)(material_1.Box, { component: 'section', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', height: '100dvh', width: '100dvw', children: [(0, jsx_runtime_1.jsxs)(material_1.Box, { children: [(0, jsx_runtime_1.jsx)(material_1.Typography, { variant: 'h1', fontWeight: 'bold', children: "BattleWords" }), (0, jsx_runtime_1.jsx)(material_1.Typography, { variant: 'subtitle2', fontWeight: 'bold', textAlign: 'center', children: "".concat(userCount, " player").concat(userCount > 1 ? 's are' : ' is', " online") })] }), playerId && !roomName &&
                 (0, jsx_runtime_1.jsxs)(material_1.Box, { height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '2rem', children: [(0, jsx_runtime_1.jsx)(_create_room_1.CreateRoom, { setPlayerNumber: setPlayerNumber, setRoomName: setRoomName, playerId: playerId }), (0, jsx_runtime_1.jsx)(_join_room_1.JoinRoom, { setPlayerNumber: setPlayerNumber, setRoomName: setRoomName, playerId: playerId })] }), playerId && roomName &&
-                (0, jsx_runtime_1.jsxs)(material_1.Box, { height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly', gap: '2rem', children: [(0, jsx_runtime_1.jsxs)(material_1.Box, { children: [(0, jsx_runtime_1.jsx)(material_1.Typography, { minHeight: '3rem', textAlign: 'center', fontWeight: 'bold', variant: 'h4', children: word ? "Your word is ".concat(word.toUpperCase()) : 'Please submit your word' }), (0, jsx_runtime_1.jsx)(_player_status_1.PlayerStatus, { roomData: roomData })] }), (0, jsx_runtime_1.jsx)(_status_message_1.StatusMessage, { roomData: roomData, currentStatus: currentStatus }), (0, jsx_runtime_1.jsx)(_word_input_1.WordInput, { canSubmitWord: canSubmitWord, currentStatus: currentStatus, setCurrentGuess: setCurrentGuess, setWord: setWord })] }), (0, jsx_runtime_1.jsx)(_footer_1.Footer, {})] }));
+                (0, jsx_runtime_1.jsxs)(material_1.Box, { height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly', gap: '2rem', children: [(0, jsx_runtime_1.jsxs)(material_1.Box, { children: [(0, jsx_runtime_1.jsx)(material_1.Typography, { minHeight: '3rem', textAlign: 'center', fontWeight: 'bold', variant: 'h4', children: word ? "Your word is ".concat(word.toUpperCase()) : 'Please submit your word' }), (0, jsx_runtime_1.jsx)(_player_status_1.PlayerStatus, { roomData: roomData })] }), (0, jsx_runtime_1.jsx)(_status_message_1.StatusMessage, { roomData: roomData, currentStatus: currentStatus }), (0, jsx_runtime_1.jsx)(_word_input_1.WordInput, { canSubmitWord: canSubmitWord, currentStatus: currentStatus, setCurrentGuess: setCurrentGuess, setWord: setWord }), (0, jsx_runtime_1.jsx)(material_1.Button, { onClick: function () { setShowGuessHistory(true); }, children: "Guess History" }), (0, jsx_runtime_1.jsx)(guess_history_1.GuessHistory, { open: showGuessHistory, setOpen: setShowGuessHistory, opp_word: playerNumber === 'player_1' ? roomData.player_2.word : roomData.player_1.word, guesses: playerNumber === 'player_1' ? roomData.player_1.guesses : roomData.player_2.guesses })] }), (0, jsx_runtime_1.jsx)(_footer_1.Footer, {})] }));
 };
 var root = (0, client_1.createRoot)(document.getElementById('main'));
 root.render((0, jsx_runtime_1.jsx)(react_1.StrictMode, { children: (0, jsx_runtime_1.jsx)(Main, {}) }));

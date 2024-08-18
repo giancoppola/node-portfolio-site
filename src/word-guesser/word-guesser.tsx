@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client'
 import { useEffect, useState, Dispatch, StrictMode } from 'react'
-import { Box, List, ListItem, TextField, Typography } from '@mui/material'
+import { Box, Button, List, ListItem, TextField, Typography } from '@mui/material'
 
 import { CreateRoom } from './_create-room'
 import { JoinRoom } from './_join_room'
@@ -13,6 +13,7 @@ import { io, Socket } from 'socket.io-client'
 import { WordInput } from './_word_input'
 import { PlayerStatus } from './_player_status'
 import { StatusMessage } from './_status_message'
+import { GuessHistory } from './guess_history'
 const socket: Socket = io();
 
 const Main = () => {
@@ -24,6 +25,7 @@ const Main = () => {
     const [word, setWord]: [string, Dispatch<string>] = useState<string>("");
     const [currentGuess, setCurrentGuess]: [string, Dispatch<string>] = useState<string>('');
     const [playerNumber, setPlayerNumber]: [PLAYERS, Dispatch<PLAYERS>] = useState<PLAYERS>('');
+    const [showGuessHistory, setShowGuessHistory]: [boolean, Dispatch<boolean>] = useState<boolean>(false);
     // State used at all times
     const [userCount, setUserCount]: [number, Dispatch<number>] = useState<number>(0);
     const [roomName, setRoomName]: [string, Dispatch<string>] = useState<string>("");
@@ -122,6 +124,10 @@ const Main = () => {
                     </Box>
                     <StatusMessage roomData={roomData} currentStatus={currentStatus}/>
                     <WordInput canSubmitWord={canSubmitWord} currentStatus={currentStatus} setCurrentGuess={setCurrentGuess} setWord={setWord}/>
+                    <Button onClick={() => {setShowGuessHistory(true)}}>Guess History</Button>
+                    <GuessHistory open={showGuessHistory} setOpen={setShowGuessHistory}
+                    opp_word={playerNumber === 'player_1' ? roomData.player_2.word : roomData.player_1.word}
+                    guesses={playerNumber === 'player_1' ? roomData.player_1.guesses : roomData.player_2.guesses} />
                 </Box>
             }
             <Footer/>

@@ -11,6 +11,7 @@ export interface iPlayerInRoom {
     word: string;
     wins: number;
     current_guess: string;
+    guesses: Array<string>;
     ready: boolean;
 }
 export interface iRoom {
@@ -32,6 +33,7 @@ export const EMPTY_PLAYER_IN_ROOM: iPlayerInRoom = {
     word: "",
     wins: 0,
     current_guess: "",
+    guesses: [],
     ready: false,
 }
 export const EMPTY_ROOM: iRoom = {

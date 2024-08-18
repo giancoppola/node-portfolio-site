@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Fetch_Player_LeaveRoom = exports.Fetch_Player_CreateNewPlayer = exports.Fetch_Player_CheckPlayerId = exports.Fetch_Room_IsRoomJoinable = exports.Fetch_Room_CreateRoom = exports.Fetch_Room_DoesRoomExist = exports.RemoveQuotes = void 0;
+exports.Fetch_Player_LeaveRoom = exports.Fetch_Player_CreateNewPlayer = exports.Fetch_Player_CheckPlayerId = exports.Fetch_Room_IsRoomJoinable = exports.Fetch_Room_CreateRoom = exports.Fetch_Room_DoesRoomExist = exports.GuessChecker = exports.RemoveQuotes = void 0;
 /////////////
 // General //
 /////////////
@@ -44,6 +44,15 @@ var RemoveQuotes = function (input) {
     return input.replace(/"/gm, "");
 };
 exports.RemoveQuotes = RemoveQuotes;
+var GuessChecker = function (guess, word) {
+    var matches = 0;
+    guess[0] === word[0] ? matches++ : null;
+    guess[1] === word[1] ? matches++ : null;
+    guess[2] === word[2] ? matches++ : null;
+    guess[3] === word[3] ? matches++ : null;
+    return matches;
+};
+exports.GuessChecker = GuessChecker;
 /////////////////
 // General End //
 /////////////////

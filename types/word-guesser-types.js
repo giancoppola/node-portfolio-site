@@ -9,6 +9,7 @@ exports.EMPTY_PLAYER_IN_ROOM = {
     word: "",
     wins: 0,
     current_guess: "",
+    guesses: [],
     ready: false,
 };
 exports.EMPTY_ROOM = {
