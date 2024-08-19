@@ -11,18 +11,17 @@ interface Props {
     guesses: Array<string>
 }
 export const GuessHistory = (props: Props) => {
-    const test = ['tes1', 'tes2', 'tes3'];
     return (
         <Dialog open={props.open}>
             <DialogTitle>Guess History</DialogTitle>
             <DialogContent dividers>
                 <List>
                     <>
-                        {test.map((guess) => {
+                        {props.guesses.map((guess) => {
                             return (
                                 <ListItem>
                                     <DialogContentText>
-                                        {guess}: {GuessChecker(guess, props.opp_word)}
+                                        {guess}: {GuessChecker(guess, props.opp_word)} {GuessChecker(guess, props.opp_word) === 4 ? '- WINNER!' : ''}
                                     </DialogContentText>
                                 </ListItem>
                             )
