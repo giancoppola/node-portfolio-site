@@ -15,13 +15,13 @@ export interface iPlayerInRoom {
     ready: boolean;
 }
 export interface iRoom {
+    [key: string]: any;
     room_name: string;
     player_1: iPlayerInRoom;
     player_1_id: string;
     player_2: iPlayerInRoom;
     player_2_id: string;
     player_count: number;
-    current_guess: string;
     current_guesser: PLAYERS;
     number_of_games_played: number;
     current_status: CURRENT_STATUS;
@@ -43,7 +43,6 @@ export const EMPTY_ROOM: iRoom = {
     player_2: structuredClone(EMPTY_PLAYER_IN_ROOM),
     player_2_id: "",
     player_count: 0,
-    current_guess: "",
     current_guesser: 'player_1',
     number_of_games_played: 0,
     current_status: 'ROOM_CREATED'
@@ -88,6 +87,7 @@ export const USER_COUNT = 'user_count';
 // Player Actions //
 ////////////////////
 
+export const GAME_FINISH = 'GAME_FINISH';
 export const PLAYER_1_GUESSED = 'PLAYER_1_GUESSED';
 export const PLAYER_2_GUESSED = 'PLAYER_2_GUESSED';
 export const PLAYER_1_WORD = 'PLAYER_1_WORD';

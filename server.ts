@@ -54,7 +54,8 @@ const server = app.listen(process.env.PORT || 3000, () => {
 
 // MongoDB Database Functions
 import { Player_ResetLastPlayedDate } from './server/word-guesser-api';
-import { ACTIVE, EMPTY_ROOM, iRoom, LATEST_DATA, NOT_READY, PlayerModel, READY, ROOM_JOINED, RoomCollection, SocketIoUser, SocketIoUserObj, USER_COUNT } from './types/word-guesser-types';
+import { ACTIVE, EMPTY_ROOM, GAME_FINISH, iRoom, LATEST_DATA, NOT_READY, PLAYER_1_GUESSED, PLAYER_2_GUESSED, PlayerModel, PLAYERS, READY, ROOM_JOINED, RoomCollection, SocketIoUser, SocketIoUserObj, USER_COUNT } from './types/word-guesser-types';
+import { GuessChecker } from './src/word-guesser/word-guesser-tools';
 // Socket IO Connections and Responses
 export const users: SocketIoUserObj = {};
 export const rooms: RoomCollection = {};
@@ -68,6 +69,7 @@ io.on("connection", (socket: Socket) => {
     Handle_Player_Ready(socket);
     Handle_Player_Not_Ready(socket);
     Handle_Player_Action(socket);
+    Handle_Game_Finished(socket);
 })
 
 const Handle_New_Connection = (socket: Socket) => {
@@ -151,11 +153,26 @@ const Handle_Player_Not_Ready = (socket: Socket) => {
 }
 
 const Handle_Player_Action = (socket: Socket) => {
-    
+    socket.on(PLAYER_1_GUESSED, async (room_name: string, guess: string) => {
+        rooms[room_name].player_1.guesses.push(guess);
+        rooms[room_name].player_1.current_guess = guess;
+        rooms[room_name].current_guesser = 'player_2';
+        rooms[room_name].current_status = 'PLAYER_1_GUESSED';
+        Send_Latest_Data(room_name);
+    })
+    socket.on(PLAYER_2_GUESSED, async (room_name: string, guess: string) => {
+        rooms[room_name].player_2.guesses.push(guess);
+        rooms[room_name].player_2.current_guess = guess;
+        rooms[room_name].current_guesser = 'player_1';
+        rooms[room_name].current_status = 'PLAYER_2_GUESSED';
+        Send_Latest_Data(room_name);
+    })
 }
 
 const Handle_Game_Finished = (socket: Socket) => {
-
+    socket.on(GAME_FINISH, async (player_number: PLAYERS, room_name: string) => {
+        console.log('game over: ', player_number, room_name);
+    })
 }
 
 const Handle_Game_Restart = () => {

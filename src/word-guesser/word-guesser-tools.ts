@@ -8,12 +8,12 @@ export const RemoveQuotes = (input: string) => {
     return input.replace(/"/gm, "");
 }
 
-export const GuessChecker = (guess: string, word: string): number => {
+export const GuessChecker = (guess: string, opp_word: string): number => {
     let matches: number = 0;
-    guess[0] === word[0] ? matches++ : null;
-    guess[1] === word[1] ? matches++ : null;
-    guess[2] === word[2] ? matches++ : null;
-    guess[3] === word[3] ? matches++ : null;
+    guess[0] === opp_word[0] ? matches++ : null;
+    guess[1] === opp_word[1] ? matches++ : null;
+    guess[2] === opp_word[2] ? matches++ : null;
+    guess[3] === opp_word[3] ? matches++ : null;
     return matches;
 }
 

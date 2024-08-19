@@ -44,12 +44,12 @@ var RemoveQuotes = function (input) {
     return input.replace(/"/gm, "");
 };
 exports.RemoveQuotes = RemoveQuotes;
-var GuessChecker = function (guess, word) {
+var GuessChecker = function (guess, opp_word) {
     var matches = 0;
-    guess[0] === word[0] ? matches++ : null;
-    guess[1] === word[1] ? matches++ : null;
-    guess[2] === word[2] ? matches++ : null;
-    guess[3] === word[3] ? matches++ : null;
+    guess[0] === opp_word[0] ? matches++ : null;
+    guess[1] === opp_word[1] ? matches++ : null;
+    guess[2] === opp_word[2] ? matches++ : null;
+    guess[3] === opp_word[3] ? matches++ : null;
     return matches;
 };
 exports.GuessChecker = GuessChecker;

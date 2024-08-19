@@ -98,6 +98,7 @@ exports.io.on("connection", function (socket) {
     Handle_Player_Ready(socket);
     Handle_Player_Not_Ready(socket);
     Handle_Player_Action(socket);
+    Handle_Game_Finished(socket);
 });
 var Handle_New_Connection = function (socket) {
     exports.users[socket.id] = { player_id: '', room_name: '' };
@@ -190,8 +191,34 @@ var Handle_Player_Not_Ready = function (socket) {
     }); });
 };
 var Handle_Player_Action = function (socket) {
+    socket.on(word_guesser_types_1.PLAYER_1_GUESSED, function (room_name, guess) { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            exports.rooms[room_name].player_1.guesses.push(guess);
+            exports.rooms[room_name].player_1.current_guess = guess;
+            exports.rooms[room_name].current_guesser = 'player_2';
+            exports.rooms[room_name].current_status = 'PLAYER_1_GUESSED';
+            Send_Latest_Data(room_name);
+            return [2 /*return*/];
+        });
+    }); });
+    socket.on(word_guesser_types_1.PLAYER_2_GUESSED, function (room_name, guess) { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            exports.rooms[room_name].player_2.guesses.push(guess);
+            exports.rooms[room_name].player_2.current_guess = guess;
+            exports.rooms[room_name].current_guesser = 'player_1';
+            exports.rooms[room_name].current_status = 'PLAYER_2_GUESSED';
+            Send_Latest_Data(room_name);
+            return [2 /*return*/];
+        });
+    }); });
 };
 var Handle_Game_Finished = function (socket) {
+    socket.on(word_guesser_types_1.GAME_FINISH, function (player_number, room_name) { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            console.log('game over: ', player_number, room_name);
+            return [2 /*return*/];
+        });
+    }); });
 };
 var Handle_Game_Restart = function () {
 };

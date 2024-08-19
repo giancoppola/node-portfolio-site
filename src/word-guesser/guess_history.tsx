@@ -16,17 +16,26 @@ export const GuessHistory = (props: Props) => {
             <DialogTitle>Guess History</DialogTitle>
             <DialogContent dividers>
                 <List>
-                    <>
-                        {props.guesses.map((guess) => {
-                            return (
-                                <ListItem>
-                                    <DialogContentText>
-                                        {guess}: {GuessChecker(guess, props.opp_word)} {GuessChecker(guess, props.opp_word) === 4 ? '- WINNER!' : ''}
-                                    </DialogContentText>
-                                </ListItem>
-                            )
-                        })}
-                    </>
+                    { props.guesses.length < 1 &&
+                        <ListItem>
+                            <DialogContentText>
+                                No guesses yet...
+                            </DialogContentText>
+                        </ListItem>
+                    }
+                    { props.guesses.length >= 1 &&
+                        <>
+                            {props.guesses.map((guess) => {
+                                return (
+                                    <ListItem>
+                                        <DialogContentText>
+                                            {guess}: {GuessChecker(guess, props.opp_word)} {GuessChecker(guess, props.opp_word) === 4 ? '- WINNER!' : ''}
+                                        </DialogContentText>
+                                    </ListItem>
+                                )
+                            })}
+                        </>
+                    }
                 </List>
             </DialogContent>
             <DialogActions>

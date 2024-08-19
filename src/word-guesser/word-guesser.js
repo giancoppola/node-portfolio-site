@@ -156,8 +156,12 @@ var Main = function () {
     }, [word]);
     (0, react_1.useEffect)(function () {
         if (currentGuess && canSubmitWord) {
+            var test = playerNumber === word_guesser_types_1.PLAYER_1 ? word_guesser_types_1.PLAYER_2 : word_guesser_types_1.PLAYER_1;
             var guesser = playerNumber === word_guesser_types_1.PLAYER_1 ? word_guesser_types_1.PLAYER_1_GUESSED : word_guesser_types_1.PLAYER_2_GUESSED;
-            socket.emit(guesser);
+            (0, word_guesser_tools_1.GuessChecker)(currentGuess, roomData[test].word) === 4 ?
+                socket.emit(word_guesser_types_1.GAME_FINISH, playerNumber, roomName) :
+                socket.emit(guesser, roomName, currentGuess);
+            setCurrentGuess('');
         }
     }, [currentGuess]);
     socket.on(word_guesser_types_1.USER_COUNT, function (user_count) { return setUserCount(user_count); });

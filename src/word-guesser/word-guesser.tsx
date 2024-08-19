@@ -6,8 +6,8 @@ import { CreateRoom } from './_create-room'
 import { JoinRoom } from './_join_room'
 import { Footer } from './_footer'
 
-import { iPlayer, PlayerModel, PLAYER_ID, ACTIVE, ROOM_JOINED, USER_COUNT, LATEST_DATA, iRoom, EMPTY_ROOM, PLAYERS, CURRENT_STATUS, READY, NOT_READY, PLAYER_1, PLAYER_1_GUESSED, PLAYER_2_GUESSED, PLAYER_2, PLAYER_1_WORD, PLAYER_2_WORD } from '../../types/word-guesser-types'
-import { Fetch_Player_CheckPlayerId, Fetch_Player_CreateNewPlayer, RemoveQuotes } from './word-guesser-tools'
+import { iPlayer, PlayerModel, PLAYER_ID, ACTIVE, ROOM_JOINED, USER_COUNT, LATEST_DATA, iRoom, EMPTY_ROOM, PLAYERS, CURRENT_STATUS, READY, NOT_READY, PLAYER_1, PLAYER_1_GUESSED, PLAYER_2_GUESSED, PLAYER_2, PLAYER_1_WORD, PLAYER_2_WORD, GAME_FINISH } from '../../types/word-guesser-types'
+import { Fetch_Player_CheckPlayerId, Fetch_Player_CreateNewPlayer, GuessChecker, RemoveQuotes } from './word-guesser-tools'
 
 import { io, Socket } from 'socket.io-client'
 import { WordInput } from './_word_input'
@@ -97,8 +97,12 @@ const Main = () => {
     }, [word])
     useEffect(() => {
         if (currentGuess && canSubmitWord) {
+            let test = playerNumber === PLAYER_1 ? PLAYER_2 : PLAYER_1;
             let guesser = playerNumber === PLAYER_1 ? PLAYER_1_GUESSED : PLAYER_2_GUESSED;
-            socket.emit(guesser);
+            GuessChecker(currentGuess, roomData[test].word) === 4 ?
+            socket.emit(GAME_FINISH, playerNumber, roomName) :
+            socket.emit(guesser, roomName, currentGuess);
+            setCurrentGuess('');
         }
     }, [currentGuess])
     socket.on(USER_COUNT, (user_count: number) => setUserCount(user_count));
