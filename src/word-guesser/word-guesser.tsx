@@ -1,20 +1,34 @@
 import { createRoot } from 'react-dom/client'
 import { useEffect, useState, Dispatch, StrictMode } from 'react'
-import { Box, Button, List, ListItem, TextField, Typography } from '@mui/material'
+import { Box, Button, createTheme, CssBaseline, List, ListItem, TextField, ThemeProvider, Typography, IconButton } from '@mui/material'
 
 import { CreateRoom } from './_create-room'
 import { JoinRoom } from './_join_room'
 import { Footer } from './_footer'
 
-import { iPlayer, PlayerModel, PLAYER_ID, ACTIVE, ROOM_JOINED, USER_COUNT, LATEST_DATA, iRoom, EMPTY_ROOM, PLAYERS, CURRENT_STATUS, READY, NOT_READY, PLAYER_1, PLAYER_1_GUESSED, PLAYER_2_GUESSED, PLAYER_2, PLAYER_1_WORD, PLAYER_2_WORD, GAME_FINISH } from '../../types/word-guesser-types'
+import { iPlayer, PlayerModel, PLAYER_ID, ACTIVE, ROOM_JOINED, USER_COUNT, LATEST_DATA, iRoom, EMPTY_ROOM, PLAYERS, CURRENT_STATUS, READY, NOT_READY, PLAYER_1, PLAYER_1_GUESSED, PLAYER_2_GUESSED, PLAYER_2, PLAYER_1_WORD, PLAYER_2_WORD, GAME_FINISH, LEAVE_ROOM } from '../../types/word-guesser-types'
 import { Fetch_Player_CheckPlayerId, Fetch_Player_CreateNewPlayer, GuessChecker, RemoveQuotes } from './word-guesser-tools'
 
 import { io, Socket } from 'socket.io-client'
 import { WordInput } from './_word_input'
 import { PlayerStatus } from './_player_status'
-import { StatusMessage } from './_status_message'
-import { GuessHistory } from './guess_history'
+import { GuessHistoryDialog } from './guess_history_dialog'
+import { LeaveRoomButton } from './_leave_room'
+import { GuessHistoryButton } from './_guess_history_button'
+import { Brightness4, Brightness7 } from '@mui/icons-material'
+
 const socket: Socket = io();
+
+const DarkTheme = createTheme({
+    palette: {
+        mode: "dark",
+    }
+})
+const LightTheme = createTheme({
+    palette: {
+        mode: "light",
+    }
+})
 
 const Main = () => {
     // State for when in room
@@ -27,6 +41,7 @@ const Main = () => {
     const [playerNumber, setPlayerNumber]: [PLAYERS, Dispatch<PLAYERS>] = useState<PLAYERS>('');
     const [showGuessHistory, setShowGuessHistory]: [boolean, Dispatch<boolean>] = useState<boolean>(false);
     // State used at all times
+    const [darkMode, setDarkMode]: [boolean, Dispatch<boolean>] = useState<boolean>(true);
     const [userCount, setUserCount]: [number, Dispatch<number>] = useState<number>(0);
     const [roomName, setRoomName]: [string, Dispatch<string>] = useState<string>("");
     const [playerId, setPlayerId]: [string, Dispatch<string>] = useState<string>("");
@@ -69,6 +84,10 @@ const Main = () => {
         }
         return canSubmit;
     }
+    const LeaveRoom = () => {
+        console.log(LEAVE_ROOM);
+        socket.emit(LEAVE_ROOM, playerNumber, roomName);
+    }
     socket.on(LATEST_DATA, (room_data: iRoom) => {
         console.log('Got new room data:', room_data);
         setRoomData(room_data);
@@ -107,35 +126,46 @@ const Main = () => {
     }, [currentGuess])
     socket.on(USER_COUNT, (user_count: number) => setUserCount(user_count));
     return (
-        <Box component='section' display='flex' flexDirection='column' justifyContent='space-between' alignItems='center' height='100dvh' width='100dvw'>
-            <Box>
-                <Typography variant='h1' fontWeight='bold'>BattleWords</Typography>
-                <Typography variant='subtitle2' fontWeight='bold' textAlign='center'>{`${userCount} player${userCount > 1 ? 's are' : ' is'} online`}</Typography>
+        <ThemeProvider theme={darkMode ? DarkTheme : LightTheme}>
+            <CssBaseline/>
+            <Box position='absolute' top='0' left='0'>
+                <IconButton onClick={() => setDarkMode(!darkMode)}>
+                    {darkMode && <Brightness7/>}
+                    {!darkMode && <Brightness4/>}
+                </IconButton>
             </Box>
-            { playerId && !roomName &&
-                <Box height='100%' display='flex' flexDirection='column' justifyContent='center' gap='2rem'>
-                    <CreateRoom setPlayerNumber={setPlayerNumber} setRoomName={setRoomName} playerId={playerId} />
-                    <JoinRoom setPlayerNumber={setPlayerNumber} setRoomName={setRoomName} playerId={playerId} />
+            <Box component='section' display='flex' flexDirection='column' justifyContent='space-between' alignItems='center' height='100dvh' width='100dvw'>
+                <Box>
+                    <Typography variant='h1' fontWeight='bold'>BattleWords</Typography>
+                    <Typography variant='subtitle2' fontWeight='bold' textAlign='center'>{`${userCount} player${userCount > 1 ? 's are' : ' is'} online`}</Typography>
                 </Box>
-            }
-            { playerId && roomName &&
-                <Box height='100%' display='flex' flexDirection='column' justifyContent='space-evenly' gap='2rem'>
-                    <Box>
-                        <Typography minHeight='3rem' textAlign='center' fontWeight='bold' variant='h4'>
-                            { word ? `Your word is ${word.toUpperCase()}` : 'Please submit your word'}
-                        </Typography>
-                        <PlayerStatus roomData={roomData}/>
+                { playerId && !roomName &&
+                    <Box height='100%' display='flex' flexDirection='column' justifyContent='center' gap='2rem'>
+                        <CreateRoom setPlayerNumber={setPlayerNumber} setRoomName={setRoomName} playerId={playerId} />
+                        <JoinRoom setPlayerNumber={setPlayerNumber} setRoomName={setRoomName} playerId={playerId} />
                     </Box>
-                    <StatusMessage roomData={roomData} currentStatus={currentStatus}/>
-                    <WordInput canSubmitWord={canSubmitWord} currentStatus={currentStatus} setCurrentGuess={setCurrentGuess} setWord={setWord}/>
-                    <Button onClick={() => {setShowGuessHistory(true)}}>Guess History</Button>
-                    <GuessHistory open={showGuessHistory} setOpen={setShowGuessHistory}
-                    opp_word={playerNumber === 'player_1' ? roomData.player_2.word : roomData.player_1.word}
-                    guesses={playerNumber === 'player_1' ? roomData.player_1.guesses : roomData.player_2.guesses} />
-                </Box>
-            }
-            <Footer/>
-        </Box>
+                }
+                { playerId && roomName &&
+                    <Box height='100%' display='flex' flexDirection='column' justifyContent='space-evenly' gap='2rem'>
+                        <Box>
+                            <Typography minHeight='3rem' textAlign='center' fontWeight='bold' variant='h4'>
+                                { word ? `Your word is ${word.toUpperCase()}` : 'Please submit your word'}
+                            </Typography>
+                            <PlayerStatus roomData={roomData}/>
+                        </Box>
+                        <WordInput canSubmitWord={canSubmitWord} currentStatus={currentStatus} setCurrentGuess={setCurrentGuess} setWord={setWord}/>
+                        <Box>
+                            <GuessHistoryButton showHistory={setShowGuessHistory} />
+                            <LeaveRoomButton leaveRoom={LeaveRoom} />
+                        </Box>
+                        <GuessHistoryDialog open={showGuessHistory} setOpen={setShowGuessHistory}
+                        opp_word={playerNumber === 'player_1' ? roomData.player_2.word : roomData.player_1.word}
+                        guesses={playerNumber === 'player_1' ? roomData.player_1.guesses : roomData.player_2.guesses} />
+                    </Box>
+                }
+                <Footer/>
+            </Box>
+        </ThemeProvider>
     )
 }
 

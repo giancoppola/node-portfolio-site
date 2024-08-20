@@ -87,6 +87,7 @@ export const USER_COUNT = 'user_count';
 // Player Actions //
 ////////////////////
 
+export const LEAVE_ROOM = 'LEAVE_ROOM';
 export const GAME_FINISH = 'GAME_FINISH';
 export const PLAYER_1_GUESSED = 'PLAYER_1_GUESSED';
 export const PLAYER_2_GUESSED = 'PLAYER_2_GUESSED';
