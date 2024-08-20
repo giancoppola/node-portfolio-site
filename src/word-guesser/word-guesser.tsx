@@ -16,6 +16,7 @@ import { GuessHistoryDialog } from './guess_history_dialog'
 import { LeaveRoomButton } from './_leave_room'
 import { GuessHistoryButton } from './_guess_history_button'
 import { Brightness4, Brightness7 } from '@mui/icons-material'
+import { ThemeModeToggle } from './_theme_mode_toggle'
 
 const socket: Socket = io();
 
@@ -128,12 +129,7 @@ const Main = () => {
     return (
         <ThemeProvider theme={darkMode ? DarkTheme : LightTheme}>
             <CssBaseline/>
-            <Box position='absolute' top='0' left='0'>
-                <IconButton onClick={() => setDarkMode(!darkMode)}>
-                    {darkMode && <Brightness7/>}
-                    {!darkMode && <Brightness4/>}
-                </IconButton>
-            </Box>
+            <ThemeModeToggle darkMode={darkMode} setDarkMode={setDarkMode} />
             <Box component='section' display='flex' flexDirection='column' justifyContent='space-between' alignItems='center' height='100dvh' width='100dvw'>
                 <Box>
                     <Typography variant='h1' fontWeight='bold'>BattleWords</Typography>
