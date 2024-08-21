@@ -74,7 +74,7 @@ var Main = function () {
     var _g = (0, react_1.useState)(''), playerNumber = _g[0], setPlayerNumber = _g[1];
     var _h = (0, react_1.useState)(false), showGuessHistory = _h[0], setShowGuessHistory = _h[1];
     // State used at all times
-    var _j = (0, react_1.useState)(true), darkMode = _j[0], setDarkMode = _j[1];
+    var _j = (0, react_1.useState)(false), darkMode = _j[0], setDarkMode = _j[1];
     var _k = (0, react_1.useState)(0), userCount = _k[0], setUserCount = _k[1];
     var _l = (0, react_1.useState)(""), roomName = _l[0], setRoomName = _l[1];
     var _m = (0, react_1.useState)(""), playerId = _m[0], setPlayerId = _m[1];
@@ -134,8 +134,15 @@ var Main = function () {
         return canSubmit;
     };
     var LeaveRoom = function () {
-        console.log(word_guesser_types_1.LEAVE_ROOM);
         socket.emit(word_guesser_types_1.LEAVE_ROOM, playerNumber, roomName);
+        setRoomName('');
+        setPlayerNumber('');
+        setCurrentGuess('');
+        setWord('');
+        setCanSubmitWord(true);
+        setReady(false);
+        setRoomData(word_guesser_types_1.EMPTY_ROOM);
+        setCurrentStatus('ROOM_CREATED');
     };
     socket.on(word_guesser_types_1.LATEST_DATA, function (room_data) {
         console.log('Got new room data:', room_data);

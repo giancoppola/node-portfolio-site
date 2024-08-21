@@ -95,6 +95,7 @@ exports.io.on("connection", function (socket) {
     Handle_Player_Disconnect(socket);
     Handle_Player_Active(socket);
     Handle_Room_Joined(socket);
+    Handle_Room_Left(socket);
     Handle_Player_Ready(socket);
     Handle_Player_Not_Ready(socket);
     Handle_Player_Action(socket);
@@ -145,6 +146,19 @@ var Handle_Room_Joined = function (socket) {
             !exports.rooms[room_name].player_1_id ? exports.rooms[room_name].player_1_id = exports.users[socket.id].player_id : exports.rooms[room_name].player_2_id = exports.users[socket.id].player_id;
             exports.rooms[room_name].player_count = exports.rooms[room_name].player_count + 1;
             socket.join(room_name);
+            Send_Latest_Data(room_name);
+            return [2 /*return*/];
+        });
+    }); });
+};
+var Handle_Room_Left = function (socket) {
+    socket.on(word_guesser_types_1.LEAVE_ROOM, function (player_number, room_name) { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            exports.users[socket.id].room_name = '';
+            exports.rooms[room_name][player_number] = structuredClone(word_guesser_types_1.EMPTY_PLAYER_IN_ROOM);
+            exports.rooms[room_name][player_number + '_id'] = '';
+            exports.rooms[room_name].player_count = exports.rooms[room_name].player_count - 1;
+            exports.rooms[room_name].player_count === 0 ? delete exports.rooms[room_name] : null;
             Send_Latest_Data(room_name);
             return [2 /*return*/];
         });
@@ -216,6 +230,10 @@ var Handle_Game_Finished = function (socket) {
     socket.on(word_guesser_types_1.GAME_FINISH, function (player_number, room_name) { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             console.log('game over: ', player_number, room_name);
+            exports.rooms[room_name].current_status = 'GAME_FINISH';
+            exports.rooms[room_name][player_number].wins = exports.rooms[room_name][player_number].wins + 1;
+            console.log(exports.rooms[room_name][player_number].wins);
+            Send_Latest_Data(room_name);
             return [2 /*return*/];
         });
     }); });

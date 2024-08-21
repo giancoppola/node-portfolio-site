@@ -19,7 +19,7 @@ var Player = function (props) {
             console.error(e);
         }
     };
-    return ((0, jsx_runtime_1.jsxs)(material_1.ListItem, { children: [(0, jsx_runtime_1.jsx)(material_1.ListItemText, { primary: props.name, secondary: props.playerStatus }), (0, jsx_runtime_1.jsxs)(material_1.ListItemIcon, { sx: { justifyContent: 'center', alignItems: "center", gap: '.5rem' }, children: [(0, jsx_runtime_1.jsx)(icons_material_1.EmojiEvents, {}), " ", (0, jsx_runtime_1.jsx)(material_1.Typography, { fontWeight: 'bold', variant: 'subtitle2', children: " 0" })] }), (0, jsx_runtime_1.jsxs)(material_1.ListItemIcon, { sx: { justifyContent: 'flex-end' }, children: [props.icon === 'pending' &&
+    return ((0, jsx_runtime_1.jsxs)(material_1.ListItem, { children: [(0, jsx_runtime_1.jsx)(material_1.ListItemText, { primary: props.name, secondary: props.playerStatus }), (0, jsx_runtime_1.jsxs)(material_1.ListItemIcon, { sx: { justifyContent: 'center', alignItems: "center", gap: '.5rem' }, children: [(0, jsx_runtime_1.jsx)(icons_material_1.EmojiEvents, {}), " ", (0, jsx_runtime_1.jsx)(material_1.Typography, { fontWeight: 'bold', variant: 'subtitle2', children: props.wins })] }), (0, jsx_runtime_1.jsxs)(material_1.ListItemIcon, { sx: { justifyContent: 'flex-end' }, children: [props.icon === 'pending' &&
                         (0, jsx_runtime_1.jsx)(material_1.Tooltip, { placement: "bottom", arrow: true, title: tooltip, children: (0, jsx_runtime_1.jsx)(material_1.Link, { style: { cursor: "pointer" }, component: 'button', onClick: SaveLinkToClipboard, children: (0, jsx_runtime_1.jsx)(icons_material_1.Share, { color: 'action' }) }) }), props.icon === 'hourglass' && (0, jsx_runtime_1.jsx)(icons_material_1.HourglassEmpty, { color: 'warning' }), props.icon === 'thumbs_up' && (0, jsx_runtime_1.jsx)(icons_material_1.ThumbUpAlt, { color: 'success' })] })] }));
 };
 var PlayerStatus = function (props) {
@@ -82,6 +82,6 @@ var PlayerStatus = function (props) {
                 break;
         }
     }, [props.roomData]);
-    return ((0, jsx_runtime_1.jsxs)(material_1.List, { children: [(0, jsx_runtime_1.jsx)(Player, { roomName: props.roomData.room_name, name: 'Player 1', icon: playerOneIcon, playerStatus: playerOneStatus }), (0, jsx_runtime_1.jsx)(Player, { roomName: props.roomData.room_name, name: 'Player 2', icon: playerTwoIcon, playerStatus: playerTwoStatus })] }));
+    return ((0, jsx_runtime_1.jsxs)(material_1.List, { children: [(0, jsx_runtime_1.jsx)(Player, { roomName: props.roomData.room_name, name: 'Player 1', wins: props.roomData.player_1.wins, icon: playerOneIcon, playerStatus: playerOneStatus }), (0, jsx_runtime_1.jsx)(Player, { roomName: props.roomData.room_name, name: 'Player 2', wins: props.roomData.player_2.wins, icon: playerTwoIcon, playerStatus: playerTwoStatus })] }));
 };
 exports.PlayerStatus = PlayerStatus;

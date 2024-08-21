@@ -54,7 +54,7 @@ const server = app.listen(process.env.PORT || 3000, () => {
 
 // MongoDB Database Functions
 import { Player_ResetLastPlayedDate } from './server/word-guesser-api';
-import { ACTIVE, EMPTY_ROOM, GAME_FINISH, iRoom, LATEST_DATA, NOT_READY, PLAYER_1_GUESSED, PLAYER_2_GUESSED, PlayerModel, PLAYERS, READY, ROOM_JOINED, RoomCollection, SocketIoUser, SocketIoUserObj, USER_COUNT } from './types/word-guesser-types';
+import { ACTIVE, EMPTY_PLAYER_IN_ROOM, EMPTY_ROOM, GAME_FINISH, iRoom, LATEST_DATA, LEAVE_ROOM, NOT_READY, PLAYER_1_GUESSED, PLAYER_2_GUESSED, PlayerModel, PLAYERS, READY, ROOM_JOINED, RoomCollection, SocketIoUser, SocketIoUserObj, USER_COUNT } from './types/word-guesser-types';
 import { GuessChecker } from './src/word-guesser/word-guesser-tools';
 // Socket IO Connections and Responses
 export const users: SocketIoUserObj = {};
@@ -66,6 +66,7 @@ io.on("connection", (socket: Socket) => {
     Handle_Player_Disconnect(socket);
     Handle_Player_Active(socket);
     Handle_Room_Joined(socket);
+    Handle_Room_Left(socket);
     Handle_Player_Ready(socket);
     Handle_Player_Not_Ready(socket);
     Handle_Player_Action(socket);
@@ -113,6 +114,17 @@ const Handle_Room_Joined = (socket: Socket) => {
         !rooms[room_name].player_1_id ? rooms[room_name].player_1_id = users[socket.id].player_id : rooms[room_name].player_2_id = users[socket.id].player_id;
         rooms[room_name].player_count = rooms[room_name].player_count + 1;
         socket.join(room_name);
+        Send_Latest_Data(room_name);
+    })
+}
+
+const Handle_Room_Left = (socket: Socket) => {
+    socket.on(LEAVE_ROOM, async (player_number: PLAYERS, room_name: string) => {
+        users[socket.id].room_name = '';
+        rooms[room_name][player_number] = structuredClone(EMPTY_PLAYER_IN_ROOM);
+        rooms[room_name][player_number + '_id'] = '';
+        rooms[room_name].player_count = rooms[room_name].player_count - 1;
+        rooms[room_name].player_count === 0 ? delete rooms[room_name] : null;
         Send_Latest_Data(room_name);
     })
 }
@@ -172,6 +184,10 @@ const Handle_Player_Action = (socket: Socket) => {
 const Handle_Game_Finished = (socket: Socket) => {
     socket.on(GAME_FINISH, async (player_number: PLAYERS, room_name: string) => {
         console.log('game over: ', player_number, room_name);
+        rooms[room_name].current_status = 'GAME_FINISH';
+        rooms[room_name][player_number].wins = rooms[room_name][player_number].wins + 1;
+        console.log(rooms[room_name][player_number].wins);
+        Send_Latest_Data(room_name);
     })
 }
 

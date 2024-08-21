@@ -9,6 +9,7 @@ interface PlayerProps {
     name: string;
     icon: StatusIcon;
     playerStatus: string;
+    wins: number;
 }
 const Player = (props: PlayerProps) => {
     const [tooltip, setTooltip]: [string, Dispatch<string>] = useState<string>("Click to copy share link...");
@@ -31,7 +32,7 @@ const Player = (props: PlayerProps) => {
                 secondary={props.playerStatus}
             />
             <ListItemIcon sx={{ justifyContent: 'center', alignItems: "center", gap: '.5rem' }}>
-                <EmojiEvents/> <Typography fontWeight='bold' variant='subtitle2'> 0</Typography>
+                <EmojiEvents/> <Typography fontWeight='bold' variant='subtitle2'>{props.wins}</Typography>
                 </ListItemIcon>
             <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
                 { props.icon === 'pending' &&
@@ -96,8 +97,8 @@ export const PlayerStatus = (props: PlayerStatusProps) => {
     }, [props.roomData])
     return (
         <List>
-            <Player roomName={props.roomData.room_name} name='Player 1' icon={playerOneIcon} playerStatus={playerOneStatus} />
-            <Player roomName={props.roomData.room_name} name='Player 2' icon={playerTwoIcon} playerStatus={playerTwoStatus} />
+            <Player roomName={props.roomData.room_name} name='Player 1' wins={props.roomData.player_1.wins} icon={playerOneIcon} playerStatus={playerOneStatus} />
+            <Player roomName={props.roomData.room_name} name='Player 2' wins={props.roomData.player_2.wins} icon={playerTwoIcon} playerStatus={playerTwoStatus} />
         </List>
     )
 }

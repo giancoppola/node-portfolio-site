@@ -42,7 +42,7 @@ const Main = () => {
     const [playerNumber, setPlayerNumber]: [PLAYERS, Dispatch<PLAYERS>] = useState<PLAYERS>('');
     const [showGuessHistory, setShowGuessHistory]: [boolean, Dispatch<boolean>] = useState<boolean>(false);
     // State used at all times
-    const [darkMode, setDarkMode]: [boolean, Dispatch<boolean>] = useState<boolean>(true);
+    const [darkMode, setDarkMode]: [boolean, Dispatch<boolean>] = useState<boolean>(false);
     const [userCount, setUserCount]: [number, Dispatch<number>] = useState<number>(0);
     const [roomName, setRoomName]: [string, Dispatch<string>] = useState<string>("");
     const [playerId, setPlayerId]: [string, Dispatch<string>] = useState<string>("");
@@ -86,8 +86,15 @@ const Main = () => {
         return canSubmit;
     }
     const LeaveRoom = () => {
-        console.log(LEAVE_ROOM);
         socket.emit(LEAVE_ROOM, playerNumber, roomName);
+        setRoomName('');
+        setPlayerNumber('');
+        setCurrentGuess('');
+        setWord('');
+        setCanSubmitWord(true);
+        setReady(false);
+        setRoomData(EMPTY_ROOM);
+        setCurrentStatus('ROOM_CREATED');
     }
     socket.on(LATEST_DATA, (room_data: iRoom) => {
         console.log('Got new room data:', room_data);
