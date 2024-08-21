@@ -20,6 +20,7 @@ import { Brightness4, Brightness7 } from '@mui/icons-material'
 import { ThemeModeToggle } from './_theme_mode_toggle'
 import { StatusMessage } from './_status_message'
 import { RematchVote } from './_rematch_vote'
+import { StatusDialog } from './_status_dialog'
 
 const socket: Socket = io();
 
@@ -44,6 +45,8 @@ const Main = () => {
     const [currentGuess, setCurrentGuess]: [string, Dispatch<string>] = useState<string>('');
     const [playerNumber, setPlayerNumber]: [PLAYERS, Dispatch<PLAYERS>] = useState<PLAYERS>('');
     const [showGuessHistory, setShowGuessHistory]: [boolean, Dispatch<boolean>] = useState<boolean>(false);
+    const [showStatus, setShowStatus]: [boolean, Dispatch<boolean>] = useState<boolean>(false);
+    const [statusDialogMsg, setStatusDialogMsg]: [string, Dispatch<string>] = useState<string>("");
     // State used at all times
     const [darkMode, setDarkMode]: [boolean, Dispatch<boolean>] = useState<boolean>(false);
     const [userCount, setUserCount]: [number, Dispatch<number>] = useState<number>(0);
@@ -125,6 +128,12 @@ const Main = () => {
             CreateNewPlayer();
         }
     }, [])
+    useEffect(() => {
+        switch (currentStatus) {
+            //todo
+        }
+        setShowStatus(true);
+    }, [currentStatus])
     useEffect(() => { playerId ? socket.emit(ACTIVE, playerId) : null }, [playerId])
     useEffect(() => { roomName ? socket.emit(ROOM_JOINED, roomName) : null }, [roomName])
     useEffect(() => { ready ? socket.emit(READY, playerId, roomName, word) : socket.emit(NOT_READY, playerId, roomName) }, [ready])
@@ -180,6 +189,7 @@ const Main = () => {
                         <GuessHistoryDialog open={showGuessHistory} setOpen={setShowGuessHistory}
                         opp_word={playerNumber === 'player_1' ? roomData.player_2.word : roomData.player_1.word}
                         guesses={playerNumber === 'player_1' ? roomData.player_1.guesses : roomData.player_2.guesses} />
+                        <StatusDialog msg={statusDialogMsg} show={showStatus} setShow={setShowStatus} />
                     </Box>
                 }
                 <Footer/>
