@@ -5,14 +5,16 @@ export const PLAYER_ID = "WG.player_id";
 export const PLAYER_1 = 'player_1';
 export const PLAYER_2 = 'player_2';
 
-export type CURRENT_STATUS = 'ROOM_CREATED' | 'GAME_READY' | 'PLAYER_1_GUESSED' | 'PLAYER_2_GUESSED' | 'GAME_FINISH';
+export type CURRENT_STATUS = 'ROOM_CREATED' | 'GAME_READY' | 'PLAYER_1_GUESSED' | 'PLAYER_2_GUESSED' | 'GAME_FINISH' | 'ROOM_CLOSING';
 export type PLAYERS = 'player_1' | 'player_2' | '';
+export type REMATCH_VOTE = 'yes' | 'no' | '';
 export interface iPlayerInRoom {
     word: string;
     wins: number;
     current_guess: string;
     guesses: Array<string>;
     ready: boolean;
+    rematch: REMATCH_VOTE;
 }
 export interface iRoom {
     [key: string]: any;
@@ -23,6 +25,7 @@ export interface iRoom {
     player_2_id: string;
     player_count: number;
     current_guesser: PLAYERS;
+    winner: string;
     number_of_games_played: number;
     current_status: CURRENT_STATUS;
 }
@@ -35,6 +38,7 @@ export const EMPTY_PLAYER_IN_ROOM: iPlayerInRoom = {
     current_guess: "",
     guesses: [],
     ready: false,
+    rematch: ''
 }
 export const EMPTY_ROOM: iRoom = {
     room_name: '',
@@ -44,6 +48,7 @@ export const EMPTY_ROOM: iRoom = {
     player_2_id: "",
     player_count: 0,
     current_guesser: 'player_1',
+    winner: '',
     number_of_games_played: 0,
     current_status: 'ROOM_CREATED'
 }
@@ -89,6 +94,7 @@ export const USER_COUNT = 'user_count';
 
 export const LEAVE_ROOM = 'LEAVE_ROOM';
 export const GAME_FINISH = 'GAME_FINISH';
+export const PLAYER_VOTE = 'PLAYER_VOTE';
 export const PLAYER_1_GUESSED = 'PLAYER_1_GUESSED';
 export const PLAYER_2_GUESSED = 'PLAYER_2_GUESSED';
 export const PLAYER_1_WORD = 'PLAYER_1_WORD';

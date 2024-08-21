@@ -75,10 +75,30 @@ var PlayerStatus = function (props) {
                 setPlayerOneIcon('hourglass');
                 break;
             case "GAME_FINISH":
-                setPlayerTwoStatus("Waiting for player to vote...");
-                setPlayerTwoIcon('hourglass');
-                setPlayerOneStatus('Waiting for player to vote...');
-                setPlayerOneIcon('hourglass');
+                if (!room.player_2.rematch) {
+                    setPlayerTwoStatus("Waiting for player to vote...");
+                    setPlayerTwoIcon('hourglass');
+                }
+                else if (room.player_2.rematch === 'no') {
+                    setPlayerTwoStatus("Player does not want a rematch!");
+                    setPlayerTwoIcon('pending');
+                }
+                else if (room.player_2.rematch === 'yes') {
+                    setPlayerTwoStatus("Player wants a rematch!");
+                    setPlayerTwoIcon('thumbs_up');
+                }
+                if (!room.player_1.rematch) {
+                    setPlayerOneStatus("Waiting for player to vote...");
+                    setPlayerOneIcon('hourglass');
+                }
+                else if (room.player_1.rematch === 'no') {
+                    setPlayerOneStatus("Player does not want a rematch!");
+                    setPlayerOneIcon('pending');
+                }
+                else if (room.player_1.rematch === 'yes') {
+                    setPlayerOneStatus("Player wants a rematch!");
+                    setPlayerOneIcon('thumbs_up');
+                }
                 break;
         }
     }, [props.roomData]);

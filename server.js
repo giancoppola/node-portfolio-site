@@ -100,6 +100,7 @@ exports.io.on("connection", function (socket) {
     Handle_Player_Not_Ready(socket);
     Handle_Player_Action(socket);
     Handle_Game_Finished(socket);
+    Handle_Game_Restart(socket);
 });
 var Handle_New_Connection = function (socket) {
     exports.users[socket.id] = { player_id: '', room_name: '' };
@@ -232,14 +233,51 @@ var Handle_Game_Finished = function (socket) {
             console.log('game over: ', player_number, room_name);
             exports.rooms[room_name].current_status = 'GAME_FINISH';
             exports.rooms[room_name][player_number].wins = exports.rooms[room_name][player_number].wins + 1;
+            exports.rooms[room_name].number_of_games_played = exports.rooms[room_name].number_of_games_played + 1;
+            exports.rooms[room_name].winner = player_number === 'player_1' ? 'Player 1' : 'Player 2';
             console.log(exports.rooms[room_name][player_number].wins);
             Send_Latest_Data(room_name);
             return [2 /*return*/];
         });
     }); });
 };
-var Handle_Game_Restart = function () {
+var Handle_Game_Restart = function (socket) {
+    socket.on(word_guesser_types_1.PLAYER_VOTE, function (player_number, room_name, vote) { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            exports.rooms[room_name][player_number].rematch = vote;
+            if (exports.rooms[room_name].player_1.rematch === 'yes' && exports.rooms[room_name].player_2.rematch === 'yes') {
+                RestartGame(room_name);
+                Send_Latest_Data(room_name);
+            }
+            else if (exports.rooms[room_name].player_1.rematch === 'no' || exports.rooms[room_name].player_2.rematch === 'no') {
+                exports.rooms[room_name].current_status = 'ROOM_CLOSING';
+                Send_Latest_Data(room_name);
+                exports.users[exports.rooms[room_name].player_1_id].room_name = '';
+                exports.users[exports.rooms[room_name].player_2_id].room_name = '';
+                delete exports.rooms[room_name];
+            }
+            else {
+                Send_Latest_Data(room_name);
+            }
+            return [2 /*return*/];
+        });
+    }); });
 };
 var Send_Latest_Data = function (room_name) {
     exports.io.to(room_name).emit(word_guesser_types_1.LATEST_DATA, exports.rooms[room_name]);
+};
+var RestartGame = function (room_name) {
+    exports.rooms[room_name].current_guesser = 'player_1';
+    exports.rooms[room_name].current_status = 'ROOM_CREATED';
+    exports.rooms[room_name].winner = '';
+    exports.rooms[room_name].player_1.current_guess = '';
+    exports.rooms[room_name].player_1.guesses = [];
+    exports.rooms[room_name].player_1.ready = false;
+    exports.rooms[room_name].player_1.rematch = '';
+    exports.rooms[room_name].player_1.word = '';
+    exports.rooms[room_name].player_2.current_guess = '';
+    exports.rooms[room_name].player_2.guesses = [];
+    exports.rooms[room_name].player_2.ready = false;
+    exports.rooms[room_name].player_2.rematch = '';
+    exports.rooms[room_name].player_2.word = '';
 };

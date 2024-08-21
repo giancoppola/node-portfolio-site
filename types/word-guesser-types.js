@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LATEST_DATA = exports.NOT_READY = exports.READY = exports.ACTIVE = exports.ROOM_JOINED = exports.PLAYER_2_WORD = exports.PLAYER_1_WORD = exports.PLAYER_2_GUESSED = exports.PLAYER_1_GUESSED = exports.GAME_FINISH = exports.LEAVE_ROOM = exports.USER_COUNT = exports.PlayerModel = exports.PlayerSchema = exports.EMPTY_ROOM = exports.EMPTY_PLAYER_IN_ROOM = exports.PLAYER_2 = exports.PLAYER_1 = exports.PLAYER_ID = void 0;
+exports.LATEST_DATA = exports.NOT_READY = exports.READY = exports.ACTIVE = exports.ROOM_JOINED = exports.PLAYER_2_WORD = exports.PLAYER_1_WORD = exports.PLAYER_2_GUESSED = exports.PLAYER_1_GUESSED = exports.PLAYER_VOTE = exports.GAME_FINISH = exports.LEAVE_ROOM = exports.USER_COUNT = exports.PlayerModel = exports.PlayerSchema = exports.EMPTY_ROOM = exports.EMPTY_PLAYER_IN_ROOM = exports.PLAYER_2 = exports.PLAYER_1 = exports.PLAYER_ID = void 0;
 var mongoose = require('mongoose');
 exports.PLAYER_ID = "WG.player_id";
 exports.PLAYER_1 = 'player_1';
@@ -11,6 +11,7 @@ exports.EMPTY_PLAYER_IN_ROOM = {
     current_guess: "",
     guesses: [],
     ready: false,
+    rematch: ''
 };
 exports.EMPTY_ROOM = {
     room_name: '',
@@ -20,6 +21,7 @@ exports.EMPTY_ROOM = {
     player_2_id: "",
     player_count: 0,
     current_guesser: 'player_1',
+    winner: '',
     number_of_games_played: 0,
     current_status: 'ROOM_CREATED'
 };
@@ -41,6 +43,7 @@ exports.USER_COUNT = 'user_count';
 ////////////////////
 exports.LEAVE_ROOM = 'LEAVE_ROOM';
 exports.GAME_FINISH = 'GAME_FINISH';
+exports.PLAYER_VOTE = 'PLAYER_VOTE';
 exports.PLAYER_1_GUESSED = 'PLAYER_1_GUESSED';
 exports.PLAYER_2_GUESSED = 'PLAYER_2_GUESSED';
 exports.PLAYER_1_WORD = 'PLAYER_1_WORD';

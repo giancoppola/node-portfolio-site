@@ -6,10 +6,11 @@ import { CreateRoom } from './_create-room'
 import { JoinRoom } from './_join_room'
 import { Footer } from './_footer'
 
-import { iPlayer, PlayerModel, PLAYER_ID, ACTIVE, ROOM_JOINED, USER_COUNT, LATEST_DATA, iRoom, EMPTY_ROOM, PLAYERS, CURRENT_STATUS, READY, NOT_READY, PLAYER_1, PLAYER_1_GUESSED, PLAYER_2_GUESSED, PLAYER_2, PLAYER_1_WORD, PLAYER_2_WORD, GAME_FINISH, LEAVE_ROOM } from '../../types/word-guesser-types'
+import { iPlayer, PlayerModel, PLAYER_ID, ACTIVE, ROOM_JOINED, USER_COUNT, LATEST_DATA, iRoom, EMPTY_ROOM, PLAYERS, CURRENT_STATUS, READY, NOT_READY, PLAYER_1, PLAYER_1_GUESSED, PLAYER_2_GUESSED, PLAYER_2, PLAYER_1_WORD, PLAYER_2_WORD, GAME_FINISH, LEAVE_ROOM, REMATCH_VOTE, PLAYER_VOTE } from '../../types/word-guesser-types'
 import { Fetch_Player_CheckPlayerId, Fetch_Player_CreateNewPlayer, GuessChecker, RemoveQuotes } from './word-guesser-tools'
 
 import { io, Socket } from 'socket.io-client'
+
 import { WordInput } from './_word_input'
 import { PlayerStatus } from './_player_status'
 import { GuessHistoryDialog } from './guess_history_dialog'
@@ -17,6 +18,8 @@ import { LeaveRoomButton } from './_leave_room'
 import { GuessHistoryButton } from './_guess_history_button'
 import { Brightness4, Brightness7 } from '@mui/icons-material'
 import { ThemeModeToggle } from './_theme_mode_toggle'
+import { StatusMessage } from './_status_message'
+import { RematchVote } from './_rematch_vote'
 
 const socket: Socket = io();
 
@@ -96,11 +99,21 @@ const Main = () => {
         setRoomData(EMPTY_ROOM);
         setCurrentStatus('ROOM_CREATED');
     }
+    const RestartRoom = () => {
+        setCurrentGuess('');
+        setWord('');
+        setReady(false);
+    }
+    const PlayerVote = (vote: REMATCH_VOTE) => {
+        socket.emit(PLAYER_VOTE, playerNumber, roomName, vote);
+    }
     socket.on(LATEST_DATA, (room_data: iRoom) => {
         console.log('Got new room data:', room_data);
         setRoomData(room_data);
         setCurrentStatus(room_data.current_status);
         setCanSubmitWord(CanSubmitCheck(room_data));
+        if (room_data.current_status === 'GAME_FINISH') { RestartRoom(); }
+        if (room_data.current_status === 'ROOM_CLOSING') { LeaveRoom(); }
     })
     useEffect(() => {
         let player_id = localStorage.getItem(PLAYER_ID);
@@ -151,12 +164,15 @@ const Main = () => {
                 { playerId && roomName &&
                     <Box height='100%' display='flex' flexDirection='column' justifyContent='space-evenly' gap='2rem'>
                         <Box>
-                            <Typography minHeight='3rem' textAlign='center' fontWeight='bold' variant='h4'>
-                                { word ? `Your word is ${word.toUpperCase()}` : 'Please submit your word'}
-                            </Typography>
+                            <StatusMessage currentStatus={currentStatus} winner={roomData.winner} word={word} />
                             <PlayerStatus roomData={roomData}/>
                         </Box>
-                        <WordInput canSubmitWord={canSubmitWord} currentStatus={currentStatus} setCurrentGuess={setCurrentGuess} setWord={setWord}/>
+                        { currentStatus != 'GAME_FINISH' &&
+                            <WordInput canSubmitWord={canSubmitWord} currentStatus={currentStatus} setCurrentGuess={setCurrentGuess} setWord={setWord}/>
+                        }
+                        { currentStatus === 'GAME_FINISH' &&
+                            <RematchVote vote={PlayerVote} />
+                        }
                         <Box>
                             <GuessHistoryButton showHistory={setShowGuessHistory} />
                             <LeaveRoomButton leaveRoom={LeaveRoom} />

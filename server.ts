@@ -54,7 +54,7 @@ const server = app.listen(process.env.PORT || 3000, () => {
 
 // MongoDB Database Functions
 import { Player_ResetLastPlayedDate } from './server/word-guesser-api';
-import { ACTIVE, EMPTY_PLAYER_IN_ROOM, EMPTY_ROOM, GAME_FINISH, iRoom, LATEST_DATA, LEAVE_ROOM, NOT_READY, PLAYER_1_GUESSED, PLAYER_2_GUESSED, PlayerModel, PLAYERS, READY, ROOM_JOINED, RoomCollection, SocketIoUser, SocketIoUserObj, USER_COUNT } from './types/word-guesser-types';
+import { ACTIVE, EMPTY_PLAYER_IN_ROOM, EMPTY_ROOM, GAME_FINISH, iRoom, LATEST_DATA, LEAVE_ROOM, NOT_READY, PLAYER_1_GUESSED, PLAYER_2_GUESSED, PLAYER_VOTE, PlayerModel, PLAYERS, READY, REMATCH_VOTE, ROOM_JOINED, RoomCollection, SocketIoUser, SocketIoUserObj, USER_COUNT } from './types/word-guesser-types';
 import { GuessChecker } from './src/word-guesser/word-guesser-tools';
 // Socket IO Connections and Responses
 export const users: SocketIoUserObj = {};
@@ -71,6 +71,7 @@ io.on("connection", (socket: Socket) => {
     Handle_Player_Not_Ready(socket);
     Handle_Player_Action(socket);
     Handle_Game_Finished(socket);
+    Handle_Game_Restart(socket);
 })
 
 const Handle_New_Connection = (socket: Socket) => {
@@ -186,15 +187,49 @@ const Handle_Game_Finished = (socket: Socket) => {
         console.log('game over: ', player_number, room_name);
         rooms[room_name].current_status = 'GAME_FINISH';
         rooms[room_name][player_number].wins = rooms[room_name][player_number].wins + 1;
+        rooms[room_name].number_of_games_played = rooms[room_name].number_of_games_played + 1;
+        rooms[room_name].winner = player_number === 'player_1' ? 'Player 1' : 'Player 2';
         console.log(rooms[room_name][player_number].wins);
         Send_Latest_Data(room_name);
     })
 }
 
-const Handle_Game_Restart = () => {
-
+const Handle_Game_Restart = (socket: Socket) => {
+    socket.on(PLAYER_VOTE, async (player_number: PLAYERS, room_name: string, vote: REMATCH_VOTE) => {
+        rooms[room_name][player_number].rematch = vote;
+        if (rooms[room_name].player_1.rematch === 'yes' && rooms[room_name].player_2.rematch === 'yes') {
+            RestartGame(room_name);
+            Send_Latest_Data(room_name);
+        }
+        else if (rooms[room_name].player_1.rematch === 'no' || rooms[room_name].player_2.rematch === 'no') {
+            rooms[room_name].current_status = 'ROOM_CLOSING';
+            Send_Latest_Data(room_name);
+            users[rooms[room_name].player_1_id].room_name = '';
+            users[rooms[room_name].player_2_id].room_name = '';
+            delete rooms[room_name];
+        }
+        else {
+            Send_Latest_Data(room_name);
+        }
+    })
 }
 
 const Send_Latest_Data = (room_name: string) => {
     io.to(room_name).emit(LATEST_DATA, rooms[room_name])
+}
+
+const RestartGame = (room_name: string) => {
+    rooms[room_name].current_guesser = 'player_1';
+    rooms[room_name].current_status = 'ROOM_CREATED';
+    rooms[room_name].winner = '';
+    rooms[room_name].player_1.current_guess = '';
+    rooms[room_name].player_1.guesses = [];
+    rooms[room_name].player_1.ready = false;
+    rooms[room_name].player_1.rematch = '';
+    rooms[room_name].player_1.word = '';
+    rooms[room_name].player_2.current_guess = '';
+    rooms[room_name].player_2.guesses = [];
+    rooms[room_name].player_2.ready = false;
+    rooms[room_name].player_2.rematch = '';
+    rooms[room_name].player_2.word = '';
 }

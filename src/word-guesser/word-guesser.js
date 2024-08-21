@@ -52,6 +52,8 @@ var guess_history_dialog_1 = require("./guess_history_dialog");
 var _leave_room_1 = require("./_leave_room");
 var _guess_history_button_1 = require("./_guess_history_button");
 var _theme_mode_toggle_1 = require("./_theme_mode_toggle");
+var _status_message_1 = require("./_status_message");
+var _rematch_vote_1 = require("./_rematch_vote");
 var socket = (0, socket_io_client_1.io)();
 var DarkTheme = (0, material_1.createTheme)({
     palette: {
@@ -144,11 +146,25 @@ var Main = function () {
         setRoomData(word_guesser_types_1.EMPTY_ROOM);
         setCurrentStatus('ROOM_CREATED');
     };
+    var RestartRoom = function () {
+        setCurrentGuess('');
+        setWord('');
+        setReady(false);
+    };
+    var PlayerVote = function (vote) {
+        socket.emit(word_guesser_types_1.PLAYER_VOTE, playerNumber, roomName, vote);
+    };
     socket.on(word_guesser_types_1.LATEST_DATA, function (room_data) {
         console.log('Got new room data:', room_data);
         setRoomData(room_data);
         setCurrentStatus(room_data.current_status);
         setCanSubmitWord(CanSubmitCheck(room_data));
+        if (room_data.current_status === 'GAME_FINISH') {
+            RestartRoom();
+        }
+        if (room_data.current_status === 'ROOM_CLOSING') {
+            LeaveRoom();
+        }
     });
     (0, react_1.useEffect)(function () {
         var player_id = localStorage.getItem(word_guesser_types_1.PLAYER_ID);
@@ -191,7 +207,9 @@ var Main = function () {
     socket.on(word_guesser_types_1.USER_COUNT, function (user_count) { return setUserCount(user_count); });
     return ((0, jsx_runtime_1.jsxs)(material_1.ThemeProvider, { theme: darkMode ? DarkTheme : LightTheme, children: [(0, jsx_runtime_1.jsx)(material_1.CssBaseline, {}), (0, jsx_runtime_1.jsx)(_theme_mode_toggle_1.ThemeModeToggle, { darkMode: darkMode, setDarkMode: setDarkMode }), (0, jsx_runtime_1.jsxs)(material_1.Box, { component: 'section', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', height: '100dvh', width: '100dvw', children: [(0, jsx_runtime_1.jsxs)(material_1.Box, { children: [(0, jsx_runtime_1.jsx)(material_1.Typography, { variant: 'h1', fontWeight: 'bold', children: "BattleWords" }), (0, jsx_runtime_1.jsx)(material_1.Typography, { variant: 'subtitle2', fontWeight: 'bold', textAlign: 'center', children: "".concat(userCount, " player").concat(userCount > 1 ? 's are' : ' is', " online") })] }), playerId && !roomName &&
                         (0, jsx_runtime_1.jsxs)(material_1.Box, { height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '2rem', children: [(0, jsx_runtime_1.jsx)(_create_room_1.CreateRoom, { setPlayerNumber: setPlayerNumber, setRoomName: setRoomName, playerId: playerId }), (0, jsx_runtime_1.jsx)(_join_room_1.JoinRoom, { setPlayerNumber: setPlayerNumber, setRoomName: setRoomName, playerId: playerId })] }), playerId && roomName &&
-                        (0, jsx_runtime_1.jsxs)(material_1.Box, { height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly', gap: '2rem', children: [(0, jsx_runtime_1.jsxs)(material_1.Box, { children: [(0, jsx_runtime_1.jsx)(material_1.Typography, { minHeight: '3rem', textAlign: 'center', fontWeight: 'bold', variant: 'h4', children: word ? "Your word is ".concat(word.toUpperCase()) : 'Please submit your word' }), (0, jsx_runtime_1.jsx)(_player_status_1.PlayerStatus, { roomData: roomData })] }), (0, jsx_runtime_1.jsx)(_word_input_1.WordInput, { canSubmitWord: canSubmitWord, currentStatus: currentStatus, setCurrentGuess: setCurrentGuess, setWord: setWord }), (0, jsx_runtime_1.jsxs)(material_1.Box, { children: [(0, jsx_runtime_1.jsx)(_guess_history_button_1.GuessHistoryButton, { showHistory: setShowGuessHistory }), (0, jsx_runtime_1.jsx)(_leave_room_1.LeaveRoomButton, { leaveRoom: LeaveRoom })] }), (0, jsx_runtime_1.jsx)(guess_history_dialog_1.GuessHistoryDialog, { open: showGuessHistory, setOpen: setShowGuessHistory, opp_word: playerNumber === 'player_1' ? roomData.player_2.word : roomData.player_1.word, guesses: playerNumber === 'player_1' ? roomData.player_1.guesses : roomData.player_2.guesses })] }), (0, jsx_runtime_1.jsx)(_footer_1.Footer, {})] })] }));
+                        (0, jsx_runtime_1.jsxs)(material_1.Box, { height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly', gap: '2rem', children: [(0, jsx_runtime_1.jsxs)(material_1.Box, { children: [(0, jsx_runtime_1.jsx)(_status_message_1.StatusMessage, { currentStatus: currentStatus, winner: roomData.winner, word: word }), (0, jsx_runtime_1.jsx)(_player_status_1.PlayerStatus, { roomData: roomData })] }), currentStatus != 'GAME_FINISH' &&
+                                    (0, jsx_runtime_1.jsx)(_word_input_1.WordInput, { canSubmitWord: canSubmitWord, currentStatus: currentStatus, setCurrentGuess: setCurrentGuess, setWord: setWord }), currentStatus === 'GAME_FINISH' &&
+                                    (0, jsx_runtime_1.jsx)(_rematch_vote_1.RematchVote, { vote: PlayerVote }), (0, jsx_runtime_1.jsxs)(material_1.Box, { children: [(0, jsx_runtime_1.jsx)(_guess_history_button_1.GuessHistoryButton, { showHistory: setShowGuessHistory }), (0, jsx_runtime_1.jsx)(_leave_room_1.LeaveRoomButton, { leaveRoom: LeaveRoom })] }), (0, jsx_runtime_1.jsx)(guess_history_dialog_1.GuessHistoryDialog, { open: showGuessHistory, setOpen: setShowGuessHistory, opp_word: playerNumber === 'player_1' ? roomData.player_2.word : roomData.player_1.word, guesses: playerNumber === 'player_1' ? roomData.player_1.guesses : roomData.player_2.guesses })] }), (0, jsx_runtime_1.jsx)(_footer_1.Footer, {})] })] }));
 };
 var root = (0, client_1.createRoot)(document.getElementById('main'));
 root.render((0, jsx_runtime_1.jsx)(react_1.StrictMode, { children: (0, jsx_runtime_1.jsx)(Main, {}) }));
