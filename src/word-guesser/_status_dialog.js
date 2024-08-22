@@ -6,7 +6,8 @@ var react_1 = require("react");
 var material_1 = require("@mui/material");
 var StatusDialog = function (props) {
     var _a = (0, react_1.useState)(false), show = _a[0], setShow = _a[1];
-    var _b = (0, react_1.useState)(""), msg = _b[0], setMsg = _b[1];
+    var _b = (0, react_1.useState)(""), contextualMsg = _b[0], setContextualMsg = _b[1];
+    var _c = (0, react_1.useState)(""), msg = _c[0], setMsg = _c[1];
     var ShowDialog = function () {
         setShow(true);
         setTimeout(function () {
@@ -39,6 +40,6 @@ var StatusDialog = function (props) {
                 break;
         }
     }, [props.currentStatus]);
-    return ((0, jsx_runtime_1.jsx)(material_1.Dialog, { open: show, children: (0, jsx_runtime_1.jsx)(material_1.DialogTitle, { children: msg }) }));
+    return ((0, jsx_runtime_1.jsx)(material_1.Dialog, { open: show, children: (0, jsx_runtime_1.jsxs)(material_1.DialogTitle, { children: [contextualMsg, contextualMsg && (0, jsx_runtime_1.jsx)("br", {}), msg] }) }));
 };
 exports.StatusDialog = StatusDialog;

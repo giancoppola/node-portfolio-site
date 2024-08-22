@@ -9,6 +9,7 @@ interface Props {
 }
 export const StatusDialog = (props: Props) => {
     const [show, setShow]: [boolean, Dispatch<boolean>] = useState<boolean>(false);
+    const [contextualMsg, setContextualMsg]: [string, Dispatch<string>] = useState<string>("");
     const [msg, setMsg]: [string, Dispatch<string>] = useState<string>("");
     const ShowDialog = () => {
         setShow(true);
@@ -45,6 +46,8 @@ export const StatusDialog = (props: Props) => {
     return (
         <Dialog open={show}>
             <DialogTitle>
+                {contextualMsg}
+                {contextualMsg && <br/>}
                 {msg}
             </DialogTitle>
             {/* <DialogActions>
