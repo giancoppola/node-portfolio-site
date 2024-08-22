@@ -184,12 +184,10 @@ const Handle_Player_Action = (socket: Socket) => {
 
 const Handle_Game_Finished = (socket: Socket) => {
     socket.on(GAME_FINISH, async (player_number: PLAYERS, room_name: string) => {
-        console.log('game over: ', player_number, room_name);
         rooms[room_name].current_status = 'GAME_FINISH';
         rooms[room_name][player_number].wins = rooms[room_name][player_number].wins + 1;
         rooms[room_name].number_of_games_played = rooms[room_name].number_of_games_played + 1;
         rooms[room_name].winner = player_number === 'player_1' ? 'Player 1' : 'Player 2';
-        console.log(rooms[room_name][player_number].wins);
         Send_Latest_Data(room_name);
     })
 }
@@ -202,10 +200,13 @@ const Handle_Game_Restart = (socket: Socket) => {
             Send_Latest_Data(room_name);
         }
         else if (rooms[room_name].player_1.rematch === 'no' || rooms[room_name].player_2.rematch === 'no') {
+            const roomUsers: Set<string> | undefined = io.sockets.adapter.rooms.get(room_name);
             rooms[room_name].current_status = 'ROOM_CLOSING';
             Send_Latest_Data(room_name);
-            users[rooms[room_name].player_1_id].room_name = '';
-            users[rooms[room_name].player_2_id].room_name = '';
+            roomUsers?.forEach((room_user: string) => {
+                users[room_user].room_name = '';
+                users[room_user].room_name = '';
+            })
             delete rooms[room_name];
         }
         else {

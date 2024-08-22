@@ -58,13 +58,33 @@ var _status_dialog_1 = require("./_status_dialog");
 var socket = (0, socket_io_client_1.io)();
 var DarkTheme = (0, material_1.createTheme)({
     palette: {
-        mode: "dark",
-    }
+        mode: 'dark',
+        primary: {
+            main: '#90caf9',
+        },
+        secondary: {
+            main: '#f48fb1',
+        },
+        background: {
+            default: '#212121',
+            paper: '#424242',
+        },
+    },
 });
 var LightTheme = (0, material_1.createTheme)({
     palette: {
-        mode: "light",
-    }
+        mode: 'light',
+        primary: {
+            main: '#1976d2',
+        },
+        secondary: {
+            main: '#9c27b0',
+        },
+        background: {
+            default: '#fff',
+            paper: '#fff',
+        },
+    },
 });
 var Main = function () {
     // State for when in room
@@ -77,9 +97,9 @@ var Main = function () {
     var _g = (0, react_1.useState)(''), playerNumber = _g[0], setPlayerNumber = _g[1];
     var _h = (0, react_1.useState)(false), showGuessHistory = _h[0], setShowGuessHistory = _h[1];
     var _j = (0, react_1.useState)(false), showStatus = _j[0], setShowStatus = _j[1];
-    var _k = (0, react_1.useState)(""), statusDialogMsg = _k[0], setStatusDialogMsg = _k[1];
+    var _k = (0, react_1.useState)(''), statusDialogMsg = _k[0], setStatusDialogMsg = _k[1];
     // State used at all times
-    var _l = (0, react_1.useState)(false), darkMode = _l[0], setDarkMode = _l[1];
+    var _l = (0, react_1.useState)(true), darkMode = _l[0], setDarkMode = _l[1];
     var _m = (0, react_1.useState)(0), userCount = _m[0], setUserCount = _m[1];
     var _o = (0, react_1.useState)(""), roomName = _o[0], setRoomName = _o[1];
     var _p = (0, react_1.useState)(""), playerId = _p[0], setPlayerId = _p[1];
@@ -138,8 +158,9 @@ var Main = function () {
         }
         return canSubmit;
     };
-    var LeaveRoom = function () {
-        socket.emit(word_guesser_types_1.LEAVE_ROOM, playerNumber, roomName);
+    var LeaveRoom = function (update_server) {
+        if (update_server === void 0) { update_server = true; }
+        update_server && socket.emit(word_guesser_types_1.LEAVE_ROOM, playerNumber, roomName);
         setRoomName('');
         setPlayerNumber('');
         setCurrentGuess('');
@@ -166,7 +187,9 @@ var Main = function () {
             RestartRoom();
         }
         if (room_data.current_status === 'ROOM_CLOSING') {
-            LeaveRoom();
+            setTimeout(function () {
+                LeaveRoom(false);
+            }, 2000);
         }
     });
     (0, react_1.useEffect)(function () {
@@ -179,12 +202,6 @@ var Main = function () {
             CreateNewPlayer();
         }
     }, []);
-    (0, react_1.useEffect)(function () {
-        switch (currentStatus) {
-            //todo
-        }
-        setShowStatus(true);
-    }, [currentStatus]);
     (0, react_1.useEffect)(function () { playerId ? socket.emit(word_guesser_types_1.ACTIVE, playerId) : null; }, [playerId]);
     (0, react_1.useEffect)(function () { roomName ? socket.emit(word_guesser_types_1.ROOM_JOINED, roomName) : null; }, [roomName]);
     (0, react_1.useEffect)(function () { ready ? socket.emit(word_guesser_types_1.READY, playerId, roomName, word) : socket.emit(word_guesser_types_1.NOT_READY, playerId, roomName); }, [ready]);
@@ -218,7 +235,7 @@ var Main = function () {
                         (0, jsx_runtime_1.jsxs)(material_1.Box, { height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '2rem', children: [(0, jsx_runtime_1.jsx)(_create_room_1.CreateRoom, { setPlayerNumber: setPlayerNumber, setRoomName: setRoomName, playerId: playerId }), (0, jsx_runtime_1.jsx)(_join_room_1.JoinRoom, { setPlayerNumber: setPlayerNumber, setRoomName: setRoomName, playerId: playerId })] }), playerId && roomName &&
                         (0, jsx_runtime_1.jsxs)(material_1.Box, { height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly', gap: '2rem', children: [(0, jsx_runtime_1.jsxs)(material_1.Box, { children: [(0, jsx_runtime_1.jsx)(_status_message_1.StatusMessage, { currentStatus: currentStatus, winner: roomData.winner, word: word }), (0, jsx_runtime_1.jsx)(_player_status_1.PlayerStatus, { roomData: roomData })] }), currentStatus != 'GAME_FINISH' &&
                                     (0, jsx_runtime_1.jsx)(_word_input_1.WordInput, { canSubmitWord: canSubmitWord, currentStatus: currentStatus, setCurrentGuess: setCurrentGuess, setWord: setWord }), currentStatus === 'GAME_FINISH' &&
-                                    (0, jsx_runtime_1.jsx)(_rematch_vote_1.RematchVote, { vote: PlayerVote }), (0, jsx_runtime_1.jsxs)(material_1.Box, { children: [(0, jsx_runtime_1.jsx)(_guess_history_button_1.GuessHistoryButton, { showHistory: setShowGuessHistory }), (0, jsx_runtime_1.jsx)(_leave_room_1.LeaveRoomButton, { leaveRoom: LeaveRoom })] }), (0, jsx_runtime_1.jsx)(guess_history_dialog_1.GuessHistoryDialog, { open: showGuessHistory, setOpen: setShowGuessHistory, opp_word: playerNumber === 'player_1' ? roomData.player_2.word : roomData.player_1.word, guesses: playerNumber === 'player_1' ? roomData.player_1.guesses : roomData.player_2.guesses }), (0, jsx_runtime_1.jsx)(_status_dialog_1.StatusDialog, { msg: statusDialogMsg, show: showStatus, setShow: setShowStatus })] }), (0, jsx_runtime_1.jsx)(_footer_1.Footer, {})] })] }));
+                                    (0, jsx_runtime_1.jsx)(_rematch_vote_1.RematchVote, { vote: PlayerVote }), (0, jsx_runtime_1.jsxs)(material_1.Box, { children: [(0, jsx_runtime_1.jsx)(_guess_history_button_1.GuessHistoryButton, { currentStatus: currentStatus, showHistory: setShowGuessHistory }), (0, jsx_runtime_1.jsx)(_leave_room_1.LeaveRoomButton, { leaveRoom: LeaveRoom })] }), (0, jsx_runtime_1.jsx)(guess_history_dialog_1.GuessHistoryDialog, { open: showGuessHistory, setOpen: setShowGuessHistory, opp_word: playerNumber === 'player_1' ? roomData.player_2.word : roomData.player_1.word, guesses: playerNumber === 'player_1' ? roomData.player_1.guesses : roomData.player_2.guesses }), (0, jsx_runtime_1.jsx)(_status_dialog_1.StatusDialog, { playerNumber: playerNumber, currentStatus: currentStatus, winner: roomData.winner })] }), (0, jsx_runtime_1.jsx)(_footer_1.Footer, {})] })] }));
 };
 var root = (0, client_1.createRoot)(document.getElementById('main'));
 root.render((0, jsx_runtime_1.jsx)(react_1.StrictMode, { children: (0, jsx_runtime_1.jsx)(Main, {}) }));

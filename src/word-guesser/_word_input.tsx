@@ -1,7 +1,7 @@
 import { Dispatch, useEffect, useState } from 'react'
 import { Box, Button, Input, InputBaseComponentProps, List, ListItem, OutlinedInput, StyledComponentProps, SxProps, TextField, Typography } from '@mui/material'
 import { RemoveQuotes, Fetch_Room_DoesRoomExist, Fetch_Room_CreateRoom } from './word-guesser-tools'
-import { CURRENT_STATUS } from '../../types/word-guesser-types';
+import { CURRENT_STATUS, WORD_SET } from '../../types/word-guesser-types';
 
 
 interface Props {
@@ -11,6 +11,7 @@ interface Props {
     setCurrentGuess: Function;
 }
 export const WordInput = (props: Props) => {
+    const [wordSet, setWordSet]: [WORD_SET, Dispatch<WORD_SET>] = useState({});
     const [errMsg, setErrMsg]: [string, Dispatch<string>] = useState<string>("");
     const [letterOne, setLetterOne]: [string, Dispatch<string>] = useState<string>("");
     const [letterTwo, setLetterTwo]: [string, Dispatch<string>] = useState<string>("");
@@ -37,13 +38,19 @@ export const WordInput = (props: Props) => {
     }
     const UpdateWord = () => {
         let word = letterOne + letterTwo + letterThree + letterFour;
+        console.log(wordSet[word]);
         if (word.length === 4) {
-            props.currentStatus === 'ROOM_CREATED' ? props.setWord(word) : props.setCurrentGuess(word);
-            setErrMsg('');
-            setLetterOne('');
-            setLetterTwo('');
-            setLetterThree('');
-            setLetterFour('');
+            if (wordSet[word] != null) {
+                props.currentStatus === 'ROOM_CREATED' ? props.setWord(word) : props.setCurrentGuess(word);
+                setErrMsg('');
+                setLetterOne('');
+                setLetterTwo('');
+                setLetterThree('');
+                setLetterFour('');
+            }
+            else {
+                setErrMsg('Not a valid word!');
+            }
         }
         else {
             setErrMsg('Please provide a four letter word!');
@@ -53,6 +60,12 @@ export const WordInput = (props: Props) => {
         props.setWord('');
     }
     useEffect(() => { setErrMsg('') }, [letterOne, letterTwo, letterThree, letterFour])
+    useEffect(() => {
+        fetch('/JSON/four-letter-words.json')
+        .then(res => res.json())
+        .then(data => setWordSet(data))
+        .catch((e) => console.log(e))
+    }, [])
     const InputStyles: React.CSSProperties = { width: '5rem', height: '5rem', fontSize: '5rem', textAlign: 'center' }
     const InputProps: InputBaseComponentProps = { maxLength: 1, style: InputStyles }
     return (

@@ -230,12 +230,10 @@ var Handle_Player_Action = function (socket) {
 var Handle_Game_Finished = function (socket) {
     socket.on(word_guesser_types_1.GAME_FINISH, function (player_number, room_name) { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
-            console.log('game over: ', player_number, room_name);
             exports.rooms[room_name].current_status = 'GAME_FINISH';
             exports.rooms[room_name][player_number].wins = exports.rooms[room_name][player_number].wins + 1;
             exports.rooms[room_name].number_of_games_played = exports.rooms[room_name].number_of_games_played + 1;
             exports.rooms[room_name].winner = player_number === 'player_1' ? 'Player 1' : 'Player 2';
-            console.log(exports.rooms[room_name][player_number].wins);
             Send_Latest_Data(room_name);
             return [2 /*return*/];
         });
@@ -243,6 +241,7 @@ var Handle_Game_Finished = function (socket) {
 };
 var Handle_Game_Restart = function (socket) {
     socket.on(word_guesser_types_1.PLAYER_VOTE, function (player_number, room_name, vote) { return __awaiter(void 0, void 0, void 0, function () {
+        var roomUsers;
         return __generator(this, function (_a) {
             exports.rooms[room_name][player_number].rematch = vote;
             if (exports.rooms[room_name].player_1.rematch === 'yes' && exports.rooms[room_name].player_2.rematch === 'yes') {
@@ -250,10 +249,13 @@ var Handle_Game_Restart = function (socket) {
                 Send_Latest_Data(room_name);
             }
             else if (exports.rooms[room_name].player_1.rematch === 'no' || exports.rooms[room_name].player_2.rematch === 'no') {
+                roomUsers = exports.io.sockets.adapter.rooms.get(room_name);
                 exports.rooms[room_name].current_status = 'ROOM_CLOSING';
                 Send_Latest_Data(room_name);
-                exports.users[exports.rooms[room_name].player_1_id].room_name = '';
-                exports.users[exports.rooms[room_name].player_2_id].room_name = '';
+                roomUsers === null || roomUsers === void 0 ? void 0 : roomUsers.forEach(function (room_user) {
+                    exports.users[room_user].room_name = '';
+                    exports.users[room_user].room_name = '';
+                });
                 delete exports.rooms[room_name];
             }
             else {

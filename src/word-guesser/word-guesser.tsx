@@ -26,13 +26,33 @@ const socket: Socket = io();
 
 const DarkTheme = createTheme({
     palette: {
-        mode: "dark",
-    }
+        mode: 'dark',
+        primary: {
+          main: '#90caf9',
+        },
+        secondary: {
+          main: '#f48fb1',
+        },
+        background: {
+          default: '#212121',
+          paper: '#424242',
+        },
+    },
 })
 const LightTheme = createTheme({
     palette: {
-        mode: "light",
-    }
+        mode: 'light',
+        primary: {
+          main: '#1976d2',
+        },
+        secondary: {
+          main: '#9c27b0',
+        },
+        background: {
+          default: '#fff',
+          paper: '#fff',
+        },
+    },
 })
 
 const Main = () => {
@@ -46,9 +66,9 @@ const Main = () => {
     const [playerNumber, setPlayerNumber]: [PLAYERS, Dispatch<PLAYERS>] = useState<PLAYERS>('');
     const [showGuessHistory, setShowGuessHistory]: [boolean, Dispatch<boolean>] = useState<boolean>(false);
     const [showStatus, setShowStatus]: [boolean, Dispatch<boolean>] = useState<boolean>(false);
-    const [statusDialogMsg, setStatusDialogMsg]: [string, Dispatch<string>] = useState<string>("");
+    const [statusDialogMsg, setStatusDialogMsg]: [string, Dispatch<string>] = useState<string>('');
     // State used at all times
-    const [darkMode, setDarkMode]: [boolean, Dispatch<boolean>] = useState<boolean>(false);
+    const [darkMode, setDarkMode]: [boolean, Dispatch<boolean>] = useState<boolean>(true);
     const [userCount, setUserCount]: [number, Dispatch<number>] = useState<number>(0);
     const [roomName, setRoomName]: [string, Dispatch<string>] = useState<string>("");
     const [playerId, setPlayerId]: [string, Dispatch<string>] = useState<string>("");
@@ -91,8 +111,8 @@ const Main = () => {
         }
         return canSubmit;
     }
-    const LeaveRoom = () => {
-        socket.emit(LEAVE_ROOM, playerNumber, roomName);
+    const LeaveRoom = (update_server: boolean = true) => {
+        update_server && socket.emit(LEAVE_ROOM, playerNumber, roomName);
         setRoomName('');
         setPlayerNumber('');
         setCurrentGuess('');
@@ -116,7 +136,11 @@ const Main = () => {
         setCurrentStatus(room_data.current_status);
         setCanSubmitWord(CanSubmitCheck(room_data));
         if (room_data.current_status === 'GAME_FINISH') { RestartRoom(); }
-        if (room_data.current_status === 'ROOM_CLOSING') { LeaveRoom(); }
+        if (room_data.current_status === 'ROOM_CLOSING') {
+            setTimeout(() => {
+                LeaveRoom(false);
+            }, 2000)
+        }
     })
     useEffect(() => {
         let player_id = localStorage.getItem(PLAYER_ID);
@@ -128,12 +152,6 @@ const Main = () => {
             CreateNewPlayer();
         }
     }, [])
-    useEffect(() => {
-        switch (currentStatus) {
-            //todo
-        }
-        setShowStatus(true);
-    }, [currentStatus])
     useEffect(() => { playerId ? socket.emit(ACTIVE, playerId) : null }, [playerId])
     useEffect(() => { roomName ? socket.emit(ROOM_JOINED, roomName) : null }, [roomName])
     useEffect(() => { ready ? socket.emit(READY, playerId, roomName, word) : socket.emit(NOT_READY, playerId, roomName) }, [ready])
@@ -183,13 +201,13 @@ const Main = () => {
                             <RematchVote vote={PlayerVote} />
                         }
                         <Box>
-                            <GuessHistoryButton showHistory={setShowGuessHistory} />
+                            <GuessHistoryButton currentStatus={currentStatus} showHistory={setShowGuessHistory} />
                             <LeaveRoomButton leaveRoom={LeaveRoom} />
                         </Box>
                         <GuessHistoryDialog open={showGuessHistory} setOpen={setShowGuessHistory}
                         opp_word={playerNumber === 'player_1' ? roomData.player_2.word : roomData.player_1.word}
                         guesses={playerNumber === 'player_1' ? roomData.player_1.guesses : roomData.player_2.guesses} />
-                        <StatusDialog msg={statusDialogMsg} show={showStatus} setShow={setShowStatus} />
+                        <StatusDialog playerNumber={playerNumber} currentStatus={currentStatus} winner={roomData.winner} />
                     </Box>
                 }
                 <Footer/>

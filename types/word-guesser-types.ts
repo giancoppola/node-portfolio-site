@@ -1,6 +1,10 @@
 import { Model } from "mongoose";
 const mongoose = require('mongoose');
 
+export interface WORD_SET {
+    [key: string]: number;
+}
+
 export const PLAYER_ID = "WG.player_id";
 export const PLAYER_1 = 'player_1';
 export const PLAYER_2 = 'player_2';
