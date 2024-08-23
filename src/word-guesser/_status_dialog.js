@@ -23,10 +23,16 @@ var StatusDialog = function (props) {
                 ShowDialog();
                 break;
             case 'PLAYER_1_GUESSED':
+                setContextualMsg(props.playerNumber === 'player_1' ?
+                    "You guessed ".concat(props.roomData.player_1.current_guess.toUpperCase(), " which had ").concat(props.roomData.player_1.last_guess_score, " matches") :
+                    "Player 1 guessed ".concat(props.roomData.player_1.current_guess.toUpperCase(), " which had ").concat(props.roomData.player_1.last_guess_score, " matches"));
                 setMsg("".concat(props.playerNumber === 'player_1' ? "Player 2's" : 'Your', " turn to guess!"));
                 ShowDialog();
                 break;
             case 'PLAYER_2_GUESSED':
+                setContextualMsg(props.playerNumber === 'player_1' ?
+                    "Player 2 guessed ".concat(props.roomData.player_2.current_guess.toUpperCase(), " which had ").concat(props.roomData.player_2.last_guess_score, " matches") :
+                    "You guessed ".concat(props.roomData.player_2.current_guess.toUpperCase(), " which had ").concat(props.roomData.player_2.last_guess_score, " matches"));
                 setMsg("".concat(props.playerNumber === 'player_1' ? "Your" : "Player 1's", " turn to guess!"));
                 ShowDialog();
                 break;
@@ -35,11 +41,13 @@ var StatusDialog = function (props) {
                 ShowDialog();
                 break;
             case 'ROOM_CLOSING':
-                setMsg('Rematch denied! Room is now closing...');
+                props.roomData.player_count < 2 ?
+                    setMsg('Opponent left! Room is now closing...') :
+                    setMsg('Rematch denied! Room is now closing...');
                 ShowDialog();
                 break;
         }
     }, [props.currentStatus]);
-    return ((0, jsx_runtime_1.jsx)(material_1.Dialog, { open: show, children: (0, jsx_runtime_1.jsxs)(material_1.DialogTitle, { children: [contextualMsg, contextualMsg && (0, jsx_runtime_1.jsx)("br", {}), msg] }) }));
+    return ((0, jsx_runtime_1.jsx)(material_1.Dialog, { open: show, children: (0, jsx_runtime_1.jsxs)(material_1.DialogTitle, { textAlign: 'center', margin: '1rem', children: [contextualMsg, contextualMsg && (0, jsx_runtime_1.jsx)("br", {}), contextualMsg && (0, jsx_runtime_1.jsx)("br", {}), msg] }) }));
 };
 exports.StatusDialog = StatusDialog;

@@ -51,41 +51,48 @@ var _player_status_1 = require("./_player_status");
 var guess_history_dialog_1 = require("./guess_history_dialog");
 var _leave_room_1 = require("./_leave_room");
 var _guess_history_button_1 = require("./_guess_history_button");
-var _theme_mode_toggle_1 = require("./_theme_mode_toggle");
 var _status_message_1 = require("./_status_message");
 var _rematch_vote_1 = require("./_rematch_vote");
 var _status_dialog_1 = require("./_status_dialog");
+var _header_1 = require("./_header");
 var socket = (0, socket_io_client_1.io)();
+// Based on #D4DCFF as a core color, using Figma Material Theme Builder and https://zenoo.github.io/mui-theme-creator/
 var DarkTheme = (0, material_1.createTheme)({
     palette: {
         mode: 'dark',
         primary: {
-            main: '#90caf9',
+            main: '#B4C5FF',
+            contrastText: '#1B2D60',
         },
         secondary: {
-            main: '#f48fb1',
+            main: '#C1C5DD',
+            contrastText: '#2B3042',
         },
-        background: {
-            default: '#212121',
-            paper: '#424242',
+        error: {
+            main: '#FFB4AB',
+            contrastText: '#690005',
         },
     },
 });
+DarkTheme = (0, material_1.responsiveFontSizes)(DarkTheme);
 var LightTheme = (0, material_1.createTheme)({
     palette: {
         mode: 'light',
         primary: {
-            main: '#1976d2',
+            main: '#4B5C92',
+            contrastText: '#FFFFFF',
         },
         secondary: {
-            main: '#9c27b0',
+            main: '#595E72',
+            contrastText: '#ffffff',
         },
-        background: {
-            default: '#fff',
-            paper: '#fff',
+        error: {
+            main: '#ba1a1a',
+            contrastText: '#ffffff',
         },
     },
 });
+LightTheme = (0, material_1.responsiveFontSizes)(LightTheme);
 var Main = function () {
     // State for when in room
     var _a = (0, react_1.useState)('ROOM_CREATED'), currentStatus = _a[0], setCurrentStatus = _a[1];
@@ -231,11 +238,11 @@ var Main = function () {
         }
     }, [currentGuess]);
     socket.on(word_guesser_types_1.USER_COUNT, function (user_count) { return setUserCount(user_count); });
-    return ((0, jsx_runtime_1.jsxs)(material_1.ThemeProvider, { theme: darkMode ? DarkTheme : LightTheme, children: [(0, jsx_runtime_1.jsx)(material_1.CssBaseline, {}), (0, jsx_runtime_1.jsx)(_theme_mode_toggle_1.ThemeModeToggle, { darkMode: darkMode, setDarkMode: setDarkMode }), (0, jsx_runtime_1.jsxs)(material_1.Box, { component: 'section', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', height: '100dvh', width: '100dvw', children: [(0, jsx_runtime_1.jsxs)(material_1.Box, { children: [(0, jsx_runtime_1.jsx)(material_1.Typography, { variant: 'h1', fontWeight: 'bold', children: "BattleWords" }), (0, jsx_runtime_1.jsx)(material_1.Typography, { variant: 'subtitle2', fontWeight: 'bold', textAlign: 'center', children: "".concat(userCount, " player").concat(userCount > 1 ? 's are' : ' is', " online") })] }), playerId && !roomName &&
+    return ((0, jsx_runtime_1.jsxs)(material_1.ThemeProvider, { theme: darkMode ? DarkTheme : LightTheme, children: [(0, jsx_runtime_1.jsx)(material_1.CssBaseline, {}), (0, jsx_runtime_1.jsxs)(material_1.Box, { component: 'section', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', height: '100dvh', width: '100dvw', children: [(0, jsx_runtime_1.jsx)(_header_1.Header, { darkMode: darkMode, setDarkMode: setDarkMode, userCount: userCount }), playerId && !roomName &&
                         (0, jsx_runtime_1.jsxs)(material_1.Box, { height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '2rem', children: [(0, jsx_runtime_1.jsx)(_create_room_1.CreateRoom, { setPlayerNumber: setPlayerNumber, setRoomName: setRoomName, playerId: playerId }), (0, jsx_runtime_1.jsx)(_join_room_1.JoinRoom, { setPlayerNumber: setPlayerNumber, setRoomName: setRoomName, playerId: playerId })] }), playerId && roomName &&
                         (0, jsx_runtime_1.jsxs)(material_1.Box, { height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly', gap: '2rem', children: [(0, jsx_runtime_1.jsxs)(material_1.Box, { children: [(0, jsx_runtime_1.jsx)(_status_message_1.StatusMessage, { currentStatus: currentStatus, winner: roomData.winner, word: word }), (0, jsx_runtime_1.jsx)(_player_status_1.PlayerStatus, { roomData: roomData })] }), currentStatus != 'GAME_FINISH' &&
                                     (0, jsx_runtime_1.jsx)(_word_input_1.WordInput, { canSubmitWord: canSubmitWord, currentStatus: currentStatus, setCurrentGuess: setCurrentGuess, setWord: setWord }), currentStatus === 'GAME_FINISH' &&
-                                    (0, jsx_runtime_1.jsx)(_rematch_vote_1.RematchVote, { vote: PlayerVote }), (0, jsx_runtime_1.jsxs)(material_1.Box, { children: [(0, jsx_runtime_1.jsx)(_guess_history_button_1.GuessHistoryButton, { currentStatus: currentStatus, showHistory: setShowGuessHistory }), (0, jsx_runtime_1.jsx)(_leave_room_1.LeaveRoomButton, { leaveRoom: LeaveRoom })] }), (0, jsx_runtime_1.jsx)(guess_history_dialog_1.GuessHistoryDialog, { open: showGuessHistory, setOpen: setShowGuessHistory, opp_word: playerNumber === 'player_1' ? roomData.player_2.word : roomData.player_1.word, guesses: playerNumber === 'player_1' ? roomData.player_1.guesses : roomData.player_2.guesses }), (0, jsx_runtime_1.jsx)(_status_dialog_1.StatusDialog, { playerNumber: playerNumber, currentStatus: currentStatus, winner: roomData.winner })] }), (0, jsx_runtime_1.jsx)(_footer_1.Footer, {})] })] }));
+                                    (0, jsx_runtime_1.jsx)(_rematch_vote_1.RematchVote, { vote: PlayerVote }), (0, jsx_runtime_1.jsxs)(material_1.Box, { children: [(0, jsx_runtime_1.jsx)(_guess_history_button_1.GuessHistoryButton, { currentStatus: currentStatus, showHistory: setShowGuessHistory }), (0, jsx_runtime_1.jsx)(_leave_room_1.LeaveRoomButton, { leaveRoom: LeaveRoom })] }), (0, jsx_runtime_1.jsx)(guess_history_dialog_1.GuessHistoryDialog, { open: showGuessHistory, setOpen: setShowGuessHistory, opp_word: playerNumber === 'player_1' ? roomData.player_2.word : roomData.player_1.word, guesses: playerNumber === 'player_1' ? roomData.player_1.guesses : roomData.player_2.guesses }), (0, jsx_runtime_1.jsx)(_status_dialog_1.StatusDialog, { roomData: roomData, playerNumber: playerNumber, currentStatus: currentStatus, winner: roomData.winner })] }), (0, jsx_runtime_1.jsx)(_footer_1.Footer, {})] })] }));
 };
 var root = (0, client_1.createRoot)(document.getElementById('main'));
 root.render((0, jsx_runtime_1.jsx)(react_1.StrictMode, { children: (0, jsx_runtime_1.jsx)(Main, {}) }));

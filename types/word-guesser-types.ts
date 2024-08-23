@@ -17,6 +17,7 @@ export interface iPlayerInRoom {
     wins: number;
     current_guess: string;
     guesses: Array<string>;
+    last_guess_score: number;
     ready: boolean;
     rematch: REMATCH_VOTE;
 }
@@ -41,6 +42,7 @@ export const EMPTY_PLAYER_IN_ROOM: iPlayerInRoom = {
     wins: 0,
     current_guess: "",
     guesses: [],
+    last_guess_score: 0,
     ready: false,
     rematch: ''
 }

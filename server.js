@@ -85,6 +85,7 @@ var server = app.listen(process.env.PORT || 3000, function () {
 // MongoDB Database Functions
 var word_guesser_api_1 = require("./server/word-guesser-api");
 var word_guesser_types_1 = require("./types/word-guesser-types");
+var word_guesser_tools_1 = require("./src/word-guesser/word-guesser-tools");
 // Socket IO Connections and Responses
 exports.users = {};
 exports.rooms = {};
@@ -154,13 +155,26 @@ var Handle_Room_Joined = function (socket) {
 };
 var Handle_Room_Left = function (socket) {
     socket.on(word_guesser_types_1.LEAVE_ROOM, function (player_number, room_name) { return __awaiter(void 0, void 0, void 0, function () {
+        var roomUsers;
         return __generator(this, function (_a) {
             exports.users[socket.id].room_name = '';
             exports.rooms[room_name][player_number] = structuredClone(word_guesser_types_1.EMPTY_PLAYER_IN_ROOM);
             exports.rooms[room_name][player_number + '_id'] = '';
             exports.rooms[room_name].player_count = exports.rooms[room_name].player_count - 1;
+            // Handle player leaving in the middle of a game
+            if (exports.rooms[room_name].current_status != 'GAME_FINISH' && exports.rooms[room_name].current_status != 'ROOM_CREATED') {
+                roomUsers = exports.io.sockets.adapter.rooms.get(room_name);
+                exports.rooms[room_name].current_status = 'ROOM_CLOSING';
+                Send_Latest_Data(room_name);
+                roomUsers === null || roomUsers === void 0 ? void 0 : roomUsers.forEach(function (room_user) {
+                    exports.users[room_user].room_name = '';
+                });
+                delete exports.rooms[room_name];
+            }
+            else {
+                Send_Latest_Data(room_name);
+            }
             exports.rooms[room_name].player_count === 0 ? delete exports.rooms[room_name] : null;
-            Send_Latest_Data(room_name);
             return [2 /*return*/];
         });
     }); });
@@ -210,6 +224,7 @@ var Handle_Player_Action = function (socket) {
         return __generator(this, function (_a) {
             exports.rooms[room_name].player_1.guesses.push(guess);
             exports.rooms[room_name].player_1.current_guess = guess;
+            exports.rooms[room_name].player_1.last_guess_score = (0, word_guesser_tools_1.GuessChecker)(guess, exports.rooms[room_name].player_2.word);
             exports.rooms[room_name].current_guesser = 'player_2';
             exports.rooms[room_name].current_status = 'PLAYER_1_GUESSED';
             Send_Latest_Data(room_name);
@@ -220,6 +235,7 @@ var Handle_Player_Action = function (socket) {
         return __generator(this, function (_a) {
             exports.rooms[room_name].player_2.guesses.push(guess);
             exports.rooms[room_name].player_2.current_guess = guess;
+            exports.rooms[room_name].player_2.last_guess_score = (0, word_guesser_tools_1.GuessChecker)(guess, exports.rooms[room_name].player_1.word);
             exports.rooms[room_name].current_guesser = 'player_1';
             exports.rooms[room_name].current_status = 'PLAYER_2_GUESSED';
             Send_Latest_Data(room_name);
@@ -254,7 +270,6 @@ var Handle_Game_Restart = function (socket) {
                 Send_Latest_Data(room_name);
                 roomUsers === null || roomUsers === void 0 ? void 0 : roomUsers.forEach(function (room_user) {
                     exports.users[room_user].room_name = '';
-                    exports.users[room_user].room_name = '';
                 });
                 delete exports.rooms[room_name];
             }
@@ -274,11 +289,13 @@ var RestartGame = function (room_name) {
     exports.rooms[room_name].winner = '';
     exports.rooms[room_name].player_1.current_guess = '';
     exports.rooms[room_name].player_1.guesses = [];
+    exports.rooms[room_name].player_1.last_guess_score = 0;
     exports.rooms[room_name].player_1.ready = false;
     exports.rooms[room_name].player_1.rematch = '';
     exports.rooms[room_name].player_1.word = '';
     exports.rooms[room_name].player_2.current_guess = '';
     exports.rooms[room_name].player_2.guesses = [];
+    exports.rooms[room_name].player_2.last_guess_score = 0;
     exports.rooms[room_name].player_2.ready = false;
     exports.rooms[room_name].player_2.rematch = '';
     exports.rooms[room_name].player_2.word = '';

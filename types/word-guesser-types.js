@@ -10,6 +10,7 @@ exports.EMPTY_PLAYER_IN_ROOM = {
     wins: 0,
     current_guess: "",
     guesses: [],
+    last_guess_score: 0,
     ready: false,
     rematch: ''
 };

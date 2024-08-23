@@ -125,8 +125,18 @@ const Handle_Room_Left = (socket: Socket) => {
         rooms[room_name][player_number] = structuredClone(EMPTY_PLAYER_IN_ROOM);
         rooms[room_name][player_number + '_id'] = '';
         rooms[room_name].player_count = rooms[room_name].player_count - 1;
+        // Handle player leaving in the middle of a game
+        if (rooms[room_name].current_status != 'GAME_FINISH' && rooms[room_name].current_status != 'ROOM_CREATED') {
+            const roomUsers: Set<string> | undefined = io.sockets.adapter.rooms.get(room_name);
+            rooms[room_name].current_status = 'ROOM_CLOSING';
+            Send_Latest_Data(room_name);
+            roomUsers?.forEach((room_user: string) => {
+                users[room_user].room_name = '';
+            })
+            delete rooms[room_name];
+        }
+        else { Send_Latest_Data(room_name); }
         rooms[room_name].player_count === 0 ? delete rooms[room_name] : null;
-        Send_Latest_Data(room_name);
     })
 }
 
@@ -169,6 +179,7 @@ const Handle_Player_Action = (socket: Socket) => {
     socket.on(PLAYER_1_GUESSED, async (room_name: string, guess: string) => {
         rooms[room_name].player_1.guesses.push(guess);
         rooms[room_name].player_1.current_guess = guess;
+        rooms[room_name].player_1.last_guess_score = GuessChecker(guess, rooms[room_name].player_2.word);
         rooms[room_name].current_guesser = 'player_2';
         rooms[room_name].current_status = 'PLAYER_1_GUESSED';
         Send_Latest_Data(room_name);
@@ -176,6 +187,7 @@ const Handle_Player_Action = (socket: Socket) => {
     socket.on(PLAYER_2_GUESSED, async (room_name: string, guess: string) => {
         rooms[room_name].player_2.guesses.push(guess);
         rooms[room_name].player_2.current_guess = guess;
+        rooms[room_name].player_2.last_guess_score = GuessChecker(guess, rooms[room_name].player_1.word);
         rooms[room_name].current_guesser = 'player_1';
         rooms[room_name].current_status = 'PLAYER_2_GUESSED';
         Send_Latest_Data(room_name);
@@ -205,7 +217,6 @@ const Handle_Game_Restart = (socket: Socket) => {
             Send_Latest_Data(room_name);
             roomUsers?.forEach((room_user: string) => {
                 users[room_user].room_name = '';
-                users[room_user].room_name = '';
             })
             delete rooms[room_name];
         }
@@ -225,11 +236,13 @@ const RestartGame = (room_name: string) => {
     rooms[room_name].winner = '';
     rooms[room_name].player_1.current_guess = '';
     rooms[room_name].player_1.guesses = [];
+    rooms[room_name].player_1.last_guess_score = 0;
     rooms[room_name].player_1.ready = false;
     rooms[room_name].player_1.rematch = '';
     rooms[room_name].player_1.word = '';
     rooms[room_name].player_2.current_guess = '';
     rooms[room_name].player_2.guesses = [];
+    rooms[room_name].player_2.last_guess_score = 0;
     rooms[room_name].player_2.ready = false;
     rooms[room_name].player_2.rematch = '';
     rooms[room_name].player_2.word = '';

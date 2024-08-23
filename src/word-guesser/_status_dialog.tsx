@@ -1,8 +1,9 @@
 import { useEffect, useState, Dispatch } from 'react'
 import { Box, List, ListItem, TextField, Typography, Dialog, DialogContent, Divider, DialogTitle, DialogContentText, DialogActions, Button } from '@mui/material'
-import { CURRENT_STATUS, PLAYERS } from '../../types/word-guesser-types';
+import { CURRENT_STATUS, iRoom, PLAYERS } from '../../types/word-guesser-types';
 
 interface Props {
+    roomData: iRoom;
     currentStatus: CURRENT_STATUS;
     playerNumber: PLAYERS;
     winner: string;
@@ -26,10 +27,16 @@ export const StatusDialog = (props: Props) => {
                 ShowDialog();
                 break;
             case 'PLAYER_1_GUESSED':
+                setContextualMsg(props.playerNumber === 'player_1' ?
+                `You guessed ${props.roomData.player_1.current_guess.toUpperCase()} which had ${props.roomData.player_1.last_guess_score} matches` :
+                `Player 1 guessed ${props.roomData.player_1.current_guess.toUpperCase()} which had ${props.roomData.player_1.last_guess_score} matches`);
                 setMsg(`${props.playerNumber === 'player_1' ? "Player 2's" : 'Your'} turn to guess!`);
                 ShowDialog();
                 break;
             case 'PLAYER_2_GUESSED':
+                setContextualMsg(props.playerNumber === 'player_1' ?
+                `Player 2 guessed ${props.roomData.player_2.current_guess.toUpperCase()} which had ${props.roomData.player_2.last_guess_score} matches` :
+                `You guessed ${props.roomData.player_2.current_guess.toUpperCase()} which had ${props.roomData.player_2.last_guess_score} matches`);
                 setMsg(`${props.playerNumber === 'player_1' ? "Your" : "Player 1's"} turn to guess!`);
                 ShowDialog();
                 break;
@@ -38,6 +45,8 @@ export const StatusDialog = (props: Props) => {
                 ShowDialog();
                 break;
             case 'ROOM_CLOSING':
+                props.roomData.player_count < 2 ?
+                setMsg('Opponent left! Room is now closing...') :
                 setMsg('Rematch denied! Room is now closing...');
                 ShowDialog();
                 break;
@@ -45,14 +54,12 @@ export const StatusDialog = (props: Props) => {
     }, [props.currentStatus])
     return (
         <Dialog open={show}>
-            <DialogTitle>
+            <DialogTitle textAlign='center' margin='1rem'>
                 {contextualMsg}
+                {contextualMsg && <br/>}
                 {contextualMsg && <br/>}
                 {msg}
             </DialogTitle>
-            {/* <DialogActions>
-                <Button onClick={() => setShow(false)}>Close</Button>
-            </DialogActions> */}
         </Dialog>
     )
 }

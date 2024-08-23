@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client'
 import { useEffect, useState, Dispatch, StrictMode } from 'react'
-import { Box, Button, createTheme, CssBaseline, List, ListItem, TextField, ThemeProvider, Typography, IconButton } from '@mui/material'
+import { AppBar, Box, Button, createTheme, CssBaseline, List, ListItem, TextField, ThemeProvider, Typography, IconButton, responsiveFontSizes } from '@mui/material'
 
 import { CreateRoom } from './_create-room'
 import { JoinRoom } from './_join_room'
@@ -17,43 +17,51 @@ import { GuessHistoryDialog } from './guess_history_dialog'
 import { LeaveRoomButton } from './_leave_room'
 import { GuessHistoryButton } from './_guess_history_button'
 import { Brightness4, Brightness7 } from '@mui/icons-material'
-import { ThemeModeToggle } from './_theme_mode_toggle'
+import { FloatingOptions } from './_floating_options'
 import { StatusMessage } from './_status_message'
 import { RematchVote } from './_rematch_vote'
 import { StatusDialog } from './_status_dialog'
+import { Header } from './_header'
 
 const socket: Socket = io();
 
-const DarkTheme = createTheme({
+// Based on #D4DCFF as a core color, using Figma Material Theme Builder and https://zenoo.github.io/mui-theme-creator/
+let DarkTheme = createTheme({
     palette: {
         mode: 'dark',
         primary: {
-          main: '#90caf9',
+          main: '#B4C5FF',
+          contrastText: '#1B2D60',
         },
         secondary: {
-          main: '#f48fb1',
+          main: '#C1C5DD',
+          contrastText: '#2B3042',
         },
-        background: {
-          default: '#212121',
-          paper: '#424242',
+        error: {
+          main: '#FFB4AB',
+          contrastText: '#690005',
         },
     },
 })
-const LightTheme = createTheme({
+DarkTheme = responsiveFontSizes(DarkTheme);
+let LightTheme = createTheme({
     palette: {
         mode: 'light',
         primary: {
-          main: '#1976d2',
+          main: '#4B5C92',
+          contrastText: '#FFFFFF',
         },
         secondary: {
-          main: '#9c27b0',
+          main: '#595E72',
+          contrastText: '#ffffff',
         },
-        background: {
-          default: '#fff',
-          paper: '#fff',
+        error: {
+          main: '#ba1a1a',
+          contrastText: '#ffffff',
         },
     },
 })
+LightTheme = responsiveFontSizes(LightTheme);
 
 const Main = () => {
     // State for when in room
@@ -176,12 +184,8 @@ const Main = () => {
     return (
         <ThemeProvider theme={darkMode ? DarkTheme : LightTheme}>
             <CssBaseline/>
-            <ThemeModeToggle darkMode={darkMode} setDarkMode={setDarkMode} />
             <Box component='section' display='flex' flexDirection='column' justifyContent='space-between' alignItems='center' height='100dvh' width='100dvw'>
-                <Box>
-                    <Typography variant='h1' fontWeight='bold'>BattleWords</Typography>
-                    <Typography variant='subtitle2' fontWeight='bold' textAlign='center'>{`${userCount} player${userCount > 1 ? 's are' : ' is'} online`}</Typography>
-                </Box>
+                <Header darkMode={darkMode} setDarkMode={setDarkMode} userCount={userCount} />
                 { playerId && !roomName &&
                     <Box height='100%' display='flex' flexDirection='column' justifyContent='center' gap='2rem'>
                         <CreateRoom setPlayerNumber={setPlayerNumber} setRoomName={setRoomName} playerId={playerId} />
@@ -207,7 +211,8 @@ const Main = () => {
                         <GuessHistoryDialog open={showGuessHistory} setOpen={setShowGuessHistory}
                         opp_word={playerNumber === 'player_1' ? roomData.player_2.word : roomData.player_1.word}
                         guesses={playerNumber === 'player_1' ? roomData.player_1.guesses : roomData.player_2.guesses} />
-                        <StatusDialog playerNumber={playerNumber} currentStatus={currentStatus} winner={roomData.winner} />
+                        <StatusDialog roomData={roomData} playerNumber={playerNumber}
+                        currentStatus={currentStatus} winner={roomData.winner} />
                     </Box>
                 }
                 <Footer/>
