@@ -106,7 +106,7 @@ var Main = function () {
     var _j = (0, react_1.useState)(false), showStatus = _j[0], setShowStatus = _j[1];
     var _k = (0, react_1.useState)(''), statusDialogMsg = _k[0], setStatusDialogMsg = _k[1];
     // State used at all times
-    var _l = (0, react_1.useState)(true), darkMode = _l[0], setDarkMode = _l[1];
+    var _l = (0, react_1.useState)(false), darkMode = _l[0], setDarkMode = _l[1];
     var _m = (0, react_1.useState)(0), userCount = _m[0], setUserCount = _m[1];
     var _o = (0, react_1.useState)(""), roomName = _o[0], setRoomName = _o[1];
     var _p = (0, react_1.useState)(""), playerId = _p[0], setPlayerId = _p[1];
