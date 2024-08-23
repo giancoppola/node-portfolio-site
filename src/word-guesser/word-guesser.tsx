@@ -76,7 +76,7 @@ const Main = () => {
     const [showStatus, setShowStatus]: [boolean, Dispatch<boolean>] = useState<boolean>(false);
     const [statusDialogMsg, setStatusDialogMsg]: [string, Dispatch<string>] = useState<string>('');
     // State used at all times
-    const [darkMode, setDarkMode]: [boolean, Dispatch<boolean>] = useState<boolean>(true);
+    const [darkMode, setDarkMode]: [boolean, Dispatch<boolean>] = useState<boolean>(false);
     const [userCount, setUserCount]: [number, Dispatch<number>] = useState<number>(0);
     const [roomName, setRoomName]: [string, Dispatch<string>] = useState<string>("");
     const [playerId, setPlayerId]: [string, Dispatch<string>] = useState<string>("");
