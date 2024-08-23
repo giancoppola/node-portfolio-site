@@ -8,7 +8,7 @@ interface Props {
 }
 export const Header = (props: Props) => {
     return (
-        <AppBar position='static' color='primary' sx={{padding: {[theme.breakpoints.down('md')]: '2rem 1rem 1rem'}}}>
+        <AppBar position='static' color='primary' sx={{padding: {xs: '2rem 1rem 1rem', md: '1rem'}}}>
                 <FloatingOptions darkMode={props.darkMode} setDarkMode={props.setDarkMode} />
                 <Typography variant='h1' fontWeight='bold' textAlign='center'>BattleWords</Typography>
                 <Typography variant='subtitle2' fontWeight='bold' textAlign='center'>{`${props.userCount} player${props.userCount > 1 ? 's are' : ' is'} online`}</Typography>

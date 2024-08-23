@@ -21,8 +21,11 @@ export const StatusDialog = (props: Props) => {
     useEffect(() => {
         switch (props.currentStatus) {
             case 'ROOM_CREATED':
+                setContextualMsg('');
+                setMsg('');
                 break;
             case 'GAME_READY':
+                setContextualMsg('');
                 setMsg(`${props.playerNumber === 'player_1' ? 'You' : 'Player 1'} to guess first!`);
                 ShowDialog();
                 break;
@@ -41,10 +44,12 @@ export const StatusDialog = (props: Props) => {
                 ShowDialog();
                 break;
             case 'GAME_FINISH':
+                setContextualMsg('');
                 setMsg(`${props.winner} is the winner!`);
                 ShowDialog();
                 break;
             case 'ROOM_CLOSING':
+                setContextualMsg('');
                 props.roomData.player_count < 2 ?
                 setMsg('Opponent left! Room is now closing...') :
                 setMsg('Rematch denied! Room is now closing...');

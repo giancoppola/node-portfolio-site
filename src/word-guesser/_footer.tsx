@@ -3,7 +3,7 @@ import { Box, Button, List, ListItem, TextField, Typography } from '@mui/materia
 
 export const Footer = () => {
     return (
-        <Box display='flex' justifyContent='center' alignItems='center' gap='1rem'>
+        <Box display='flex' justifyContent='center' alignItems='center' gap='1rem' width='100dvw'>
             <Typography variant='subtitle2'>created by <Typography fontWeight='bold' variant='subtitle2' component='span'>melliek</Typography></Typography>
             <Typography variant='subtitle2'>coded by <Typography fontWeight='bold' variant='subtitle2' component='span'>gianc</Typography></Typography>
         </Box>

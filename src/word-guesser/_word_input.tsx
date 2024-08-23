@@ -66,15 +66,15 @@ export const WordInput = (props: Props) => {
         .then(data => setWordSet(data))
         .catch((e) => console.log(e))
     }, [])
-    const InputStyles: React.CSSProperties = { width: '5rem', height: '5rem', fontSize: '5rem', textAlign: 'center' }
-    const InputProps: InputBaseComponentProps = { maxLength: 1, style: InputStyles }
+    // const Styles: React.CSSProperties = { width: '5rem', height: '5rem', fontSize: '5rem', textAlign: 'center' };
+    const InputProps: InputBaseComponentProps = { maxLength: 1 };
     return (
         <Box display='flex' flexDirection='column' justifyContent='center' alignItems='center' gap='1rem'>
-            <Box display='flex' gap='1rem'>
-                <TextField disabled={!props.canSubmitWord} id='letter-one' inputProps={InputProps} value={letterOne} onChange={(e) => HandleChange(e.target.value, 'letter-one')} />
-                <TextField disabled={!props.canSubmitWord} id='letter-two' inputProps={InputProps} value={letterTwo} onChange={(e) => HandleChange(e.target.value, 'letter-two')} />
-                <TextField disabled={!props.canSubmitWord} id='letter-three' inputProps={InputProps} value={letterThree} onChange={(e) => HandleChange(e.target.value, 'letter-three')} />
-                <TextField disabled={!props.canSubmitWord} id='letter-four' inputProps={InputProps} value={letterFour} onChange={(e) => HandleChange(e.target.value, 'letter-four')} />
+            <Box display='flex' gap='1rem'> 
+                <TextField className='letter-input' disabled={!props.canSubmitWord} id='letter-one' inputProps={InputProps} value={letterOne} onChange={(e) => HandleChange(e.target.value, 'letter-one')} />
+                <TextField className='letter-input' disabled={!props.canSubmitWord} id='letter-two' inputProps={InputProps} value={letterTwo} onChange={(e) => HandleChange(e.target.value, 'letter-two')} />
+                <TextField className='letter-input' disabled={!props.canSubmitWord} id='letter-three' inputProps={InputProps} value={letterThree} onChange={(e) => HandleChange(e.target.value, 'letter-three')} />
+                <TextField className='letter-input' disabled={!props.canSubmitWord} id='letter-four' inputProps={InputProps} value={letterFour} onChange={(e) => HandleChange(e.target.value, 'letter-four')} />
             </Box>
             { props.canSubmitWord && <Button disabled={!props.canSubmitWord} variant='outlined' onClick={UpdateWord} color={errMsg ? 'error' : 'primary'}>{props.currentStatus === 'ROOM_CREATED' ? 'Submit' : 'Guess'}</Button>}
             { !props.canSubmitWord && props.currentStatus === 'ROOM_CREATED' && <Button variant='outlined' onClick={CancelReady} color={'error'}>Cancel</Button>}

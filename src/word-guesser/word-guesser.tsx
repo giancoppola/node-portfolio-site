@@ -193,7 +193,7 @@ const Main = () => {
                     </Box>
                 }
                 { playerId && roomName &&
-                    <Box height='100%' display='flex' flexDirection='column' justifyContent='space-evenly' gap='2rem'>
+                    <Box height='100%' display='flex' flexDirection='column' justifyContent='space-evenly' gap='2rem' margin='1rem 0'>
                         <Box>
                             <StatusMessage currentStatus={currentStatus} winner={roomData.winner} word={word} />
                             <PlayerStatus roomData={roomData}/>

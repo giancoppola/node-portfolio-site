@@ -17,8 +17,11 @@ var StatusDialog = function (props) {
     (0, react_1.useEffect)(function () {
         switch (props.currentStatus) {
             case 'ROOM_CREATED':
+                setContextualMsg('');
+                setMsg('');
                 break;
             case 'GAME_READY':
+                setContextualMsg('');
                 setMsg("".concat(props.playerNumber === 'player_1' ? 'You' : 'Player 1', " to guess first!"));
                 ShowDialog();
                 break;
@@ -37,10 +40,12 @@ var StatusDialog = function (props) {
                 ShowDialog();
                 break;
             case 'GAME_FINISH':
+                setContextualMsg('');
                 setMsg("".concat(props.winner, " is the winner!"));
                 ShowDialog();
                 break;
             case 'ROOM_CLOSING':
+                setContextualMsg('');
                 props.roomData.player_count < 2 ?
                     setMsg('Opponent left! Room is now closing...') :
                     setMsg('Rematch denied! Room is now closing...');
